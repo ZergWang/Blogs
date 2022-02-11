@@ -1,0 +1,15 @@
+$("aside.blog_container_aside").remove();
+$("div.left-toolbox").remove();
+$("div#csdn-toolbar").remove();
+$("div.recommend-box.insert-baidu-box").remove();
+$("div.comment-box.comment-box-old").remove();
+$("div.first-recommend-box.recommend-box").remove();
+$("div.second-recommend-box.recommend-box").remove();
+$("div.blog-footer-bottom").remove();
+$("div#treeSkill").remove();
+$("div.template-box").remove();
+$("div.csdn-side-toolbar").remove();
+$("div.recommend-right.align-items-stretch.clearfix").remove();
+$("main").unwrap();
+$("main").unwrap();
+window.print();
