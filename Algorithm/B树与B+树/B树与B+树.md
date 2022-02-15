@@ -1,4 +1,4 @@
-﻿阅读此文章前，最好先了解一下二叉搜索树和AVL树的相关知识：[二叉搜索树及AVL_ZergWang's Blog-CSDN博客](https://blog.csdn.net/Zerg_Wang/article/details/121383939)
+阅读此文章前，最好先了解一下二叉搜索树和AVL树的相关知识：[二叉搜索树及AVL_ZergWang's Blog-CSDN博客](https://blog.csdn.net/Zerg_Wang/article/details/121383939)
 <br/>
 
 # B树
