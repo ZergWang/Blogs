@@ -27,11 +27,11 @@ fclose(fp);
 如果 fprintf 输出“\r\n”或者“\n\r”，实际上会输出为“0D 0D 0A”或者“0D 0A 0D”。
 
 
-# 读入
+# 读相关函数
 #### scanf
 函数声明：
 ```cpp
-int scanf(const char *format, ...)
+int scanf(const char* format, ...)
 ```
 
 int：%d
@@ -41,10 +41,17 @@ long long(unsigned long long)： %lld
 float: %f
 double :  %lf
 
- #### 多组数据连续scanf
-```cpp
-while (scanf("%d",&n)!=EOF)
-```
+
+
+#### fscanf
+
+#### fgetc
+
+
+#### fgets
+<br/><br/>
+
+# 写相关函数
 #### printf
 输出的时候可用占位符代表变量，也可直接输出字符内容。
 ```cpp
@@ -78,23 +85,32 @@ cin.getline(c, 50);
 string s;
 getline(cin,s);
 ```
+#### fprintf
 
 <br/><br/>
 
 # 文件读写
-#### 打开及关闭文件
+#### 打开文件
 ```cpp
 FILE *fp;
-fp = fopen(文件路径)
+fp = fopen(path, mode)
+```
+其中，path为文件路径，mode有如下多种模式：
+| 模式 | 描述 |
+| ---  | --- |
+| r    | 从原文件的开头读取，若原文件不存在也不会报错，但内容不可知|
+| w    | 从原文件的开头写入，若原文件不存在则创建一个新的|
+| a    | 从原文件的末尾写入，若原文件不存在则创建一个新的|
+| b    | 以二进制形式处理文件|
+| +    | 同时进行读写操作    |
 
-...
+以上这5种模式可叠加使用，例如，
 
+#### 关闭文件
+```cpp
 fclose(fp);
 ```
-#### 文件读入
-```cpp
-fgets
-```
+成功关闭文件，fclose会返回零，否则返回EOF。
 <br/><br/>
 
 # 字符串（字符数组）处理函数
@@ -154,8 +170,7 @@ strstr(c1,c2);    //找到字符数组c2在字符数组c1中第一次出现的�
 str1.find(str2);  //返回一个整数，表示str2在str1中第一次出现的位置，若没有返回-1
 str1.rfind(str2); //同上，但从后往前找
 ```
-#### 清除
-对C++风格字符串：
+#### 清除或填充
 ```cpp
 string s;
 s.clear();//全部清除
@@ -180,7 +195,12 @@ str2 = str1.substr(pos,len); //将str1从第pos位开始连续len个字符赋值
 ...
 memset(a,0,sizeof(a))
 ```
-#### 替换
+#### 复制
+所用函数：
+```cpp
+char *strcpy(char *t, const char *s)
+```
+将字符串c赋值给t。
 对于C风格字符数组：
 ```cpp
 strcpy(str1,str2);    //等效于str1=str2;

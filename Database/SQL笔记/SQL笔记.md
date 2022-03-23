@@ -304,6 +304,23 @@ select 列名 from 表名 order by 列名
 select 列名 from 表名 order by 列名 desc
 ```
 注意：order by无法对子查询使用。
+
+### distinct
+去除select结果中相同的值
+```sql
+select distinct 列名或列表达式 from 表名;
+```
+
+### case when
+```sql
+case 
+    when 判断条件1 then 列表达式1
+    when 判断条件2 then 列表达式2
+    when 判断条件3 then 列表达式3 
+    else 列表达式4
+end
+```
+其中，when ... then 可一直叠加。case when语法整体作为一个列表达式使用。
 <br/><br/>
 
 # 特殊数据类型
