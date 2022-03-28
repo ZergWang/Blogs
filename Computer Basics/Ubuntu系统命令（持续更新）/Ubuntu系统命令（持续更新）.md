@@ -236,6 +236,14 @@ grep '要搜索的字符串'   目录
 <br/><br/>
 
 # 其他Terminal命令
+#### perf
+linux自带的性能分析工具。
+
+分析指定PID的程序运行时堆栈调用情况，连续追踪t秒：
+```bash
+perf record -F 99 -p PID -g -- sleep t
+```
+数据存储在当前目录下的perf.data中
 #### watch
 自动反复执行某些命令，格式为：watch [参数] [命令]
 

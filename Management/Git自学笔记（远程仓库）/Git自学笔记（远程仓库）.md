@@ -22,38 +22,43 @@ title随便写，key项就将.ssh目录下id_rsa.pub打开，内容复制进去�
 git remote add origin https://github.com/用户名/Documents.git
 ```
 其中，后面的网址要对应为自己的Github账号以及对应的远程库。假如远程库名为“Documents”，则地址如同以上示例代码，为“Documents.git”。
-#### 推送
-实际上是把当前分支master推送到远程。推送会将本地所有未推送过的commit一并推送。
+<br/><br/>
+
+# push
+即“推送”。推送会将本地指定分支所有未推送过的commit一并推送至远程指定分支。
 ```bash
-git push origin master
+git push 远程主机名 本地分支名:远程分支名
 ```
-如果是第一次推送，可加上“-u”参数，用于将本地的master分支和远程的master分支关联起来，在以后的推送或者拉取时就可以简化命令。
+主机名一般为“origin”，若本地分支和远程分支名字一样，可简化为：
 ```bash
-git push -u origin master
+git push 远程主机名 分支名
 ```
-在推送时，除了master，也可以推送其他分支：
+实际上分支名也可省略，默认推送本地当前分支。
+
+可选参数有：
 ```bash
-git push origin 分支名
+-u         # 关联远程主机，以后push时连主机名都省了，直接“git push”
+--force    # 远程版本与当前要推送版本不符，强行推送并覆盖远程版本
 ```
-如果远程的版本与当前要推送的版本不符，则可以通过以下命令覆盖掉远程的版本：
-```bash
-git push --force origin 分支名
-```
-#### 远程仓库克隆
+<br/><br/>
+
+
+# clone
 将远程仓库上的内容复制到本地：
 ```bash
-git clone git@github.com:用户名/XXXX.git
+git clone git@github.com:用户名/仓库名.git
+# ssh协议
+git clone https://github.com/用户名/仓库名.git
+# https协议
 ```
-该命令使用ssh协议，注意后面要使用自己的Github账户名和仓库名。
+可选参数
+```bash
+-b 分支名  # 仅clone指定分支
+```
+<br/><br/>
 
-当然，也可以使用https协议：
-```bash
-git clone https://github.com/ZergWang/XXXX.git
-```
-如果要clone指定分支：
-```bash
-git clone -b 分支名 https://github.com/ZergWang/XXXX.git
-```
+# pull & fetch
+
 更新远程仓库到本地：
 ```bash
 git pull origin 远程仓库分支名

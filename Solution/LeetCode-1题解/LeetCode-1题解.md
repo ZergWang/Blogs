@@ -68,7 +68,7 @@ int* twoSum(int* nums, int numsSize, int target, int* returnSize){
 使用哈希表存储数字。哈希算法采用最简单的取模法。由于数据范围过大，因此有很大的概率产生哈希冲突。因此，哈希表中的每个元素均为链表，用于存储nums中哈希值相同的数。
 
 ```cpp
-#define HASHMOD 911
+#define HASHMOD 389
 
 typedef struct HashNode Node;
 struct HashNode {
@@ -88,13 +88,12 @@ void HashInsert(int key, int pos) {
 
 int HashFind(int key) {
     int hashFunc = abs(key) % HASHMOD;
-    if (!table[hashFunc].next) return -1;
     Node *current = table[hashFunc].next;
-    do {
+    while (current != NULL) {
         if (current->key == key) 
             return current->val;
         current = current->next;
-    }  while (current != NULL);
+    }  
     return -1;
 }
 
@@ -117,9 +116,9 @@ int* twoSum(int* nums, int n, int target, int* returnSize){
     return NULL;
 }
 ```
-相比算法一，时间从20ms提升到了9ms。效果再度拔群！
+相比算法一，时间从20ms提升到了4ms。效果再度拔群！
 
-不过使用哈希表的话，时间复杂度比较受哈希算法的影响。同样是取模法，取1009的运行时间是22ms，不同的mod值时间能差一倍……
+然而，使用哈希表的话，时间复杂度比较受哈希算法的影响。同样是取模法，取911的运行时间是9ms，不同的mod值时间能差一倍……
 <br/><br/>
 
 # 参考资料

@@ -68,12 +68,61 @@ create view 视图名 as 子查询 with check option;
 ### 创建表
 ```sql
 -- 普通表
-create table 表名 (字段名1 类型1, 字段名2, 类型2 ... );
-
--- 含限制条件的表
-create table 表名 (字段名 类型 限制条件1, 字段名2, 类型2 限制条件2 ... );
+create table 表名 (列名 类型, 列名 类型 ... );
 ```
-限制条件有： not null、unique、primary key(列名) 等
+含约束条件的表：
+```sql
+create table 表名 
+    (列名 类型 列约束, 列名 类型 列约束, 表约束, 表约束);
+```
+约束有： not null、unique、default、primary key（主键）、foreign key（外键）、check等。
+
+#### 主键
+一个表的主键可唯一标识表中所有元组。受到主键约束的列必须是unique且not null。每张表最多只能有一个主键。
+
+主键可以是某一列，也可以是多个列组成的属性组。例如某表记录了某学校每个班级的情况，若要在学校中唯一标识每个班级，则需要班级号和年级号共同决定，因此(年级，班级)为主键。
+
+在语法上，可以将主键写为列约束，也可以写为表约束。
+```sql
+-- 指定某列为主键，写成列约束
+create table 表名 (列名 类型 primary key, 列名 类型);
+-- 或者写成表约束
+create table 表名 (列名 类型, 列名 类型, primary key(列名));
+
+-- 指定多列共同为主键，写成表约束
+create table 表名 (列名 类型, 列名 类型, primary key (列名, 列名));
+
+-- 若要为主键命名，可使用如下命令，主键为单列或多列均可
+create table 表名 (列名 类型, 列名 类型, 
+    constraint 主键名 primary key (列名, 列名));
+```
+#### 外键
+外键用于关联两张表，防止表间关系被破坏，同时防止非法插入。
+所有的外键都是另一张表的主键，或者说，依赖于另一张表的主键。主键所在表为父表，外键所在表为子表。
+
+举个例子，表Info存储学生个人信息，有两列id和name，分别存储学生的学号和姓名；表Score存储学生成绩，有列id和sum，存储学生学号和总分。两张表均存储了学生的学号，则学号可作为外键关联两表。将Info.id作为Info表的主键，同时作为Score表的外键，建表语句：
+```sql
+create table Score (id int, sum int, 
+    foreign key (id) references Info(id));
+```
+此时Score表（子表）中的数据会受到Info表（父表）数据的约束。例如，不可往子表中插入父表不存在的数据。也就是说，现在有学号为1的学生的姓名和成绩，该信息未录入Info表前不可录入到Score中，以此来确保Score中的数据在Info中均有对应。
+
+若指定多列共同为外键，或为外键命名，可：
+```sql
+create table 表名 (列名 类型, 列名 类型, 
+    constraint 外键名 foreign key (列名, 列名) references 表名(列名, 列名));
+```
+#### check
+
+用于限制列中值的范围。可以写为列约束，对单个列进行约束；也可以写为表约束，同时约束多个列。举个例子
+```sql
+create table score (id int, 
+    score int check (score>=0 and score<=100));
+
+create table boy (height int, gender char(5), 
+    constraint 约束名 check(height>0 and gender='male'));
+```
+
 ### 为表中某一列创建唯一索引
 <font color='FF0000'>一旦为某一列创建唯一索引，则表中任意两行的该列对应的属性值不能相同</font>
 ```sql
@@ -83,7 +132,7 @@ create unique index 索引名 on 表名 (列名 desc);
 其中，asc表示升序，desc表示降序。
 <br/><br/>
 
-# delete 
+# drop & delete 
 ### 删除数据库
 ```sql
 drop database 数据库名; 
@@ -91,7 +140,11 @@ drop database 数据库名;
 ### 删除视图
 ```sql
 drop view 视图名;
+
+-- 级联删除（递归删除依赖该视图的视图）
+drop view 视图名 cascade;
 ```
+举个例子，假设视图v2依赖v1，v3依赖v2，v4依赖v3……则级联删除v1时v2、v3、v4……全都会被删除。
 ### 删除索引
 ```sql
 drop index 索引名;
@@ -104,7 +157,7 @@ truncate 表名;
 -- 删除整张表
 drop table 表名;
 
--- 级联删除（同时删除依赖于该表的视图和外键约束）
+-- 级联删除（递归删除依赖于该表的视图和外键约束）
 drop table 表名 cascade;
 
 -- 限制删除（表如果被视图或其他表的外键引用则无法删除）
@@ -149,7 +202,7 @@ insert first when 条件1 into 表1 when 条件2 into 表2 else into 表3 查询
 使用all关键字时：对于select出来的每个元组，执行所有匹配的when语句中的插入操作。</font>
 <br/><br/>
 
-# update
+# update & alter
 ### 重命名表
 ```sql
 rename table 旧表名 to 新表名;
@@ -157,6 +210,26 @@ rename table 旧表名 to 新表名;
 ### 单条元组修改
 ```sql
 update 表名 set 列名=新值 where 条件;
+```
+### 修改表中列
+```sql
+-- 添加列
+alter table 表名 add 列名 列类型;
+
+-- 删除列
+alter table 表名 drop column 列名;
+```
+
+### 约束
+#### 添加约束
+
+#### 删除约束
+```sql
+-- 通过约束名删除约束
+alter table 表名 drop constraint 约束名;
+
+-- 删除主键
+alter table 表名 drop primary key;
 ```
 <br/><br/>
 
