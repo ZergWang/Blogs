@@ -61,7 +61,15 @@ git clone https://github.com/用户名/仓库名.git
 
 更新远程仓库到本地：
 ```bash
-git pull origin 远程仓库分支名
+git pull 远程主机名 远程仓库分支名
+```
+如果本地的当前分支有修改未被add或commit，则更新会中止。
+
+若要放弃本地的更改，强制更新，则：
+```bash
+git fetch --all
+git reset --hard 远程主机名/远程分支名
+git pull
 ```
 <br/><br/>
 
