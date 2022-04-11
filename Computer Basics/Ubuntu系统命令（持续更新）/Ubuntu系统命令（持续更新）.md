@@ -236,6 +236,16 @@ grep '要搜索的字符串'   目录
 <br/><br/>
 
 # 其他Terminal命令
+#### alias
+```bash
+alias
+# 查看所有已设置的别名
+alias 别名 = 命令
+# 设置别名，例如alias nvi='nvidia -smi'
+unalias 别名 
+# 取消某个别名的设置
+```
+以上设置仅在当前终端有效，换终端或重启就失效了。若要永久生效，需要修改~/.bashrc文件。
 #### perf
 linux自带的性能分析工具。
 
@@ -259,11 +269,15 @@ perf record -F 99 -p PID -g -- sleep t
 ```bash
 watch -n 1 -t -d nvidia-smi
 ```
+#### 注释
+以“#”为开头的一行即为注释
+
 #### 其他
 密码更改：passwd
 
 清屏：Ctrl+L或者clear
 <br/><br/>
+
 
 # 参考资料
 [Shell脚本：Linux Shell脚本学习指南（超详细）](http://c.biancheng.net/shell/)

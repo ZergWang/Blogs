@@ -280,22 +280,27 @@ s fe85718 4
 ![](Git自学笔记（本地操作）_6.png)
 
 如果仅合并第2、3次commit，则合并后仅存在第一次commit以及2、3合二为一的commit，共两个commit，第4次commit会消失。
-##### 复制多个commit至另一分支
 
-```
+##### 复制多个commit至目标分支
+```bash
 git rebase --onto 目标分支名 commitID_1  commitID_2
 ```
-将当前分支上，从commitID_1之后的commit（不包括该commit），一直到commitID_2之间的所有commit复制到目标分支上去。
+将某个分支上的从commitID_1之后的commit（不包括该commit），一直到commitID_2之间的所有commit复制到目标分支上去。
 
 举个例子，假设现在有master和m2这两个分支，它们的commit情况如下图所示：
 
 ![](Git自学笔记（本地操作）_7.png)
 
-若将m2分支上从C到D的commit复制到Master分支上，则首先将分支切换到m2，然后：（为了叙述方便，下面的commitID直接拿对应字母替代）
+若将m2分支上从C到D的commit复制到Master分支上，则：（为了叙述方便，下面的commitID直接拿对应字母替代）
 ```bash
 git rebase --onto master B D
 ```
-执行完后切回到master分支，查看日志发现并没有找到复制过来的commit，这是因为当前的master分支上HEAD指向的节点仍然在F处，因此还要执行：
+
+每rebase一个commit，都可能产生一轮合并冲突，从而导致rebase中断。对于有冲突的文件，解决后手动add。将所有冲突文件add后执行以下命令以继续rebase：
+```bash
+git rebase --continue
+```
+执行完后在master分支查看日志发现并没有找到复制过来的commit，这是因为当前的master分支上HEAD指向的节点仍然在F处，因此还要执行：
 ```bash
 git reset --hard D
 ```
