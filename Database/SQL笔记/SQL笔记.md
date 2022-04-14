@@ -1,4 +1,4 @@
-**<font color='ff0000'> 若无特殊说明，则以下SQL语法适用于Informix或GBase数据库。</font>**
+**<font color='ff0000'> 若无特殊说明，则以下SQL语法均适用于GBase数据库，大部分适用于Oracle数据库。</font>**
 <br/>
 
 # Oracle系统操作
@@ -18,14 +18,26 @@ conn 用户名;
 # Gbase系统操作
 ### onstat
 ```sql
--- 查看实例的进程
+-- 查看实例配置文件（onconfig）
+onstat -c
+
+-- 查看dbspace和chunk信息
+onstat -d 
+
+-- 查看环境变量
+onstat -g env
+
+-- 查看实例的各项进程
 onstat -g glo 
+
+-- 查看隔离级别和锁模式
+onstat -g sql
 
 -- 查看锁信息
 onstat -k
 
--- 查看隔离级别和锁模式
-onstat -g sql
+-- 查看事务信息
+onstat -x
 ```
 ### oninit
 ```sql
@@ -44,6 +56,24 @@ onmode -ky
 -- 清空共享内存及缓存
 onclean -ky
 ```
+### oncheck
+```sql
+-- 查看表的存储情况
+oncheck -pt 数据库名:表名
+```
+<br/><br/>
+
+
+# Gbase系统表
+| 表名 | 内容 |
+| ---  | --- |
+| systables | 所有表和视图的信息（不记录表的内容） |
+| syscolumns | 所有列的信息 |
+| sysconstraints | 所有列上的约束信息 |
+| sysfragments | 所有分片的信息 |
+| sysindexes | 所有索引的信息 |
+| sysviews | 所有视图的信息 |
+
 <br/><br/>
 
 # Create
@@ -122,6 +152,24 @@ create table score (id int,
 create table boy (height int, gender char(5), 
     constraint 约束名 check(height>0 and gender='male'));
 ```
+### 分片表
+#### 轮转法分片
+（可指定多个dbspace，每个dbspace存一个分片）
+```sql
+create table 表名 (列名 类型, 列名 类型) 
+    fragment by round robin in dbspace01, dbspace02, dbspace03;
+```
+
+#### 表达式分片
+```sql
+create table 表名 (列名 类型, 列名 类型) fragment by expression;
+```
+举个例子：
+```sql
+create table student (id int, score int) fragment by
+     range(score) (partition values less than (60), partition values less than (100));
+```
+partition values之间可填入分片名，为partition指定名字。
 
 ### 为表中某一列创建唯一索引
 <font color='FF0000'>一旦为某一列创建唯一索引，则表中任意两行的该列对应的属性值不能相同</font>
@@ -157,6 +205,9 @@ truncate 表名;
 -- 删除整张表
 drop table 表名;
 
+-- 若要删除的表不存在也不报错
+drop table if exists 表名;
+
 -- 级联删除（递归删除依赖于该表的视图和外键约束）
 drop table 表名 cascade;
 
@@ -172,13 +223,13 @@ delete from 表名 where 条件;
 # insert
 ### 插入单条元组
 ```sql
-insert into 表名 values( 字段1对应值 , 字段2对应值 ... );  
+insert into 表名 values( 列1对应值 , 列2对应值 ... );  
 ```
 ### 指定列插入单条元组
 ```sql
 insert into 表名 (列1 , 列2 , 列3 ....) values ( 值1, 值2, 值3 ... )
 ```
-### 从查询中插入
+### 从查询结果中插入
 ```sql
 insert  into 表名 子查询语句;
 ```
@@ -231,8 +282,17 @@ alter table 表名 drop constraint 约束名;
 -- 删除主键
 alter table 表名 drop primary key;
 ```
-<br/><br/>
+### 增删分片
+```sql
+-- 添加分片
+alter fragment on table 表名 
+    add partition 分片名 values less than (值);
 
+-- 拆分分片
+alter fragment on table 表名 
+    split partition 分片名 at (值) into (partition 新分片名1, partition 新分片名2);
+```
+<br/><br/>
 
 
 # select
