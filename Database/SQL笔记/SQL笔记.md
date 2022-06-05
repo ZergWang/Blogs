@@ -18,6 +18,10 @@ conn 用户名;
 # Gbase系统操作
 ### onstat
 ```sql
+-- 查看数据库状态
+-- 有On-Line、Off-Line、Quiescent、Read-Only、Recovery等模式
+onstat - 
+
 -- 查看实例配置文件（onconfig）
 onstat -c
 
@@ -36,8 +40,16 @@ onstat -g sql
 -- 查看锁信息
 onstat -k
 
+-- 查看运行日志（即online.log）
+onstat -m
+
 -- 查看事务信息
 onstat -x
+
+-- 查看实例的版本
+onstat -V
+--或者
+onstat -version
 ```
 ### oninit
 ```sql
