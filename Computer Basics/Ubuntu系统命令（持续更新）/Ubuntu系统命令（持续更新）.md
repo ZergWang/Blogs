@@ -33,6 +33,8 @@ bash 脚本文件名
 
 查看本机网络配置：ifconfig（Windows下的cmd命令为ipconfig）
 
+查看磁盘使用情况：df
+
 #### 内核管理
 查看已安装内核：dpkg --get-selections | grep linux-image
 

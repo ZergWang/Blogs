@@ -1,59 +1,52 @@
+# GBase管理命令
 ### onstat
-```sql
--- 查看数据库状态
--- 有On-Line、Off-Line、Quiescent、Read-Only、Recovery等模式
+用于查看数据库各项信息
+```
 onstat - 
+-- 
+-- 数据库有On-Line、Off-Line、Quiescent、Read-Only、Recovery等模式
 
--- 查看实例配置文件（onconfig）
-onstat -c
+-c    查看实例配置文件（onconfig）
+-d    查看dbspace和chunk信息
+-k    查看锁信息
+-m    查看最近的运行日志（即online.log）
+-x    查看事务信息
+```
 
--- 查看dbspace和chunk信息
-onstat -d 
-
--- 查看环境变量
-onstat -g env
-
--- 查看实例的各项进程
-onstat -g glo 
-
--- 查看隔离级别和锁模式
-onstat -g sql
-
--- 查看锁信息
-onstat -k
-
--- 查看运行日志（即online.log）
-onstat -m
-
--- 查看事务信息
-onstat -x
-
--- 查看实例的版本
-onstat -V
---或者
-onstat -version
+onstat -g命令用于查看数据库调试信息
+```
+-g ath    查看实例的线程
+-g cmsm   查看各个实例的连接管理器
+-g dis    查看实例的整体信息，包括安装目录和配置文件（sqlhosts和onconfig）
+-g dri    查看高可用集群的数据同步信息
+-g env    查看环境变量
+-g glo    查看实例虚拟处理器的信息
+-g sql    查看隔离级别和锁模式
 ```
 ### oninit
-```sql
--- 初始化并启动实例
-oninit -ivy
--- 仅启动实例
-oninit -vy
+用于启动数据库软件，将数据库模式转为On-Line
+```
+-i    初始化磁盘空间（仅数据库安装完成后第一次启动时使用）
+-v    启动时显示提示信息 
+-y    对所有交互信息均以“yes”回应
 ```
 ### onmode
-```sql
--- 完全关闭数据库实例
-onmode -ky
+主要用于更改数据库运行模式，部分命令可更改数据库运行参数。
+```
+-k    清理共享内存，将数据库转为Off-Line模式
+-y    对所有交互信息均以“yes”回应
 ```
 ### onclean
-```sql
--- 清空共享内存及缓存
-onclean -ky
+当使用onmode命令无法关闭数据库，或数据库无法重启时，使用onclean强制关闭
+```
+-k    清空共享内存，关闭数据库
+-y    对所有交互信息均以“yes”回应
 ```
 ### oncheck
-```sql
--- 查看表的存储情况
-oncheck -pt 数据库名:表名
+用于查看磁盘结构，包括其中的索引、表空间等结构。
+```
+-pt 数据库名:表名    查看表的存储情况
+-pT 数据库名:表名    和-pt类似，但会额外显示索引的情况
 ```
 <br/><br/>
 
@@ -67,5 +60,3 @@ oncheck -pt 数据库名:表名
 | sysfragments | 所有分片的信息 |
 | sysindexes | 所有索引的信息 |
 | sysviews | 所有视图的信息 |
-
-<br/><br/>

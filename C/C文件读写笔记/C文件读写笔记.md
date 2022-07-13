@@ -113,35 +113,75 @@ getline(cin,s);
 <br/><br/>
 
 # 文件输入输出函数
+### FILE指针
+在文件读写中，文件访问的唯一标识为FILE指针。在各类文件读写函数中，FILE指针作为参数来指定要操作的文件。
+
+FILE指针变量的声明：
+```cpp
+FILE *fp;   //一般变量名为fp，即file pointer缩写
+```
+
+
 ### fopen
 ```cpp
-FILE *fp;
-fp = fopen(path, mode)
+FILE *fopen(const char *filename, const char *mode)
 ```
-其中，path为文件路径，mode有如下多种模式：
+filename为文件路径，mode为文件读写模式，其中：
 | 模式 | 描述 |
 | ---  | --- |
-| r    | 从原文件的开头读取，若原文件不存在也不会报错，但内容不可知|
+| r    | 从原文件的开头读取，若原文件不存在则执行失败，返回NULL|
 | w    | 从原文件的开头写入，若原文件不存在则创建一个新的|
 | a    | 从原文件的末尾写入，若原文件不存在则创建一个新的|
 | b    | 以二进制形式处理文件|
 | +    | 同时进行读写操作    |
 
-以上这5种模式可叠加使用，例如，
+以上这5种模式可叠加使用，如“w+”读写一个文件，文件不存在则创建一个。
+
+函数返回值为一个FILE指针。若函数执行错误，返回NULL，并设置全局变量errno来标识错误。
 
 ### fclose
 ```cpp
-fclose(fp);
+int fclose(FILE *stream)
 ```
-成功关闭文件，fclose会返回零，否则返回EOF。
+参数为FILE指针。成功关闭文件，返回零，否则返回EOF。
 
 ### fscanf
+```cpp
+int fprintf(FILE *stream, const char *format, ...)
+```
+用法和scanf类似，多了一个FILE指针类型的参数，用于指定要读取的文件。
 
+函数执行成功则返回读取的字符数，否则返回EOF。
 ### fprintf
+```cpp
+int fprintf(FILE *stream, const char *format, ...)
+```
+用法和printf类似，多了一个FILE指针类型的参数，用于指定要写入的文件。
 
+函数执行成功则返回写入的字符数，否则返回EOF。
 ### fgetc
-
+```cpp
+int fgetc(FILE *stream)
+```
+从指定文件中读取一个无符号字符，返回值即为该字符，如果到达文件末尾或发生错误，则返回EOF。
 ### fgets
+```cpp
+char *fgets(char *str, int n, FILE *stream)
+```
+从指定文件中读取最多n个字符（包括空字符）。读取过程中若遇到换行、文件末尾或者已达到n个字符则结束。将读取到的字符存入str中。
+
+函数返回值与str相同。如果到达文件末尾、没有读取到任何字符或者发生错误，str的内容不变，返回空指针。
+
+### fputc
+
+### fputs
+
+### fread
+
+### fwrite
+
+### feof
+
 <br/><br/>
  
 
