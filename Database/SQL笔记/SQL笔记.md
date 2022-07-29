@@ -35,15 +35,14 @@ create view 视图名 as 子查询;
 -- 创建限制修改的视图
 create view 视图名 as 子查询 with check option;
 ```
-### 创建表
+### 创建普通表
 ```sql
--- 普通表
 create table 表名 (列名 类型, 列名 类型 ... );
 ```
-含约束条件的表：
+### 创建含约束条件的表：
 ```sql
 create table 表名 
-    (列名 类型 列约束, 列名 类型 列约束, 表约束, 表约束);
+    (列名 类型 列约束, 列名 类型 列约束, 表约束, 表约束...);
 ```
 约束有： not null、unique、default、primary key（主键）、foreign key（外键）、check等。
 
@@ -92,7 +91,7 @@ create table score (id int,
 create table boy (height int, gender char(5), 
     constraint 约束名 check(height>0 and gender='male'));
 ```
-### 分片表
+### 创建分片表
 #### 轮转法分片
 （可指定多个dbspace，每个dbspace存一个分片）
 ```sql
@@ -102,14 +101,21 @@ create table 表名 (列名 类型, 列名 类型)
 
 #### 表达式分片
 ```sql
-create table 表名 (列名 类型, 列名 类型) fragment by expression;
+create table 表名 (列名 类型, 列名 类型 ...) fragment by expression (
+    partition 分片名1 表达式1,
+    partition 分片名2 表达式2,
+    partition 分片名3 表达式3);
 ```
+可以不为分片指定分片名（分片名可省略）
+
 举个例子：
 ```sql
 create table student (id int, score int) fragment by
      range(score) (partition values less than (60), partition values less than (100));
 ```
-partition values之间可填入分片名，为partition指定名字。
+#### 列表分片
+
+#### 间隔分片
 
 ### 为表中某一列创建唯一索引
 <font color='FF0000'>一旦为某一列创建唯一索引，则表中任意两行的该列对应的属性值不能相同</font>
@@ -213,7 +219,9 @@ alter table 表名 drop column 列名;
 
 ### 约束
 #### 添加约束
-
+```sql
+alter table 表名 add constraint 约束名;
+```
 #### 删除约束
 ```sql
 -- 通过约束名删除约束
@@ -222,15 +230,24 @@ alter table 表名 drop constraint 约束名;
 -- 删除主键
 alter table 表名 drop primary key;
 ```
-### 增删分片
+### 修改分片表
 ```sql
--- 添加分片
-alter fragment on table 表名 
+-- 新建分片
+alter fragment on table 分片表名 
     add partition 分片名 values less than (值);
 
 -- 拆分分片
-alter fragment on table 表名 
+alter fragment on table 分片表名 
     split partition 分片名 at (值) into (partition 新分片名1, partition 新分片名2);
+
+-- 删除分片
+alter fragment on table 分片表名 drop 分片名;
+
+-- 剥离分片（将分片表中的某个分片独立出来，作为一张普通表）
+alter fragment on table 分片表名 detach partition 分片名 普通表名;
+
+-- 将普通表作为分片加入分片表
+alter fragment on table 分片表名 attach 普通表名;
 ```
 <br/><br/>
 
@@ -243,6 +260,10 @@ info tables;
 ### 单表全部查询
 ```sql
 select * from 表名 where 条件;
+```
+### 指定查询分片表的某个分片
+```sql
+select * from 表名 partition 分片名;
 ```
 ### 跳过select结果中前面的K行
 ```sql
