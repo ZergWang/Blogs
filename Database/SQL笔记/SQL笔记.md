@@ -93,28 +93,30 @@ create table boy (height int, gender char(5),
 ```
 ### 创建分片表
 #### 轮转法分片
-（可指定多个dbspace，每个dbspace存一个分片）
+（可指定多个datadbs，每个datadbs存一个分片）
 ```sql
-create table 表名 (列名 类型, 列名 类型) 
-    fragment by round robin in dbspace01, dbspace02, dbspace03;
+create table 表名 (列名 类型, 列名 类型 ...) 
+    fragment by round robin in datadbs1, datadbs2, datadbs3;
 ```
 
 #### 表达式分片
 ```sql
-create table 表名 (列名 类型, 列名 类型 ...) fragment by expression (
-    partition 分片名1 表达式1,
-    partition 分片名2 表达式2,
-    partition 分片名3 表达式3);
+create table 表名 (列名 类型, 列名 类型 ...) fragment by expression 
+    partition 分片1 表达式1 in datadbs1,
+    partition 分片2 表达式2 in datadbs2,
+    partition 分片3 表达式3 in datadbs3;
 ```
-可以不为分片指定分片名（分片名可省略）
+可以省略分片名和partition关键字。
 
-举个例子：
-```sql
-create table student (id int, score int) fragment by
-     range(score) (partition values less than (60), partition values less than (100));
-```
 #### 列表分片
-
+当表中数据较为离散、无序，或者对表需要等值查询时，可以通过列表分片的形式创建分片表。
+```sql
+create table 表名 (列名 类型, 列名 类型 ...) fragment by list(列名) 
+    partition 分片1 values (值1) in datadbs1,
+    partition 分片2 values (值2) in datadbs2,
+    partition 分片3 values (值3) in datadbs3;
+```
+一个分片可以对应多个值，在values关键字后的括号里用逗号隔开即可。
 #### 间隔分片
 
 ### 为表中某一列创建唯一索引

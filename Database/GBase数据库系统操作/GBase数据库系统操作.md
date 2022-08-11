@@ -1,11 +1,8 @@
 # GBase管理命令
 ### onstat
-用于查看数据库各项信息
+用于查看数据库各项信息，后面可接参数查看指定信息
 ```
-onstat - 
--- 
--- 数据库有On-Line、Off-Line、Quiescent、Read-Only、Recovery等模式
-
+-     查看数据库基本信息及运行模式（有On-Line、Off-Line、Quiescent、Read-Only、Recovery等模式）
 -c    查看实例配置文件（onconfig）
 -d    查看dbspace和chunk信息
 -k    查看锁信息
