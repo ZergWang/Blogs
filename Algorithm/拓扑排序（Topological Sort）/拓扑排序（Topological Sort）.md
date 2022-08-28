@@ -122,3 +122,90 @@ bool canFinish(int numCourses, int** prerequisites, int prerequisitesSize, int* 
     else return 0;
 }
 ```
+<br/><br/>
+
+
+#### LeetCode 2392
+链接：https://leetcode.com/problems/build-a-matrix-with-conditions/
+
+将1到k的k个数字放在一个k*k的方格中（不放这k个数字的地方用0填充）。在放置时，还要满足某些数字要在另一些数字的左边或上边。给出这些限制条件，生成一个满足上述条件的方格。
+
+```cpp
+int GetSort(int **a, int n, int k, int *queue) {
+    bool f[k+1][k+1];
+    memset(f, 0, sizeof(f));
+    
+    int inDegree[k+1];
+    int head = 0, tail = 0, qSize = 0;
+    memset(queue, 0, k*sizeof(int));
+    memset(inDegree, 0, sizeof(inDegree));
+    
+    for (int i=0; i<n; i++) {
+        if (f[a[i][0]][a[i][1]])  //同一个限制条件出现多次，会影响元素的入度
+            continue;
+        f[a[i][0]][a[i][1]] = 1;
+        inDegree[a[i][1]]++;
+    }        
+    
+    for (int i=1; i<=k; i++) 
+        if (!inDegree[i])
+            queue[qSize++] = i;
+    
+    if (!qSize)
+        return 1;   //检测环
+    else 
+        tail = qSize-1;
+    
+    while (head<=tail) {
+        int now = queue[head];
+        for (int i=1; i<=k; i++)
+            if (f[now][i]) {
+                inDegree[i]--;
+                if (!inDegree[i]) {
+                    queue[++tail] = i;
+                    qSize++;
+                }                    
+            }
+        head++;
+    }
+    
+    if (qSize!=k)   //检测环
+        return 1;
+    
+    return 0;
+}
+
+
+int** buildMatrix(int k, int** r, int rSize, int* rowConditionsColSize, int** c, int cSize, int* colConditionsColSize, int* returnSize, int** returnColumnSizes){
+    
+    int rSort[k], cSort[k]; 
+    if (GetSort(r, rSize, k, rSort)) {
+        *returnSize = 0;
+        return NULL;    //按行号由小到大放置元素，rSort[i]表示元素rSort[i]应放置在第i行
+    }        
+    if (GetSort(c, cSize, k, cSort)){
+        *returnSize = 0;
+        return NULL;   //按列号由小到大放置元素，cSort[i]表示元素cSort[i]应放置在第i列
+    }    
+    
+    int ** ans = (int**)malloc(k*sizeof(int*));
+    *returnSize = k;
+    *returnColumnSizes = (int*)malloc(k*sizeof(int));
+    for (int i=0; i<k; i++) {
+        int* newAns = (int*)calloc(k, sizeof(int));
+        ans[i] = newAns;
+        (*returnColumnSizes)[i] = k;
+    }
+    
+    int pos[k+1][2];    
+    for (int i=0; i<k; i++) {
+        pos[rSort[i]][0] = i;
+        pos[cSort[i]][1] = i;
+    }
+    
+    for (int i=1; i<=k; i++)
+        ans[pos[i][0]][pos[i][1]]= i;
+    
+    return ans;
+}
+```
