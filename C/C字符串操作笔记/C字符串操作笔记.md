@@ -138,12 +138,16 @@ strcpy(c, s.c_str());
 ```
 ### 字符串转数字
 
-C：
+C：使用sscanf函数，方法与参数与scanf类似，区别在于scanf从设备（键盘）中取得内容放入变量，而sscanf从str中获得内容放入变量。
 ```cpp
 int sscanf(const char *str, const char *format, ...)
-```
-用法与scanf类似，但是从字符串str中读取格式化输入。
 
+//用法举例
+int d;
+char s[5] = "123";
+sscanf(s, "%d", &d);
+```
+该方法支持整数、小数及多种进制类型，通过格式控制符format来操作。
 
 
 <br/>
@@ -158,10 +162,18 @@ ss << str;
 ss >> d;
 ```
 ### 数字转字符串
-C：
+C：使用sprintf函数，方法与参数与printf类似，区别在于printf将变量内容输出到屏幕，而sprintf将变量内容输出到str。
 ```cpp
 int sprintf(char *str, const char *format, ...)
+
+//用法举例
+int d = 123;
+char s[5];
+sprintf(s, "%d", d);
 ```
+该方法支持整数、小数及多种进制类型，通过格式控制符format来操作。
+
+
 C++：（同样支持整数和实数）
 ```cpp
 #include <sstream>

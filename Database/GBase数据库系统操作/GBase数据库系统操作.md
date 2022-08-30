@@ -8,6 +8,7 @@
 -k    查看锁信息
 -m    查看最近的运行日志（即online.log）
 -x    查看事务信息
+-V    查看软件版本信息（onstat -version亦可）
 ```
 
 onstat -g命令用于查看数据库调试信息
