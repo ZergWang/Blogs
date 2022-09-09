@@ -58,3 +58,4 @@ onstat -g命令用于查看数据库调试信息
 | sysfragments | 所有分片的信息 |
 | sysindexes | 所有索引的信息 |
 | sysviews | 所有视图的信息 |
+| sysdepend | 所有表和视图的依赖信息 |

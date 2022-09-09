@@ -93,18 +93,26 @@ create table boy (height int, gender char(5),
 ```
 ### 创建分片表
 #### 轮转法分片
-（可指定多个datadbs，每个datadbs存一个分片）
+轮转分片表的数据会均匀分布在各个分片中。在创建此类分片表时，需要指定一个至多个datadbs，每个datadbs对应一个分片（当然也可以将多个分片存在同一个datadbs中）。
 ```sql
-create table 表名 (列名 类型, 列名 类型 ...) 
-    fragment by round robin in datadbs1, datadbs2, datadbs3;
+-- 不指定分片名
+create table 表名 (列名 类型, 列名 类型 ...) fragment by round robin 
+    in datadbs1, datadbs2, datadbs3;
+
+-- 指定分片名
+create table 表名 (列名 类型, 列名 类型 ...) fragment by round robin 
+    partition 分片名1 in datadbs1,
+    partition 分片名2 in datadbs2,
+    partition 分片名3 in datadbs3;
 ```
 
 #### 表达式分片
+表达式分片表的数据会根据各个分片的表达式来存储到对应分片中。
 ```sql
 create table 表名 (列名 类型, 列名 类型 ...) fragment by expression 
-    partition 分片1 表达式1 in datadbs1,
-    partition 分片2 表达式2 in datadbs2,
-    partition 分片3 表达式3 in datadbs3;
+    partition 分片名1 表达式1 in datadbs1,
+    partition 分片名2 表达式2 in datadbs2,
+    partition 分片名3 表达式3 in datadbs3;
 ```
 可以省略分片名和partition关键字。
 
@@ -112,12 +120,30 @@ create table 表名 (列名 类型, 列名 类型 ...) fragment by expression
 当表中数据较为离散、无序，或者对表需要等值查询时，可以通过列表分片的形式创建分片表。
 ```sql
 create table 表名 (列名 类型, 列名 类型 ...) fragment by list(列名) 
-    partition 分片1 values (值1) in datadbs1,
-    partition 分片2 values (值2) in datadbs2,
-    partition 分片3 values (值3) in datadbs3;
+    partition 分片名1 values (值1) in datadbs1,
+    partition 分片名2 values (值2) in datadbs2,
+    partition 分片名3 values (值3) in datadbs3;
 ```
 一个分片可以对应多个值，在values关键字后的括号里用逗号隔开即可。
 #### 间隔分片
+当表中数据连续增长，且增加的数据值不确定但易于分类时，可以使用间隔分片。对于持续增加的数据，间隔分片表可自动为新数据按照间隔规则创建新的分片。例如一个记录员工上班时间的表，其中时间相关的数据会持续增加，可以一个月为间隔划分分片，同一个月的数据放在一个分片中。之后每个月的数据系统会自动创建新的分片进行存储。
+```sql
+create table 表名 (列名 类型, 列名 类型 ...) 
+    fragment by range(列名) interval (间隔规则) store in datadbs_list
+        partition 分片名1 values < 值1 in datadbs1,
+        partition 分片名2 values < 值2 in datadbs2,
+        partition 分片名3 values < 值3 in datadbs3;
+```
+虽然系统会根据新加入数据自动划分分片，但在创建间隔分片表时，应手动创建至少一个分片。
+另外，store in 子句可以省略。
+
+间隔规则的填写与列的类型相关，若以int型数据为间隔规则，则应填入一个整型的常量表达式，且值最小为1；若以date或datetime型数据为间隔规则，则需要使用NUMTOYMINTERVAL等函数为间隔规则，具体请参考文末的相关函数。
+
+举个例子，对int型的列以10为间隔的分片表：
+```sql
+create table 表名 (列名 int) 
+    fragment by range(列名) interval (10) partition minus values<0 in datadbs;
+```
 
 ### 为表中某一列创建唯一索引
 <font color='FF0000'>一旦为某一列创建唯一索引，则表中任意两行的该列对应的属性值不能相同</font>
@@ -420,6 +446,7 @@ end
 <br/><br/>
 
 # 特殊数据类型
+### date
 ### datetime
 用于日期和时间的记录。默认格式：YYYY-MM-DD HH:MM:SS:FFF，可通过GL_DATETIME环境变量来修改。
 建一个含datetime列的表：
@@ -427,6 +454,10 @@ end
 create table 表名  (列名 datetime year to second);
 ```
 “year to second”规定了datetime列的格式为YYYY-MM-DD HH:MM:SS，若只需精确到月份，可“year to month”，最大可精确到3位毫秒（YYYY-MM-DD HH:MM:SS.FFF），即“year to fraction(3)”。
+
+##### 相关函数
+NUMTOYMINTERVAL
+
 <br/><br/>
 
 # 函数

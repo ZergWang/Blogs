@@ -147,23 +147,49 @@ double angle=arg(a);     //取得a的幅角，以弧度制表示
 函数声明：  
 ```cpp
 #include <stdlib.h>
-void qsort(arr, num, size, Cmp)
+void qsort(a, numSize, size, Cmp)
 ```
 其中：  
-- arr：指  向待  排  序  数组首  个元素
-- num：数组中元素个数  
+- a：指向待排序数组首个元素
+- numSize：数组中元素个数  
 - size：每个元素的大小  
-- Cmp：比较函数，按两元素的大小返回1、0或-1。
+- Cmp：比较函数，按两元素的大小返回1、0或-1。该函数需要用户自定义
   
-举个例子，给int型数组升序排序：
+给一维数组按升序排序：
 ```cpp
 int Cmp(const void * a, const void * b) {
     return *(int*)a - *(int*)b;
 }
 
-int a[N];
-qsort(a, N, sizeof(int), Cmp);
+int a[numsSize];
+qsort(a, numsSize, sizeof(a[0]), Cmp);
 ```
+给直接定义的二维数组排序：
+```cpp
+int a[100][2];  //100行2列的数组，按第二列的大小排序
+
+int Cmp(const void * a, const void * b) {
+    int *x = (int*)a + 1;   //如果要按第k列的大小排序，就加k-1
+    int *y = (int*)b + 1;
+    return *x - *y;
+}
+
+qsort(a, numsSize, sizeof(a[0]), Cmp);
+```
+
+给malloc的二维数组或指针数组排序：
+```cpp
+int **a = (int**)malloc(numsSize*sizeof(int*));
+
+int Cmp(const void * a, const void * b) {
+    int **x = (int**)a;   
+    int **y = (int*)b;
+    return x[1]-y[1];  //如果要按第k列的大小排序，就取x[k-1]和y[k-1]
+}
+
+qsort(a, numsSize, sizeof(a[0]), Cmp);
+```
+
 按结构体中某成员的值升序排序：
 ```cpp
 struct node {
@@ -171,10 +197,9 @@ struct node {
 };
 
 int Cmp(const void * a, const void * b) {
-    return (*(struct node *)a).n - (*(struct node *)b).n;
+    return (struct node *)a->n - (struct node *)b->n;
 }
 
 struct node a[numsSize];
 qsort(a, numsSize, sizeof(a[0]), Cmp);
 ```
-降序排序把a、b交换一下位置即可。
