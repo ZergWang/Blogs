@@ -197,9 +197,11 @@ struct node {
 };
 
 int Cmp(const void * a, const void * b) {
-    return (struct node *)a->n - (struct node *)b->n;
+    return ((struct node *)a)->n - ((struct node *)a)->n;
+    //也可以写成：return (*(struct node *)a).n - (*(struct node *)a).n;
 }
 
 struct node a[numsSize];
 qsort(a, numsSize, sizeof(a[0]), Cmp);
 ```
+注意：在Cmp函数中，对a和b强制类型转换后要加上括号，否则会报错“request for member XXX in something not a structure or union”。
