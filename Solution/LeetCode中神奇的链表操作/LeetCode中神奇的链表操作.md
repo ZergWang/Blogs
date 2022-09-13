@@ -24,16 +24,34 @@ void deleteNode(struct ListNode* node) {
 # LeetCode 142
 题目链接：https://leetcode.com/problems/linked-list-cycle-ii/
 
+给出一个可能存在环的单向链表，找出该链表中环的起始点。一开始的思路是开数组存每个节点的地址，然后遍历链表，去找数组中第一个被重复访问的地址。时间空间复杂度均为$O(N)$。
+
+以下方法将空间复杂度优化至$O(1)$：
+- 令两个指针（slow和fast）同时遍历链表，其中，指针slow每次移动一个节点，指针fast每次移动2个节点。
+- 假设n次迭代后slow和fast重合，此时fast比slow多走了多走了n步，但由于两者重合，意味着fast比slow多走了若干次环。证明n为环中节点数量的整数倍。
+- 新开一个指针ans，令ans从链表头部开始，与slow一起迭代，每次移动1个节点。
+- 无论迭代多少次，slow总是比ans多走n步。也就是说，若ans刚进入环，则必定与slow重合。此时返回ans即为答案。
 ```cpp
-
+struct ListNode *detectCycle(struct ListNode *head) {
+    struct ListNode *slow = head, *fast = head;
+    while(fast && fast->next) {
+        slow = slow->next;
+        fast = fast->next->next;
+        if(slow == fast) {
+            struct ListNode *ans = head;
+            while(slow != ans) {
+                slow = slow->next;
+                ans = ans->next;
+            }
+            return ans;
+        }
+    }
+    return NULL;
+}
 ```
-
-给出一个可能存在环的单向链表，找出该链表中环的起始点。
-
-
-此题的思路也可以用在[LeetCode 876](https://leetcode.com/problems/middle-of-the-linked-list/)，找出链表最中间的节点。
-
+此题的思路也可以用在[LeetCode 876](https://leetcode.com/problems/middle-of-the-linked-list/)，找出链表最中间的节点。令指针slow每次移动一个节点，指针fast每次移动2个节点。当fast抵达链表末尾时，slow正好在链表中间。
 <br/><br/>
+
 # LeetCode 1721
 题目链接：https://leetcode.com/problems/swapping-nodes-in-a-linked-list/
 
@@ -68,10 +86,3 @@ struct ListNode* swapNodes(struct ListNode* head, int k){
 ```
 
 对于此类要处理链表中倒数某个节点的题目，以上思路同样适用。例如[LeetCode 19](https://leetcode.com/problems/remove-nth-node-from-end-of-list/)，删除链表中倒数第k个节点这种题目。
-<br/><br/>
-
-# LeetCode 92
-
-题目链接：https://leetcode.com/problems/reverse-linked-list-ii/
-
-[LeetCode 206](https://leetcode.com/problems/reverse-linked-list/)的升级版，指定lef和rig，翻转单向链表从第lef到第rig个的全部节点。
