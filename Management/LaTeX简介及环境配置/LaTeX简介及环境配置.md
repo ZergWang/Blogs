@@ -98,13 +98,14 @@ Tex Live安装：本人版本为texlive2019，除了安装位置，其他全部�
 ```
 除了SumatraPDF软件的路径，其他照抄即可。以上设置优先使用XeLaTeX编译代码，以便支持汉字排版。
 
-最后，打开SumatraPDF的Settings中的Options界面：
-
-![](LaTeX简介及环境配置_1.png)
-
-在这一栏输入：
+最后，打开SumatraPDF的Settings中的Advanced Options，更改此行为true：
 ```
-"C:\Softwares\Microsoft VS Code\Code.exe" "C:\Softwares\Microsoft VS Code\resources\app\out\cli.js" -g "%f":"%l"
+EnableTeXEnhancements = true
+```
+并加入此行：
+
+```
+InverseSearchCmdLine = "C:\Softwares\Microsoft VS Code\Code.exe" "C:\Softwares\Microsoft VS Code\resources\app\out\cli.js" -g "%f":"%l"
 ```
 前面这两个路径根据自己VS Code实际安装位置进行更改。
 <br/><br/>
@@ -122,3 +123,5 @@ Tex Live安装：本人版本为texlive2019，除了安装位置，其他全部�
 
 [一份其实很短的 LaTeX 入门文档](
 https://liam.page/2014/09/08/latex-introduction/)
+
+[用VScode编写LaTex-最新教程2022/4/17](https://blog.csdn.net/weixin_43356770/article/details/104035291)
