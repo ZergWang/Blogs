@@ -153,9 +153,9 @@ void qsort(a, numSize, size, Cmp)
 - a：指向待排序数组首个元素
 - numSize：数组中元素个数  
 - size：每个元素的大小  
-- Cmp：比较函数，按两元素的大小返回1、0或-1。该函数需要用户自定义
-  
-给一维数组按升序排序：
+- Cmp：比较函数，按两元素的大小返回1、0或-1。该函数需要用户自定义，其参数为两个空指针，指向待比较元素的地址。
+
+**给一维数组按升序排序：**
 ```cpp
 int Cmp(const void * a, const void * b) {
     return *(int*)a - *(int*)b;
@@ -164,7 +164,7 @@ int Cmp(const void * a, const void * b) {
 int a[numsSize];
 qsort(a, numsSize, sizeof(a[0]), Cmp);
 ```
-给直接定义的二维数组排序：
+**给直接定义的二维数组排序：**
 ```cpp
 int a[100][2];  //100行2列的数组，按第二列的大小排序
 
@@ -177,20 +177,22 @@ int Cmp(const void * a, const void * b) {
 qsort(a, numsSize, sizeof(a[0]), Cmp);
 ```
 
-给malloc的二维数组或指针数组排序：
+**给malloc的二维数组或指针数组排序：**
+
+在Cmp的参数中，void型指针存储的是待排序元素的地址，而malloc的二维数组或指针数组，其元素本身为int*类型，对元素取内容得到仍然是指针。因此要在Cmp中将参数转为二级指针，取地址后得到一级指针，再取索引使用。
 ```cpp
 int **a = (int**)malloc(numsSize*sizeof(int*));
 
 int Cmp(const void * a, const void * b) {
-    int **x = (int**)a;   
-    int **y = (int*)b;
+    int *x = *(int**)a;   
+    int *y = *(int**)b;
     return x[1]-y[1];  //如果要按第k列的大小排序，就取x[k-1]和y[k-1]
 }
 
 qsort(a, numsSize, sizeof(a[0]), Cmp);
 ```
 
-按结构体中某成员的值升序排序：
+**按结构体中某成员的值升序排序：**
 ```cpp
 struct node {
     int n, i;

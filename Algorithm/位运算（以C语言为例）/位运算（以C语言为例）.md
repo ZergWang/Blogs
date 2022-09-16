@@ -82,28 +82,29 @@ void Swap(int a, int b)
 ```
 异或满足交换律，且一个数对另一个数连续异或两次，得到它自己。（即a\^b\^b==a）
 
-**这里放一道比较有意思的题：**
+**这里放一道比较有意思的题：LeetCode 136**
 
-将n个不同的数放在列表中，其中n-1个数字在列表中会出现两次，剩下那个数仅出现一次，所有数字顺序是打乱的，请找出那个仅出现一次的数。
+题目链接：https://leetcode.com/problems/single-number/
+
+数组中有n个元素，除了其中的一个元素，其他每个元素会在数组中出现两次。找出这个特殊的元素（该元素仅在数组中出现一次）。
 
 常规思路1：排序后查找相邻的数（时间复杂度为$O(n*log_2(n))$）
 
 常规思路2：直接扫一遍列表计算每个数出现的次数（时间复杂度为$O(n)$但数组会很大）
 
-位运算的思路：0与任意数字a连续异或两次，值仍为0，若只异或一次，值为a
-
-代码：
+位运算的思路：0与任意数字a连续异或两次，值仍为0，若只异或一次，值为a。
 ```cpp
-#include <stdio.h>
-int main() {
-    int ans=0,t,n;
-    scanf("%d",&n);
-    for (int i=0; i<n*2-1; i++) {
-        scanf("%d",&t);
-        ans^=t;
-    }
-    printf("%d\n",ans);
-    return 0;
-} 
+int singleNumber(int* a, int n){
+    int ans = 0;
+    for (int i=0; i<n; i++) 
+        ans ^= a[i];
+    return ans;
+}
 ```
-
+## 判断是否为2的次方
+[LeetCode 231](https://leetcode.com/problems/power-of-two/)
+```cpp
+bool isPowerOfTwo(int n){
+    return n > 0 && (n & (n - 1)) == 0;
+}
+```

@@ -28,7 +28,7 @@ void deleteNode(struct ListNode* node) {
 
 以下方法将空间复杂度优化至$O(1)$：
 - 令两个指针（slow和fast）同时遍历链表，其中，指针slow每次移动一个节点，指针fast每次移动2个节点。
-- 假设n次迭代后slow和fast重合，此时fast比slow多走了多走了n步，但由于两者重合，意味着fast比slow多走了若干次环。证明n为环中节点数量的整数倍。
+- 假设n次迭代后slow和fast重合，此时fast比slow多走了n步，但由于两者重合，意味着fast比slow多走了若干次环。证明n为环中节点数量的整数倍。
 - 新开一个指针ans，令ans从链表头部开始，与slow一起迭代，每次移动1个节点。
 - 无论迭代多少次，slow总是比ans多走n步。也就是说，若ans刚进入环，则必定与slow重合。此时返回ans即为答案。
 ```cpp
