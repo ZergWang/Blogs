@@ -217,11 +217,17 @@ insert all into 表1  values(...)  into 表2 values(...);
 ```
 ### 根据查询结果插入不同的表
 ```sql
-insert all when 条件1 into 表1 when 条件2 into 表2 else into 表3 查询语句;
+insert all 
+    when 条件1 then into 表1 
+    when 条件2 then into 表2 
+    else into 表3 查询语句;
 ```
 ### 仅执行首个匹配条件的插入操作
 ```sql
-insert first when 条件1 into 表1 when 条件2 into 表2 else into 表3 查询语句;
+insert first 
+    when 条件1 then into 表1 
+    when 条件2 then into 表2 
+    else into 表3 查询语句;
 ```
 <font color=#ff0000>使用first关键字时：对于select出来的每个元组，仅执行首个匹配的when语句中的插入操作。
 使用all关键字时：对于select出来的每个元组，执行所有匹配的when语句中的插入操作。</font>
