@@ -64,6 +64,8 @@ s.size()
 ```cpp
 int strcmp(const char *str1, const char *str2) 
 //比较两个字符串
+int strcmpi(const char *str1, const char *str2)
+//同上，比较时忽略大小写
 int strncmp(const char *str1, const char *str2, size_t n) 
 //比较两个字符串的前n位
 ```

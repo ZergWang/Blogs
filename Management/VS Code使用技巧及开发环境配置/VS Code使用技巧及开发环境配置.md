@@ -1,32 +1,17 @@
-# VS Code 大法好！
-<br/>
-
-# 一些神奇的快捷键
-#### 注释
-选中相应代码块，Ctrl+/，这部分代码就会自动变成注释，再按一次解除~
-
-#### 同时选中相同内容
-例如在批量更改变量名时，先选中其中一个变量名，再按Ctrl+Shift+L，即可选中所有同名内容，键入可同时修改。
-
-#### Tab与Shift + Tab
-前者为令光标后的代码加一个缩进，后者为使整行代码减一个缩进（无论光标在何处）。
-<br/><br/>
-
-# C/C++（用于ACM竞赛）环境配置
-Dev Cpp太捞了，因此配置了VS Code下的C/C++环境。
-
-#### 下载
+# C/C++在Windows下的环境配置
+### 下载
 首先安装minGW的编译器，dev cpp用的正是这个编译器，但一直是32位不说，还一直不更新……而实际上这个编译器有64位，而且一直在更新。
 
-然后VS Code中安装C/C++的IntelliSense和Code Runner。
+然后VS Code中安装C/C++插件IntelliSense和Code Runner。
 
-#### 配置具体环境
-VS Code作为多种语言的编译器，不同环境、任务中配置不尽相同，因此建议单开一个目录用作ACM下的C/C++环境，针对该环境的配置信息也保存在该目录的.vscode下。
+### 配置具体环境
+VS Code作为多种语言的编译器，不同环境、任务中配置不尽相同，因此建议单开一个目录用作C/C++环境，针对该环境的配置信息也保存在该目录的.vscode下。
 
 以下配置文件中凡涉及路径的，建议全部使用“/”来表示层级关系并用双引号引起，否则可能会带来问题（例如，路径中含有空格会导致完整路径被识别成空格前和空格后的两个参数……）
 
+以下三个配置文件均在.vscode目录中。
 #### c_cpp_properties.json
-用VS Code打开C/C++的工作目录后，Ctrl+Shift+P 打开命令面板，点击C/Cpp: Edit configurations，可在工作目录（即当前目录下）创建c_cpp_properties.json配置文件，本人的配置内容为：
+用于设置编译器路径和IntelliSense。本人的配置内容为：
 ```js
 {
     "configurations": [
@@ -45,10 +30,10 @@ VS Code作为多种语言的编译器，不同环境、任务中配置不尽相�
     "version": 4
 }
 ```
-其中compilerPath后为本机安装的MinGW中g++的位置。该配置文件保证了IntelliSense等功能的正常使用。
+其中compilerPath后为本机安装的MinGW中g++的位置。
 
 #### settings.json
-为Code Runner插件配置相关信息，本人为：
+用于设置Code Runner等插件及VS Code软件本身，本人为：
 ```js
 {
     "code-runner.saveFileBeforeRun": true,
@@ -62,15 +47,12 @@ VS Code作为多种语言的编译器，不同环境、任务中配置不尽相�
     },
 }
 ```
-该文件可自行创建，也可在VS Code的Settings中搜索Code Runner的相关设置自行调整，后者也会生成相应的settings.json，这里提一点，只有异于默认设置的，才会被记录到settings.json中。
+对于VS Code软件本身的设置，只有异于默认设置的，才会被记录到settings.json中。
 
 #### launch.json
 配置调试环境，本人为：
 ```js
 {
-    // Use IntelliSense to learn about possible attributes.
-    // Hover to view descriptions of existing attributes.
-    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
         {
@@ -102,10 +84,9 @@ miDebuggerPath项填写本机安装的MinGW的gdb.exe的位置即可。
 注意externalConsole这一项，如果是true，那么在使用VS Code自带的编译运行和调试（即F5和Ctrl + F5）命令时，会另外弹出终端进行操作，如果为false，则会在VS Code集成的终端中操作。若使用Code Runner运行代码则不受此项影响。
 
 #### tasks.json
+编译器相关配置，本人为：
 ```js
 {
-    // See https://go.microsoft.com/fwlink/?LinkId=733558
-    // for the documentation about the tasks.json format
     "version": "2.0.0",
     "tasks": [
         {
@@ -144,7 +125,7 @@ miDebuggerPath项填写本机安装的MinGW的gdb.exe的位置即可。
     ]
 }
 ```
-#### 编译及运行
+### 编译及运行
 安装Code Runner插件的目的是为了使编译运行过程更为便捷。在无该插件的情况下，编译运行需要Debug选单下的Start Without Debugging（Ctrl+F5）或者Start Debugging（F5），然后在终端中输入输出，若一次执行结束，看不到结果，可能还要在程序末尾手动写段按任意键退出的代码，极其智障……
 
 而使用Code Runner，可在VS Code集成的终端中输入输出，上次的运行结果也得以保留，无需写“按任意键退出”的代码了。
@@ -159,7 +140,7 @@ miDebuggerPath项填写本机安装的MinGW的gdb.exe的位置即可。
 
 这里用的例子是一个排序（从大到小）程序，输入3个数：1、2、3，输出3、2、1。
 
-#### 调试
+### 调试
 
 ![](VS%20Code使用技巧及开发环境配置_3.png)
 
@@ -187,7 +168,7 @@ Step Over（F11）：执行下一步，遇到函数会将其整个执行完，�
 Step Out（Shift+F11）：若执行位置所处函数内无断点，会执行完函数剩余部分并跳出函数，若有则跳到断点。
 <br/><br/>
 
-# Python环境配置
+# Python在Windows下环境配置
 
 安装Python插件：
 
@@ -199,9 +180,6 @@ Step Out（Shift+F11）：若执行位置所处函数内无断点，会执行完
 配置Python的调试器：
 ```js
 {
-    // Use IntelliSense to learn about possible attributes.
-    // Hover to view descriptions of existing attributes.
-    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
         {
@@ -245,7 +223,18 @@ python.pythonPath填入本机的python地址（是不是虚拟环境并不影响
 这里的pylint的地址为相应的虚拟环境中搜索到的pylint.exe的地址，把这个地址写进去，去掉.exe即可。
 <br/><br/>
 
-# 一些奇怪的错误
+# VS Code使用笔记
+### 快捷键
+#### 注释
+选中相应代码块，Ctrl+/，这部分代码就会自动变成注释，再按一次解除~
+
+#### 同时选中相同内容
+例如在批量更改变量名时，先选中其中一个变量名，再按Ctrl+Shift+L，即可选中所有同名内容，键入可同时修改。
+
+#### Tab与Shift + Tab
+前者为令光标后的代码加一个缩进，后者为使整行代码减一个缩进（无论光标在何处）。
+<br/>
+### bug
 #### 终端输入无反应
 在终端（Terminal）中输入命令，发现无反应（或者反复输入一个键多次才能成功输入一次），解决方法：把输入法切回英文……
 
