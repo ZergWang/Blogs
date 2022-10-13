@@ -44,26 +44,35 @@ create table 表名 (列名 类型, 列名 类型 ... );
 create table 表名 
     (列名 类型 列约束, 列名 类型 列约束, 表约束, 表约束...);
 ```
-约束有： not null、unique、default、primary key（主键）、foreign key（外键）、check等。
+每个列约束只能对单个列进行约束，而表约束可同时对多个列进行约束，且可以为该约束起名。
+
+约束类型有： not null、unique、default、primary key（主键）、foreign key（外键）、check等。
+
+列约束的通用格式为：
+```sql
+约束类型 约束内容
+```
+表约束通用格式为：
+```sql
+-- gbase写法
+约束类型 约束内容 constraint 约束名
+
+-- Oracle写法
+constraint 约束名 约束类型 约束内容 
+```
+若不想起名，可省略“constrint 约束名”这两部分。
 
 #### 主键
 一个表的主键可唯一标识表中所有元组。受到主键约束的列必须是unique且not null。每张表最多只能有一个主键。
 
 主键可以是某一列，也可以是多个列组成的属性组。例如某表记录了某学校每个班级的情况，若要在学校中唯一标识每个班级，则需要班级号和年级号共同决定，因此(年级，班级)为主键。
-
-在语法上，可以将主键写为列约束，也可以写为表约束。
 ```sql
--- 指定某列为主键，写成列约束
-create table 表名 (列名 类型 primary key, 列名 类型);
--- 或者写成表约束
-create table 表名 (列名 类型, 列名 类型, primary key(列名));
-
--- 指定多列共同为主键，写成表约束
-create table 表名 (列名 类型, 列名 类型, primary key (列名, 列名));
-
--- 若要为主键命名，可使用如下命令，主键为单列或多列均可
-create table 表名 (列名 类型, 列名 类型, 
-    constraint 主键名 primary key (列名, 列名));
+-- 写成列约束
+primary key
+-- 写成表约束
+primary key (列名, 列名, ...)
+-- 写成表约束，同时为主键命名
+primary key (列名, 列名 ...) constraint 主键名 
 ```
 #### 外键
 外键用于关联两张表，防止表间关系被破坏，同时防止非法插入。
@@ -78,19 +87,31 @@ create table Score (id int, sum int,
 
 若指定多列共同为外键，或为外键命名，可：
 ```sql
-create table 表名 (列名 类型, 列名 类型, 
-    constraint 外键名 foreign key (列名, 列名) references 表名(列名, 列名));
+foreign key (列名, 列名) references 表名(列名, 列名) constraint 外键名);
 ```
 #### check
-
 用于限制列中值的范围。可以写为列约束，对单个列进行约束；也可以写为表约束，同时约束多个列。举个例子
 ```sql
 create table score (id int, 
     score int check (score>=0 and score<=100));
 
 create table boy (height int, gender char(5), 
-    constraint 约束名 check(height>0 and gender='male'));
+    check (height>0 and gender='male'));
 ```
+
+#### 其他约束
+```sql
+-- 以下均为列约束写法
+-- default：当表中元组在该列的值为空时，补上一个默认值。
+default 值
+
+-- not null：表中所有元组在该列的值不能为空。
+not null
+
+-- unique：表中所有元组在该列的值不能重复
+unique
+```
+
 ### 创建分片表
 #### 轮转法分片
 轮转分片表的数据会均匀分布在各个分片中。在创建此类分片表时，需要指定一个至多个datadbs，每个datadbs对应一个分片（当然也可以将多个分片存在同一个datadbs中）。

@@ -166,10 +166,10 @@ qsort(a, numsSize, sizeof(a[0]), Cmp);
 ```
 **给直接定义的二维数组排序：**
 ```cpp
-int a[100][2];  //100行2列的数组，按第二列的大小排序
+int a[100][2];  //100行2列的数组，按第1列的大小排序（首列为第0列）
 
 int Cmp(const void * a, const void * b) {
-    int *x = (int*)a + 1;   //如果要按第k列的大小排序，就加k-1
+    int *x = (int*)a + 1;   //如果要按第k列的大小排序，就加k
     int *y = (int*)b + 1;
     return *x - *y;
 }
@@ -186,7 +186,7 @@ int **a = (int**)malloc(numsSize*sizeof(int*));
 int Cmp(const void * a, const void * b) {
     int *x = *(int**)a;   
     int *y = *(int**)b;
-    return x[1]-y[1];  //如果要按第k列的大小排序，就取x[k-1]和y[k-1]
+    return x[1]-y[1];  //如果要按第k列的大小排序，就取x[k]和y[k]
 }
 
 qsort(a, numsSize, sizeof(a[0]), Cmp);

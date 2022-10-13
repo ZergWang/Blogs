@@ -12,114 +12,54 @@
 # 拓扑排序算法
 拓扑排序就是通过以上这种有向图来获知做这一系列事情的先后顺序。算法的主要步骤有：
 
-1. 在图中找到一个入度为0的点（入度为零表示没有别的点指向该点，找不到入度为0的点说明有向图中存在环）
+1. 在图中找到一个入度为0的点K（入度为零表示没有别的点指向点K，找不到入度为0的点说明有向图中存在环）
 
-2. 输出该点并将该点的所有边删除（删除边的操作，即为将该点指向的所有点的入度减1）
+2. 输出K并将与K相关的所有边删除（将K指向的点的入度全都减1）
 
-3. 重复步骤1、2，直到所有点输出（如果所有点还没输出完，就找不到入度为0的点，说明有向图中存在环）
+3. 重复步骤1、2，直到找不到入度为0的点。
 
-为了防止每次找入度为0的点时都要遍历图中所有点，可以在一开始就将所有入度为0的点记录下来，记为 $Q = \{N_1, N_2 ... N_k\}$，每次从 $Q$ 中找点 $N_i (1\le i \le k)$ 删边后，只会改变 $N_i$ 指向的点的入度，因此每次删边后将 $N_i$ 指向的点中入度为0的加入到 $Q$ 即可。在代码上，$Q$ 可以使用队列来实现：
+为了防止每次找入度为0的点时都要遍历图中所有点，可以在一开始就将所有入度为0的点记录下来，记为 $Q = \{K_1, K_2 ... K_n\}$，每次从 $Q$ 中找点 $N_i (1\le i \le n)$ 删边后，只会改变 $N_i$ 指向的点的入度，因此每次删边后将 $N_i$ 指向的点中入度为0的加入到 $Q$ 即可。在代码上，$Q$ 可以使用队列来实现。
+
+#### LeetCode 207 & 210
+LeetCode 207链接：[207. Course Schedule](https://leetcode.com/problems/course-schedule/) 
+
+LeetCode 210链接：[210. Course Schedule II](https://leetcode.com/problems/course-schedule-ii/) 
+
+题目207给出一堆课程的先后关系，问是否能学完所有的课程。题目210与207一样，但要求输出课程的完成顺序。以下给出210的代码。
 ```cpp
-#include <queue>
-#include <iostream>
-using namespace std;
-
-#define MAXN 100
-int point[MAXN][MAXN], indeg[MAXN], ans[MAXN];
-bool a[MAXN][MAXN];             //a[i][j]为真，说明 i --> j
-int n, m, total;                
-queue <int> q;
-
-//点i指向的点的数量（也就是出度）为point[i][0]，point[i][1]到point[i][point[i][0]]存储这point[i][0]个点
- 
-int main(){
-    cin>>n>>m;  //表示有n件事，m个先后关系（m条边）
-    for (int i=1; i<=m; i++){
-        int a1, a2;
-        cin>>a1>>a2;    //输入a1 a2表示a1 --> a2  
-        if (a[a2][a1]){          
-            cout<<"No answer"<<endl; //若a1 --> a2的同时还有a1 --> a2说明有环
-            return 0;
-        }
-        if (!a[a1][a2]){   //防止重复输入
-            point[a1][++point[a1][0]] = a2;
-            a[a1][a2] = 1;
-            indeg[a2]++;  //indeg数组统计每个点的入度，从而判断重边与环
-        }
-    }
-    
-    for (int i=1; i<=n; i++)
-        if (!indeg[i]) q.push(i);   //将所有入度为零的点放入q中
-    
-    if (q.empty()) {
-        cout<<"No answer"<<endl;    //若无入度为0的点说明有环
-        return 0;
-    }
-
-    for (;;){
-        total++;
-        int cp = q.front(); //cp，即当前操作的点（current point）
-        ans[total] = cp;
-        for (int i=1; i<=point[cp][0]; i++) 
-            if (!(--indeg[point[cp][i]])) 
-                q.push(point[cp][i]);   //删边并找点
-    
-        q.pop();
-
-        if (q.empty()){
-            if (total!=n)           //判断是否输出了n个点
-                cout<<"No answer";
-            else
-                for (int i=1;i<=total;i++) cout<<ans[i]<<" ";//如果是说明排序完毕，否则说明有环
-            return 0;
-        }
-    }
-    return 0;
-} 
-```
-<br/>
-
-#### LeetCode 207
-链接：[207. Course Schedule](https://leetcode.com/problems/course-schedule/) 
-```cpp
-bool canFinish(int numCourses, int** prerequisites, int prerequisitesSize, int* prerequisitesColSize){
-    
-    int queueTail = -1, queueHead = 0, numUsed = 0;
-    int que[numCourses];
-    int indegree[numCourses];
+int* findOrder(int n, int** prerequisites, int prerequisitesSize, int* prerequisitesColSize, int* returnSize){
+    *returnSize = 0;
+    int* ans = (int*)malloc(sizeof(int)*n);
+    int indegree[n];
+    bool ifRequire[n][n];
     memset(indegree, 0, sizeof(indegree));
-    bool ifPreRequire[numCourses][numCourses];
-    memset(ifPreRequire, 0, sizeof(ifPreRequire));
+    memset(ifRequire, 0, sizeof(ifRequire));
 
     for (int i=0; i<prerequisitesSize; i++) {
-        int preCourse = prerequisites[i][1];
-        int curCourse = prerequisites[i][0];
-        indegree[curCourse]++;
-        ifPreRequire[preCourse][curCourse] = 1;
+        int pre = prerequisites[i][1];
+        int now = prerequisites[i][0];
+        indegree[now]++;
+        ifRequire[pre][now] = 1;
     }
-
-    for (int i=0; i<numCourses; i++) 
-        if (!indegree[i]) {
-            queueTail++;
-            que[queueTail] = i;
-        }
-
-    while (queueHead <= queueTail) {
-        int curCourse = que[queueHead];
-        numUsed++;
-        queueHead++;
-        for (int i=0; i<numCourses; i++) 
-            if (ifPreRequire[curCourse][i] && i!=curCourse) {
+    
+    int head = 0, tail = -1;
+    for (int i=0; i<n; i++) 
+        if (!indegree[i]) 
+            ans[++tail] = i;
+    
+    while (head <= tail) {
+        int now = ans[head++];
+        for (int i=0; i<n; i++) 
+            if (ifRequire[now][i]) {
                 indegree[i]--;
-                if (!indegree[i]) {
-                    queueTail++;
-                    que[queueTail] = i;
-                }
+                if (!indegree[i]) 
+                    ans[++tail] = i;
             }
     }
 
-    if (numUsed == numCourses) return 1;
-    else return 0;
+    if (tail+1 == n)
+        *returnSize = n;
+    return ans;
 }
 ```
 <br/><br/>
