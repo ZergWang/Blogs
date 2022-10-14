@@ -108,8 +108,14 @@ default 值
 -- not null：表中所有元组在该列的值不能为空。
 not null
 
+-- null：允许该列的值为空。
+null
+
 -- unique：表中所有元组在该列的值不能重复
 unique
+
+-- distinct: 同unique
+distinct
 ```
 
 ### 创建分片表
