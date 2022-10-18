@@ -239,4 +239,6 @@ python.pythonPath填入本机的python地址（是不是虚拟环境并不影响
 在终端（Terminal）中输入命令，发现无反应（或者反复输入一个键多次才能成功输入一次），解决方法：把输入法切回英文……
 
 #### Segmentation fault或cygwin.S的文件问题
-使用C++时发现的错误，一般是因为在函数中开辟过大内存空间（例如开了大数组），把数组设为全局变量（在int main()前定义）即可。
+Debug C/C++时，若进入函数报Segmentation fault，且报错定位到cygwin.S:126
+
+一般是因为在函数中开辟过大内存空间（例如开了大数组），把数组设为全局变量（在int main()前定义）即可。

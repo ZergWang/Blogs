@@ -1,20 +1,35 @@
 **<font color='ff0000'> 若无特殊说明，则以下SQL语法均适用于GBase数据库，大部分适用于Oracle数据库。</font>**
 <br/>
 
-# Oracle系统操作
+# 环境设置
+### 语法格式
 ```sql
--- 创建用户
-create user 用户名 identified by 密码;
--- （若提示“invalid common user or role name”，在用户名前面加上“C##”试试）
-
--- 授予用户权限
-grant connect, resource, dba to 用户名;
-
--- 连接到数据库
-conn 用户名;
+-- 设置语法为oracle模式
+set environment sqlmode 'oracle';
+-- 设置语法为gbase模式
+set environment sqlmode 'gbase';
+```
+### 锁等待策略
+```sql
+-- 设置全局锁等待时间
+set lock mode to wait 秒数;
+--设置锁不等待
+set lock mode to not wait;
+-- 设置锁一直等待
+set lock mode to wait;
+```
+### 隔离级别
+```sql
+-- 设置为脏读
+set isolation to dirty read;
+-- 设置为提交读
+set isolation to committed read;
+-- 设置为游标读
+set isolation to cursor stability;
+-- 设置为可重复读
+set isolation to repeatable read;
 ```
 <br/><br/>
-
 
 # Create
 ### 创建数据库
@@ -543,14 +558,17 @@ commit;
 -- 回滚事务
 rollback;
 ```
-### 隔离级别
+### Oracle系统操作
 ```sql
--- 设置全局锁等待时间
-set lock mode to wait 秒数;
---设置锁不等待
-set lock mode to not wait;
--- 设置锁一直等待
-set lock mode to wait;
+-- 创建用户
+create user 用户名 identified by 密码;
+-- 若提示“invalid common user or role name”，在用户名前面加上“C##”
+
+-- 授予用户权限
+grant connect, resource, dba to 用户名;
+
+-- 连接到数据库
+conn 用户名;
 ```
 <br/><br/>
 
