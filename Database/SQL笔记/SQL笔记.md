@@ -333,20 +333,24 @@ alter fragment on table 分片表名 attach 普通表名;
 ```sql
 info tables;
 ```
-### 单表全部查询
+### 基本操作
 ```sql
+-- 查询指定列
+select 列名, 列名 ... from 表名;
+
+-- 查询全部列
+select * from 表名;
+
+-- 返回满足指定条件的结果集
 select * from 表名 where 条件;
-```
-### 指定查询分片表的某个分片
-```sql
-select * from 表名 partition 分片名;
-```
-### 跳过select结果中前面的K行
-```sql
+
+-- 返回去重后的结果集
+select distinct * from 表名;
+
+-- 跳过查询结果的前K行
 select skip K * from 表名;
-```
-### 最多返回select结果中前面的K行
-```sql
+
+-- 最多返回查询结果的前K行
 select first K * from 表名;
 ```
 ### 集合操作
