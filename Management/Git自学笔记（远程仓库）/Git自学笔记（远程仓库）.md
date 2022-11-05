@@ -109,6 +109,14 @@ git pull
 git branch --set-upstream-to=origin/远程分支名 本地分支名
 ```
 一般这两个分支名是一样的。
+#### push/pull/clone报错
+平时push/pull/clone正常，但突然某一天报错：
+```
+kex_exchange_identification: Connection closed by remote host
+Connection closed by XX.XXX.XXX.XXX port XX
+fatal: Could not read from remote repository.
+```
+试着关闭VPN或系统代理，重新push/pull/clone。
 <br/><br/>
 
 # 参考资料

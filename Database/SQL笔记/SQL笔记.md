@@ -296,8 +296,9 @@ alter table 表名 drop column 列名;
 ### 约束
 #### 添加约束
 ```sql
-alter table 表名 add constraint 约束名;
+alter table 表名 add constraint 约束类型 约束内容 constraint 约束名;
 ```
+若不需要为约束起名，可省略“constraint 约束名”这两部分。
 #### 删除约束
 ```sql
 -- 通过约束名删除约束
@@ -335,56 +336,55 @@ info tables;
 ```
 ### 基本操作
 ```sql
--- 查询指定列
-select 列名, 列名 ... from 表名;
-
 -- 查询全部列
 select * from 表名;
 
 -- 返回满足指定条件的结果集
-select * from 表名 where 条件;
+select 列表达式 from 表名 where 条件;
 
 -- 返回去重后的结果集
-select distinct * from 表名;
+select distinct 列表达式 from 表名;
 
 -- 跳过查询结果的前K行
-select skip K * from 表名;
+select skip K 列表达式 from 表名;
 
 -- 最多返回查询结果的前K行
-select first K * from 表名;
+select first K 列表达式 from 表名;
 ```
 ### 集合操作
 ```sql
 -- union：对两个select的结果进行并集操作，去除重复行，并按默认规则排序
-select * from 表1 union select * from 表2;
+select 列表达式 from 表1 union select 列表达式 from 表2;
 
 -- union all：对两个select的结果进行并集操作，不去除重复行也不排序
-select * from 表1 union all select * from 表2;
+select 列表达式 from 表1 union all select 列表达式 from 表2;
 
 -- intersect：对两个select的结果进行交集操作（即取两个select结果的共同部分）
-select * from 表1 intersect select * from 表2;
+select 列表达式 from 表1 intersect select 列表达式 from 表2;
 
 -- except：对对两个select的结果取差集（第一个select结果中去掉和第二个select结果相同的部分）
-select * from 表1 except select * from 表2;
+select 列表达式 from 表1 except select 列表达式 from 表2;
 ```
 ### 别名
 常用于涉及多表操作的select语句中，为表或列增加别名以简化sql语句。
 ```sql
 -- 为表增加别名
-select 列名 from 表名 as 别名;
+select 列表达式 from 表名 as 别名;
 -- 为列增加别名
-select 列或表达式 as 别名 from 表名;
+select 列表达式 as 别名 from 表名;
 ```
 在Oracle中，as关键字可省略。
+<br/>
+
 ### join
 ![](SQL笔记_1.png)
 
 join用于把多个表中的行结合起来。
 首先在待结合的多个表中分别指定一个列，然后这些表对应列中值相等的合并为一行。指定列的列名可以互不相同。
 ```sql
-select 列或表达式 from 左表名 join 右表名 on 左表.指定列名 = 右表.指定列名
+select 列表达式 from 左表名 join 右表名 on 左表.列名 = 右表.列名
 ```
-join分为inner join、full join、left join和right join四种，区别见上表。
+join语法中常用的有inner join、full join、left join和right join四种，区别见上表。
 
 这里也举个例子，先建如下两张表，表A存储学生的姓名与学号。
 | id | name |
@@ -400,7 +400,7 @@ join分为inner join、full join、left join和right join四种，区别见上�
 | 2  | 75  |
 | 4  | 95  |
 #### inner join
-inner join将多张表中对应列中值相等的合并为一行，若不相等或者值缺少，则整行舍弃。
+将多张表对应列中值相等的合并为一行，若不相等或者值缺少，则整行舍弃。
 执行如下sql语句：
 ```sql
 select A.id, A.name, B.sum from A join B on A.id=B.id;
@@ -440,6 +440,7 @@ select A.id, A.name, B.sum from A left join B on A.id=B.id;
 
 #### right join
 同理，合并时对应列中值不相等或者缺少，右表中对应行保留，左表中对应行舍弃。
+<br/>
 
 ### group by
 一般和聚合函数一起使用。
@@ -468,22 +469,18 @@ select grade, class, avg(score) from T group by grade, class;
 | ...   | ...   | ...   |
 
 在group by的返回结果中，每组仅显示为一行，但每组是由原表中的多行构成的，对于group by的指定列，这多行的值是一样的，可以直接显示；但对于非指定列，原来的多行数据并不一样，那该显示为什么值呢？因此group by一般需要聚合函数，对非指定列进行求和、求平均、计数等方式计算出一个值来代表这一组。
+<br/>
 
 ### order by
 给出列名，按指定列中的值大小进行升序排序。若要按降序排行，添加关键字“desc”。
 ```sql
 -- 升序
-select 列名 from 表名 order by 列名
+select 列表达式 from 表名 order by 列名
 -- 降序
-select 列名 from 表名 order by 列名 desc
+select 列表达式 from 表名 order by 列名 desc
 ```
 注意：order by无法对子查询使用。
-
-### distinct
-去除select结果中相同的值
-```sql
-select distinct 列名或列表达式 from 表名;
-```
+<br/>
 
 ### case when
 ```sql
@@ -494,7 +491,39 @@ case
     else 列表达式4
 end
 ```
-其中，when ... then 可一直叠加。case when语法整体作为一个列表达式使用。
+其中，when ... then 可一直叠加。case when语法整体作为一个列表达式，或者一个值使用。
+<br/>
+
+### like 模糊查询
+适用于char、varchar等类型，一般用于where子句中，来搜索符合条件的字符串。同样，可以使用“not like”来避开符合条件的字符串。
+
+使用like查询，可使用类似于正则表达式的特殊字符来匹配目标字符串。若不使用特殊字符，则like功能与“=”相同，进行全词匹配。
+#### 使用“%”来匹配0个或多个字符
+```sql
+-- 寻找以“Tom”开头的字符串
+select * from Person where name like 'Tom%';
+-- 寻找以“Jackson”结尾的字符串
+select * from Person where name like '%Jackson';
+-- 寻找含有“Van”的字符串
+select * from Person where name like '%Van%';
+```
+#### 使用“_”限制匹配的字符数量
+每个“_”表示匹配一个任意字符。
+```sql
+-- 寻找以“Tom”开头，且后面还有任意4个字符的字符串
+select * from Person where name like 'Tom____';
+
+-- 寻找含一个“A”，且其前后各有一个字符的字符串
+select * from Person where name like '_A_';
+```
+
+#### 正则表达式匹配
+使用以下函数：
+regexp_like(列名，正则表达式)
+```sql
+-- 寻找以“BMW X”开头，后面跟着一个字符3、4或5的字符串，也就是匹配“BMW X3”、“BMW X4” 、“BMW X5”这三种字符串。
+select * from Car where name regexp_like(name, 'BMW X[3-5]');
+```
 <br/><br/>
 
 # 特殊数据类型
@@ -513,23 +542,45 @@ NUMTOYMINTERVAL
 <br/><br/>
 
 # 函数
-### 聚合函数
+### 字符型相关
+```sql
+-- 连接两个字符串
+concat(列表达式, 列表达式)
+
+-- 取字符串长度
+length(列表达式)
+
+-- 转大写字母
+upper(列表达式)
+
+-- 转小写字母
+lower(列表达式)
+
+-- 取字符串从pos开始的连续len个字符（第一位坐标为1）
+substr(列表达式, pos, len)
+```
+
+### 数值型相关
 ```sql
 -- 计算指定列中行的数量
-count(列名)
+count(列表达式)
 
 -- 求指定列中值的和
-sum(列名)
+sum(列表达式)
 
 -- 求指定列平均值
-avg(列名)
+avg(列表达式)
 
 -- 求指定列中最大值
-max(列名)
+max(列表达式)
 
 -- 求指定列中最小值
-min(列名)
+min(列表达式)
+
+-- 求指定列对指定值取模后的结果
+mod(列表达式，值)
 ```
+
 
 ### to_date
 
