@@ -273,6 +273,12 @@ insert first
 ```
 <font color=#ff0000>使用first关键字时：对于select出来的每个元组，仅执行首个匹配的when语句中的插入操作。
 使用all关键字时：对于select出来的每个元组，执行所有匹配的when语句中的插入操作。</font>
+
+### 从外部文件导入数据（load命令）
+```sql
+load from 文件名 insert into 表名;
+```
+在外部文件中，待插入的数据按行用回车隔开，按列用“|”隔开。
 <br/><br/>
 
 # update & alter
@@ -332,7 +338,11 @@ alter fragment on table 分片表名 attach 普通表名;
 # select
 ### 查看库中所有表和视图
 ```sql
+-- gbase写法
 info tables;
+
+--Oracle写法
+select table_name from user_tables;
 ```
 ### 基本操作
 ```sql
@@ -494,7 +504,23 @@ end
 其中，when ... then 可一直叠加。case when语法整体作为一个列表达式，或者一个值使用。
 <br/>
 
-### like 模糊查询
+### where中的判断语句
+#### 判断元素是否在集合中
+使用in或not in关键字。
+```sql
+select 列表达式 from 表名 where 列名 in 集合或子查询;
+```
+其中，集合可通过以下形式定义：
+```sql
+(值1, 值2, 值3 ...)
+```
+
+#### 判断元素是否为空
+使用is NULL或is not NULL关键字。
+```sql
+select 列表达式 from 表名 where 列名 is NULL;
+```
+#### like 模糊查询
 适用于char、varchar等类型，一般用于where子句中，来搜索符合条件的字符串。同样，可以使用“not like”来避开符合条件的字符串。
 
 使用like查询，可使用类似于正则表达式的特殊字符来匹配目标字符串。若不使用特殊字符，则like功能与“=”相同，进行全词匹配。
@@ -580,19 +606,50 @@ min(列表达式)
 -- 求指定列对指定值取模后的结果
 mod(列表达式，值)
 ```
+### 类型转换
 
+#### to_date
 
-### to_date
+#### to_char
 
-### to_char
-
-### to_number
+#### to_number
 
 
 <br/><br/>
 
 
 # 其他
+### 执行sql脚本
+```sql
+-- gbase写法，在Shell命令中执行
+dbaccess 库名 脚本路径
+
+-- Oracle写法，在sql终端中执行
+@脚本路径
+```
+
+若要将脚本执行结果输出到文件，则：
+```sql
+-- gbase写法，在Shell命令中执行
+dbaccess 库名 脚本路径 -> 结果文件路径
+
+-- Oracle写法，在sql脚本头部加入：
+spool 结果文件路径
+-- 在sql脚本尾部加入：
+spool off
+```
+若不希望Oracle将执行结果输出到屏幕，可以在sql脚本头部加入：
+```sql
+set termout off
+```
+### 查看sql执行时间
+```sql
+-- gbase写法，在Shell命令中执行
+export DBACCESS_SHOW_TIME=1
+
+-- Oracle写法，在sql终端中执行
+set timing on;
+```
 ### 注释
 单行注释
 ```sql
@@ -614,8 +671,8 @@ commit;
 rollback;
 ```
 ### Oracle系统操作
+#### 创建用户
 ```sql
--- 创建用户
 create user 用户名 identified by 密码;
 -- 若提示“invalid common user or role name”，在用户名前面加上“C##”
 
