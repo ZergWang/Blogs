@@ -336,6 +336,11 @@ alter fragment on table 分片表名 attach 普通表名;
 
 
 # select
+### 查看当前库名
+```sql
+--Oracle写法
+select name from v$database;
+```
 ### 查看库中所有表和视图
 ```sql
 -- gbase写法
@@ -621,16 +626,16 @@ mod(列表达式，值)
 # 其他
 ### 执行sql脚本
 ```sql
--- gbase写法，在Shell命令中执行
+-- gbase写法，在终端中执行
 dbaccess 库名 脚本路径
 
--- Oracle写法，在sql终端中执行
+-- Oracle写法，在sql中执行
 @脚本路径
 ```
 
 若要将脚本执行结果输出到文件，则：
 ```sql
--- gbase写法，在Shell命令中执行
+-- gbase写法，在终端中执行
 dbaccess 库名 脚本路径 -> 结果文件路径
 
 -- Oracle写法，在sql脚本头部加入：
@@ -644,10 +649,10 @@ set termout off
 ```
 ### 查看sql执行时间
 ```sql
--- gbase写法，在Shell命令中执行
+-- gbase写法，在终端中执行
 export DBACCESS_SHOW_TIME=1
 
--- Oracle写法，在sql终端中执行
+-- Oracle写法，在sql中执行
 set timing on;
 ```
 ### 注释
@@ -671,7 +676,7 @@ commit;
 rollback;
 ```
 ### Oracle系统操作
-#### 创建用户
+#### 用户管理
 ```sql
 create user 用户名 identified by 密码;
 -- 若提示“invalid common user or role name”，在用户名前面加上“C##”
@@ -681,6 +686,26 @@ grant connect, resource, dba to 用户名;
 
 -- 连接到数据库
 conn 用户名;
+
+-- 查看当前用户（在sql中执行）
+show user
+```
+#### 数据导入
+要将数据导入Oracle中的表，需要数据文件和导入脚本两个文件
+
+导入脚本编写：
+```bash
+load data infile '数据文件路径' 
+truncate into table 表名
+fields terminated by '|'
+optionally enclosed by '"'
+(列名, 列名, 列名 ...)
+```
+其中，数据文件路径写成绝对路径，并保证Oracle系统用户操作该数据文件的权限。数据文件中，数据按行用回车隔开，按列用统一的分隔符隔开，并在脚本文件的fields terminated中指定。若数据文件中某些数据有双引号，可在脚本文件中用optionally enclosed命令忽略。
+
+然后在终端中执行：
+```bash
+sqlldr userid=用户名/密码@库名 control=脚本文件路径
 ```
 <br/><br/>
 

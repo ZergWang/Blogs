@@ -110,17 +110,15 @@ s.clear()   //清空集合
 #include <ctime>   
 
 srand(time(0));  //设置随机数种子
-
-int a = rand();  //从[0 , 32767]中取随机整数
-
-int b = rand() % n + k;   //在[ k, n-1+k ]中取随机整数
+int a = rand();  //从[0, RAND_MAX]随机取整数，RAND_MAX一般为2^31-1
+int b = rand() % n + k;   //从[k, n-1+k]中取随机整数
 ```
 随机生成浮点数：
 ```cpp
 double c = rand() / (RAND_MAX + 0.0);
 double d = rand() / (double)RAND_MAX;  
 ```
-两种方法一样，都是生成 [ 0 , 1 ] 之间的浮点数，若有范围需要，再乘以相应的系数扩大范围，加上相应常数移动范围即可。
+两种方法一样，都是生成 [0, 1] 之间的浮点数，若有范围需要，再乘以相应的系数扩大范围，加上相应常数移动范围即可。
 <br/><br/>
  
 
