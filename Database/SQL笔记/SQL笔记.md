@@ -336,11 +336,23 @@ alter fragment on table 分片表名 attach 普通表名;
 
 
 # select
+### select语法顺序与执行顺序
+```sql
+-- 语法顺序
+select ... from ... where ... group by ... having ... order by ... limit ...
+
+-- 执行顺序
+from -> where -> group by -> having -> select -> distinct -> order by -> limit
+```
+<br/>
+
 ### 查看当前库名
 ```sql
 --Oracle写法
 select name from v$database;
 ```
+<br/>
+
 ### 查看库中所有表和视图
 ```sql
 -- gbase写法
@@ -349,6 +361,8 @@ info tables;
 --Oracle写法
 select table_name from user_tables;
 ```
+<br/>
+
 ### 基本操作
 ```sql
 -- 查询全部列
@@ -363,9 +377,13 @@ select distinct 列表达式 from 表名;
 -- 跳过查询结果的前K行
 select skip K 列表达式 from 表名;
 
--- 最多返回查询结果的前K行
+-- 返回查询结果的前K行
 select first K 列表达式 from 表名;
+-- 或者
+select 列表达式 from 表名 where rownum <= K;
 ```
+<br/>
+
 ### 集合操作
 ```sql
 -- union：对两个select的结果进行并集操作，去除重复行，并按默认规则排序
@@ -380,6 +398,8 @@ select 列表达式 from 表1 intersect select 列表达式 from 表2;
 -- except：对对两个select的结果取差集（第一个select结果中去掉和第二个select结果相同的部分）
 select 列表达式 from 表1 except select 列表达式 from 表2;
 ```
+<br/>
+
 ### 别名
 常用于涉及多表操作的select语句中，为表或列增加别名以简化sql语句。
 ```sql
@@ -389,6 +409,18 @@ select 列表达式 from 表名 as 别名;
 select 列表达式 as 别名 from 表名;
 ```
 在Oracle中，as关键字可省略。
+<br/>
+
+### case when
+```sql
+case 
+    when 判断条件1 then 列表达式1
+    when 判断条件2 then 列表达式2
+    when 判断条件3 then 列表达式3 
+    else 列表达式4
+end
+```
+其中，when ... then 可一直叠加。case when语法整体作为一个列表达式，或者一个值使用。
 <br/>
 
 ### join
@@ -457,59 +489,7 @@ select A.id, A.name, B.sum from A left join B on A.id=B.id;
 同理，合并时对应列中值不相等或者缺少，右表中对应行保留，左表中对应行舍弃。
 <br/>
 
-### group by
-一般和聚合函数一起使用。
-group by后接列名，将表中的每行按指定列进行分组。也就是说，对于每一行，它们指定列的值相等的话会被分到同一组。
-```sql
-select 列或表达式 from 表名 group by 指定列;
-```
-假设有表T记录了学校中每个学生的成绩：
-| grade | class | id | score |
-| ----- | ----- | -- | ----- |
-| 1     | 1     | 1  | 80    |
-| 1     | 1     | 2  | 90    |
-| 2     | 3     | 3  | 99    |
-| 2     | 3     | 5  | 99    |
-| ...   | ...   | ...| ...   |
-
-若要显示每个班学生的平均成绩：
-```sql
-select grade, class, avg(score) from T group by grade, class;
-```
-得到结果：
-| grade | class | score |
-| ----- | ----- | ----- |
-| 1     | 1     | 85    |
-| 2     | 3     | 99    |
-| ...   | ...   | ...   |
-
-在group by的返回结果中，每组仅显示为一行，但每组是由原表中的多行构成的，对于group by的指定列，这多行的值是一样的，可以直接显示；但对于非指定列，原来的多行数据并不一样，那该显示为什么值呢？因此group by一般需要聚合函数，对非指定列进行求和、求平均、计数等方式计算出一个值来代表这一组。
-<br/>
-
-### order by
-给出列名，按指定列中的值大小进行升序排序。若要按降序排行，添加关键字“desc”。
-```sql
--- 升序
-select 列表达式 from 表名 order by 列名
--- 降序
-select 列表达式 from 表名 order by 列名 desc
-```
-注意：order by无法对子查询使用。
-<br/>
-
-### case when
-```sql
-case 
-    when 判断条件1 then 列表达式1
-    when 判断条件2 then 列表达式2
-    when 判断条件3 then 列表达式3 
-    else 列表达式4
-end
-```
-其中，when ... then 可一直叠加。case when语法整体作为一个列表达式，或者一个值使用。
-<br/>
-
-### where中的判断语句
+### where
 #### 判断元素是否在集合中
 使用in或not in关键字。
 ```sql
@@ -555,7 +535,63 @@ regexp_like(列名，正则表达式)
 -- 寻找以“BMW X”开头，后面跟着一个字符3、4或5的字符串，也就是匹配“BMW X3”、“BMW X4” 、“BMW X5”这三种字符串。
 select * from Car where name regexp_like(name, 'BMW X[3-5]');
 ```
+<br/>
+
+### group by
+一般和聚合函数一起使用。
+group by后接列名，将表中的每行按指定列进行分组。也就是说，对于每一行，它们指定列的值相等的话会被分到同一组。
+```sql
+select 列表达式 from 表名 group by 指定列;
+```
+假设有表T记录了学校中每个学生的成绩：
+| grade | class | id | score |
+| ----- | ----- | -- | ----- |
+| 1     | 1     | 1  | 80    |
+| 1     | 1     | 2  | 90    |
+| 2     | 3     | 3  | 99    |
+| 2     | 3     | 5  | 99    |
+| ...   | ...   | ...| ...   |
+
+若要显示每个班学生的平均成绩：
+```sql
+select grade, class, avg(score) from T group by grade, class;
+```
+得到结果：
+| grade | class | score |
+| ----- | ----- | ----- |
+| 1     | 1     | 85    |
+| 2     | 3     | 99    |
+| ...   | ...   | ...   |
+
+在group by的返回结果中，每组仅显示为一行，但每组是由原表中的多行构成的，对于group by的指定列，这多行的值是一样的，可以直接显示；但对于非指定列，原来的多行数据并不一样，那该显示为什么值呢？因此group by一般需要聚合函数，对非指定列进行求和、求平均、计数等方式计算出一个值来代表这一组。
+
+也就是说，对于select后的列表达式中出现的列，若取列的原值，则该列必须同时作为group by的对象，否则该列必须经聚合函数计算。
+```sql
+-- 非法写法
+select name, id from student group by name;
+
+-- 合法写法
+select name, id from student group by name, id;
+select name, max(id) from student group by name;
+```
+<br/>
+
+### having
+用法与where类似，后面接条件判断。但两者在select语句中的执行顺序不同。where过滤原始表或join运算后的表中不符合条件的行，having则在group by之后执行，用于过滤掉不符合条件的组。
+<br/>
+
+### order by
+给出列名，按指定列中的值大小进行升序排序。默认为升序排序。若要按降序排行，添加关键字“desc”。如果排序条件涉及多列，则继续在语句后面添加列名。
+```sql
+-- 降序
+select 列表达式 from 表名 order by 列名 desc
+
+-- 按列名1排序，若列1对应值相同，则按列2排序
+select 列表达式 from 表名 order by 列1 desc, 列2 asc,  ...
+```
+注意：order by无法对子查询使用。
 <br/><br/>
+
 
 # 特殊数据类型
 ### date
@@ -619,6 +655,13 @@ mod(列表达式，值)
 
 #### to_number
 
+### 其他
+#### nvl
+空值判断函数，如果列表达式A的结果非NULL，则返回A的值，否则返回B的值。
+```sql
+nvl(列表达式A, 列表达式B)
+```
+#### listagg
 
 <br/><br/>
 
@@ -654,6 +697,16 @@ export DBACCESS_SHOW_TIME=1
 
 -- Oracle写法，在sql中执行
 set timing on;
+```
+### 查看执行计划
+```sql
+-- gbase写法，在sql中执行，在当前路径下生成文件sqexplain.out
+set explain on;
+
+-- oracle写法，在sql中执行，for后面接需要查看执行计划的语句
+--（只会生成执行计划，目标语句不会执行）
+explain plan for SQL语句
+select * from table (DBMS_XPLAN.DISPLAY);
 ```
 ### 注释
 单行注释
@@ -701,7 +754,7 @@ fields terminated by '|'
 optionally enclosed by '"'
 (列名, 列名, 列名 ...)
 ```
-其中，数据文件路径写成绝对路径，并保证Oracle系统用户操作该数据文件的权限。数据文件中，数据按行用回车隔开，按列用统一的分隔符隔开，并在脚本文件的fields terminated中指定。若数据文件中某些数据有双引号，可在脚本文件中用optionally enclosed命令忽略。
+其中，数据文件路径写成绝对路径，并保证Oracle系统用户操作该数据文件的权限。数据文件中，数据按行用回车隔开，按列用统一的分隔符隔开，分隔符要在脚本文件的fields terminated中说明。若数据文件中某些数据有双引号，可在脚本文件中用optionally enclosed命令忽略。
 
 然后在终端中执行：
 ```bash
@@ -711,3 +764,5 @@ sqlldr userid=用户名/密码@库名 control=脚本文件路径
 
 # 参考资料
 [SQL 教程 | 菜鸟教程](https://www.runoob.com/sql/sql-join.html)
+
+[SQL中select的执行顺序](https://blog.csdn.net/weixin_43480466/article/details/122974596)
