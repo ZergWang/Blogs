@@ -56,7 +56,7 @@ initdb -D C:\pg\data
 #### 数据库注册（该步骤可跳过）
 将数据库服务注册为Windows的系统服务，方便以后启停数据库服务。以下命令需要在有管理员权限的cmd中使用。
 ```bash
-pg_ctl register -N "pg" -D "C:\pg\data" -w -S demand
+pg_ctl register -N pg -D "C:\pg\data" -w -S demand
 ```
 参数解释如下：
 - -w参数指定数据库服务器需等待操作完成，并给出操作的反馈
@@ -65,7 +65,12 @@ pg_ctl register -N "pg" -D "C:\pg\data" -w -S demand
 
 - -D参数指定数据库配置文件的位置，与上一条命令中的保持一致
 
-- -U参数指定PostgreSQL在Windows系统中对应的服务名，以后启停数据库可通过该服务名进行。
+- -N参数指定PostgreSQL在Windows系统中对应的服务名（本人使用的服务名为“pg”），之后可使用含有该服务名的命令来启停数据库。
+
+如果要撤销上述的注册，可：
+```bash
+pg_ctl unregister -N 服务名
+```
 
 至此，PostgreSQL数据库编译安装成功。
 <br/><br/>
@@ -78,19 +83,30 @@ pg_ctl status -D 配置文件目录
 
 # 启动数据库
 pg_ctl start -D 配置文件目录
-# 如果数据库已注册为Windows系统服务，则可：
+# 如果数据库已注册为Windows系统服务，则可在有管理员权限的cmd中：
 net start 系统服务名
 
 # 关闭数据库
 pg_ctl stop -D 配置文件目录
+# 如果数据库已注册为Windows系统服务，则可在有管理员权限的cmd中：
+net stop 系统服务名
 
+# 进入数据库（初始数据库名为postgres）
+psql -d 数据库名
 ```
-
 <br/><br/>
 
-# 使用VS Code调试PostgreSQL
-
-
+# 调试PostgreSQL
+#### gdb调试
+首先在psql命令行下查找数据库服务的进程号：
+```sql
+select pg_backend_pid();
+```
+然后直接在cmd中：
+```bash
+gdb attach 进程号
+```
+#### VS Code调试
 
 <br/><br/>
 
