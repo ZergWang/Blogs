@@ -1,6 +1,6 @@
 # 编译前的准备
 
-本笔记适用于个人开发者在单机单节点下PostgreSQL软件的安装与调试。
+本笔记适用于个人开发者在单机单节点下PostgreSQL 13软件的安装与调试。
 
 #### 下载并配置编译环境
 
@@ -18,11 +18,10 @@ pacman --needed -S mingw-w64-x86_64-gdb
 
 #### 下载并解压PostgreSQL源码
 
-可通过PostgreSQL的Github仓库下载，也可以从官网下载。
-
-Github地址：https://github.com/postgres/postgres
+可通过PostgreSQL的官网下载。注意选择PostgreSQL 13版本（13.0到13.9均可，本人使用的是13.9版本）
 
 官网地址：https://www.postgresql.org/ftp/source/
+
 <br/><br/>
 
 # 编译与安装
@@ -35,7 +34,7 @@ MSYS2 MinGW x64下的命令与Shell一致，C盘根目录对应的地址为“/c
 ```
 其中，--perfix指定了编译完成后的安装包生成的位置（以下简称为安装目录），如上述命令，本人的安装目录为C盘下pg下的installer目录。
 
-编译完成后进入源码目录，修改src目录下的Makefile.global文件，找到以“CFLAGS = -Wall”以及“CXXFLAGS = -Wall”开头的两行，将这两行命令中的“-O2”参数去掉。
+编译完成后进入源码目录，修改src目录下的Makefile.global文件，找到以“CFLAGS = -Wall”以及“CXXFLAGS = -Wall”开头的两行，将这两行命令中的“-O2”参数去掉。（注意：以上Makefile.global的修改仅适用于PostgreSQL 13的源码）
 
 #### 编译并安装PostgreSQL
 打开MSYS2 MinGW x64，进入PostgreSQL源码目录后执行以下命令：
@@ -106,8 +105,6 @@ select pg_backend_pid();
 ```bash
 gdb attach 进程号
 ```
-#### VS Code调试
-
 <br/><br/>
 
 
