@@ -1,4 +1,4 @@
-**<font color='ff0000'> 若无特殊说明，则以下SQL语法均适用于GBase数据库，大部分适用于Oracle数据库。</font>**
+**<font color='ff0000'> 若无特殊说明，则以下SQL语法均适用于GBase数据库，适用于Oracle数据库的操作会特别标明。</font>**
 <br/>
 
 # 环境设置
@@ -275,10 +275,29 @@ insert first
 使用all关键字时：对于select出来的每个元组，执行所有匹配的when语句中的插入操作。</font>
 
 ### 从外部文件导入数据（load命令）
+#### GBase操作步骤
 ```sql
-load from 文件名 insert into 表名;
+load from 数据文件路径 insert into 表名;
 ```
-在外部文件中，待插入的数据按行用回车隔开，按列用“|”隔开。
+在数据文件中，待插入的数据按行用回车隔开，按列用“|”隔开。
+
+#### Oracle操作步骤
+导入前需准备数据文件和导入脚本两个文件
+
+导入脚本编写：
+```bash
+load data infile '数据文件路径' 
+truncate into table 表名
+fields terminated by '|'
+optionally enclosed by '"'
+(列名, 列名, 列名 ...)
+```
+其中，数据文件路径写成绝对路径，并保证Oracle系统用户操作该数据文件的权限。数据文件中，数据按行用回车隔开，按列用统一的分隔符隔开，分隔符要在脚本文件的fields terminated中说明。若数据文件中某些数据有双引号，可在脚本文件中用optionally enclosed命令忽略。
+
+然后在终端中执行：
+```bash
+sqlldr userid=用户名/密码@库名 control=脚本文件路径
+```
 <br/><br/>
 
 # update & alter
@@ -337,6 +356,8 @@ alter fragment on table 分片表名 attach 普通表名;
 
 
 # 特殊数据类型
+### blob
+### clob
 ### date
 ### datetime
 用于日期和时间的记录。默认格式：YYYY-MM-DD HH:MM:SS:FFF，可通过GL_DATETIME环境变量来修改。
@@ -413,8 +434,7 @@ commit;
 -- 回滚事务
 rollback;
 ```
-### Oracle系统操作
-#### 用户管理
+### Oracle用户管理
 ```sql
 create user 用户名 identified by 密码;
 -- 若提示“invalid common user or role name”，在用户名前面加上“C##”
@@ -427,21 +447,4 @@ conn 用户名;
 
 -- 查看当前用户（在sql中执行）
 show user
-```
-#### 数据导入
-要将数据导入Oracle中的表，需要数据文件和导入脚本两个文件
-
-导入脚本编写：
-```bash
-load data infile '数据文件路径' 
-truncate into table 表名
-fields terminated by '|'
-optionally enclosed by '"'
-(列名, 列名, 列名 ...)
-```
-其中，数据文件路径写成绝对路径，并保证Oracle系统用户操作该数据文件的权限。数据文件中，数据按行用回车隔开，按列用统一的分隔符隔开，分隔符要在脚本文件的fields terminated中说明。若数据文件中某些数据有双引号，可在脚本文件中用optionally enclosed命令忽略。
-
-然后在终端中执行：
-```bash
-sqlldr userid=用户名/密码@库名 control=脚本文件路径
 ```

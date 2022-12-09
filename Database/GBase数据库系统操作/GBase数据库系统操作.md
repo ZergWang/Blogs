@@ -6,6 +6,7 @@
 -c    查看实例配置文件（onconfig）
 -d    查看dbspace和chunk信息
 -k    查看锁信息
+-l    查看物理日志和逻辑日志相关信息
 -m    查看最近的运行日志（即online.log）
 -x    查看事务信息
 -V    查看软件版本信息（-version亦可）
@@ -51,6 +52,7 @@ onstat -g命令用于查看数据库调试信息
 ```sql
 -a dbspace名       往指定dbspace中添加chunk
 -d dbspace名       删除指定dbspace
+-c -d dbspace名    创建dbspace（支持多种类型）并指定其名字
 -c -S dbspace名    创建sbspace，并指定其名字
 -c -b dbspace名    创建blobspace，并指定其名字
 -c -P dbspace名    创建plogdbs，并指定其名字
@@ -60,6 +62,9 @@ onstat -g命令用于查看数据库调试信息
 -s 数字    指定dbspace的初始chunk的大小
 -o 数字    为达到dbspace所需的偏移量
 ```
+
+### onparams 
+用于增减逻辑日志文件
 <br/><br/>
 
 
