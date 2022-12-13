@@ -23,18 +23,23 @@ onstat -g命令用于查看数据库调试信息
 -g sql    查看隔离级别和锁模式
 ```
 ### oninit
-用于启动数据库软件，将数据库模式转为On-Line
+用于启动数据库软件，不加任何参数时将数据库从Off-Line模式转为On-Line模式。
 ```sql
--i    初始化dbspace（仅数据库安装完成后第一次启动时使用）
+-i    初始化rootdbs并从Off-Line模式转为On-Line模式（一般仅安装完成后第一次启动时使用该命令）
+-s    将数据库从Off-Line模式转为Quiescent模式
 -v    启动时显示提示信息 
 -y    对所有交互信息均以“yes”回应
 ```
 ### onmode
 主要用于更改数据库运行模式，部分命令可更改数据库运行参数。
 ```sql
--k    清理共享内存，将数据库转为Off-Line模式
+-k    将数据库转为Off-Line模式
+-m    从Quiescent模式转为On-Line模式
 -y    对所有交互信息均以“yes”回应
+-s    从On-Line模式转为Quiescent模式
+-u    立即从On-Line模式转为Quiescent模式
 ```
+-s和-u的区别在于，执行前者后，现存用户仍能继续使用，但新用户会被拒绝连接至数据库。待所有用户退出后数据库才转为Quiescent模式。后者执行后所有用户立刻被断开，所有未提交事务rollback，数据库立刻切换为Quiescent模式。
 ### onclean
 当使用onmode命令无法关闭数据库，或数据库无法重启时，使用onclean强制关闭
 ```sql
@@ -58,13 +63,18 @@ onstat -g命令用于查看数据库调试信息
 -c -P dbspace名    创建plogdbs，并指定其名字
 
 # 以下参数在创建或添加dbspace时使用
--p 路径    指定dbspace的路径
+-p 路径    指定dbspace的文件路径
 -s 数字    指定dbspace的初始chunk的大小
 -o 数字    为达到dbspace所需的偏移量
 ```
 
 ### onparams 
 用于增减逻辑日志文件
+```sql
+-a -d dbspace名 -s 整数    在指定dbspace中添加一个指定大小的逻辑日志
+-d -l 逻辑日志编号         删除指定的逻辑日志（其编号可用onstat -l命令查得）
+
+```
 <br/><br/>
 
 

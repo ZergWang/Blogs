@@ -281,6 +281,10 @@ load from 数据文件路径 insert into 表名;
 ```
 在数据文件中，待插入的数据按行用回车隔开，按列用“|”隔开。
 
+对于特殊数据类型（例如clob等），可使用自带的filetoclob函数进行插入，其中，“文件位置”这一参数用于指明文件在服务器端还是在客户端，该参数可选值为'server'或'client'。
+```sql
+insert into 表名 values (filetoclob(路径名, 文件位置));
+```
 #### Oracle操作步骤
 导入前需准备数据文件和导入脚本两个文件
 
@@ -356,8 +360,18 @@ alter fragment on table 分片表名 attach 普通表名;
 
 
 # 特殊数据类型
-### blob
-### clob
+### 大对象
+用于存储大文件、多媒体文件的一种数据类型。有简单大对象和智能大对象两种类型。每种类型下通过存储文本文件还是二进制文件又可分为总计四种类型。
+
+| 类型 | 简单大对象 | 智能大对象 |
+| ---  | ---- | ---|
+| 数据最大长度 | 2GB |  4TB |
+| 数据访问方式 | 仅顺序访问| 可顺序访问，也可随机访问 |
+| 存储位置| datadbs 或 blobspace| sbspace|
+| 存储文本文件的类型| text | clob |
+| 存储二进制文件的类型| byte | blob |
+
+简单大对象的insert可通过load命令从文件中加载，智能大对象通过filetoblob和filetoclob函数从文件中加载。
 ### date
 ### datetime
 用于日期和时间的记录。默认格式：YYYY-MM-DD HH:MM:SS:FFF，可通过GL_DATETIME环境变量来修改。
