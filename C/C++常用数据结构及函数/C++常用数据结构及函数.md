@@ -153,6 +153,8 @@ void qsort(a, numSize, size, Cmp)
 - size：每个元素的大小  
 - Cmp：比较函数，按两元素的大小返回1、0或-1。该函数需要用户自定义，其参数为两个空指针，指向待比较元素的地址。
 
+<font color="ff0000">注意：本文为了方便，在Cmp函数的返回值处使用“return 元素a-元素b”这种简单形式，但这可能导致运行结果溢出。为保险起见建议使用if语句比较元素大小并返回相应值。</font>
+
 ### 特殊数组排序函数
 ##### 一维整型数组
 ```cpp
@@ -181,9 +183,9 @@ qsort(a, numsSize, sizeof(a[0]), Cmp);
 ##### 直接定义的二维数组
 ```cpp
 int Cmp(const void * a, const void * b) {
-    int *x = (int*)a + 1;   //如果要按第k列的大小排序，就加k
-    int *y = (int*)b + 1;
-    return *x - *y;
+    int *x = (int*)a;   
+    int *y = (int*)b ;
+    return x[0] - y[0]; //如果要按第k列的大小排序，就取x[k]和y[k]
 }
 
 int a[100][2];  //100行2列的数组，按第1列的大小排序（首列为第0列）
