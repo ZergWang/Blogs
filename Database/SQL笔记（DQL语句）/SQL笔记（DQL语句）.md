@@ -357,8 +357,8 @@ listagg(列名, 分隔符) within group (order by 列名) as 新列名
 指定列下，同组的多个值将聚合到一行之中，排序后以指定分隔符隔开。举个例子：[LeetCode 1484](https://leetcode.com/problems/group-sold-products-by-the-date/)：
 
 输入：
-| sell_date  | product     |
-| -- | -- |
+| sell_date  | product    |
+| --         | --         |
 | 2020-05-30 | Headphone  |
 | 2020-06-01 | Pencil     |
 | 2020-06-02 | Mask       |
