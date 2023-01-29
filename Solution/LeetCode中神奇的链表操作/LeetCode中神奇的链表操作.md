@@ -1,5 +1,5 @@
-# LeetCode 237
-题目链接：https://leetcode.com/problems/delete-node-in-a-linked-list/
+# 删除节点
+相关题目：[LeetCode 237](https://leetcode.com/problems/delete-node-in-a-linked-list/)
 
 编写一个删除单向链表中某个节点的函数。该题的难点在于，函数传入的参数即为被删除节点本身。因此，无法取得被删除节点的前一个节点，按照常规思路没法做。
 
@@ -21,8 +21,8 @@ void deleteNode(struct ListNode* node) {
 ```
 <br/><br/>
 
-# LeetCode 142
-题目链接：https://leetcode.com/problems/linked-list-cycle-ii/
+# 快慢指针
+相关题目：[LeetCode 142](https://leetcode.com/problems/linked-list-cycle-ii/)
 
 给出一个可能存在环的单向链表，找出该链表中环的起始点。一开始的思路是开数组存每个节点的地址，然后遍历链表，去找数组中第一个被重复访问的地址。时间空间复杂度均为$O(N)$。
 
@@ -52,8 +52,8 @@ struct ListNode *detectCycle(struct ListNode *head) {
 此题的思路也可以用在[LeetCode 876](https://leetcode.com/problems/middle-of-the-linked-list/)，找出链表最中间的节点。令指针slow每次移动一个节点，指针fast每次移动2个节点。当fast抵达链表末尾时，slow正好在链表中间。
 <br/><br/>
 
-# LeetCode 1721
-题目链接：https://leetcode.com/problems/swapping-nodes-in-a-linked-list/
+# 寻找倒数的节点
+相关题目：[LeetCode 1721](https://leetcode.com/problems/swapping-nodes-in-a-linked-list/)
 
 给出一个单向链表及整数k，交换链表中正数第k个和倒数第k个节点的值。
 
