@@ -140,6 +140,20 @@ double angle=arg(a);     //取得a的幅角，以弧度制表示
 复数之间可以直接加减乘除，复数也可以和实数进行乘除运算， 但不能加减。
 <br/><br/>
 
+# 计时
+使用clock函数获得两个时间戳，相减后得到代码执行所用时间，单位为毫秒。
+
+```cpp
+#include <time.h>
+
+clock_t start, end;
+start = clock();
+// 需要计时的代码
+end = clock();
+printf("%d ms\n", end-start);
+```
+<br/><br/>
+
 # 排序  
 #### qsort
 函数声明：  
