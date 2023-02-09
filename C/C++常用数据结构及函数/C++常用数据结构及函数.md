@@ -224,7 +224,7 @@ qsort(a, numsSize, sizeof(a[0]), Cmp);
 
 ##### malloc的二维数组或指针数组
 
-在Cmp的参数中，void型指针存储的是待排序元素的地址，而malloc的二维数组或指针数组，其元素本身为int*类型，对元素取内容得到仍然是指针。因此要在Cmp中将参数转为二级指针，取地址后得到一级指针，再取索引使用。
+在Cmp的参数中，void型指针存储的是待排序元素的地址，而malloc的二维数组或指针数组，其元素本身为指针类型，因此void指针内存储的是指针的地址，因此要在Cmp中将参数转为二级指针，取地址后得到一级指针，再取索引使用。
 ```cpp
 int Cmp(const void * a, const void * b) {
     int *x = *(int**)a;   
