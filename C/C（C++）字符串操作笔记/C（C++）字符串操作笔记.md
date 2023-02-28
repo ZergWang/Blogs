@@ -150,18 +150,17 @@ str1.append(str2);
 //与str1+=str2等效
 str1.append(str2,pos,len);  
 //在str1的末尾加上str2的第pos位开始的连续len个字符
-//若要连接字符串，直接使用+即可。
 
 
-str1.insert(pos1,str2);  
-str1.insert(pos1,str2,pos2,len2);  
+str1.insert(pos1,str2);      //在str1的第pos1位上插入str2
+str1.insert(pos1,str2,pos2,len2);  //在str1的第pos1位上插入str2从pos2位开始的连续len2个字符
 str1.insert(pos1,num,char);   // num是插入次数，char是要插入的字符。
 
 
 str2 = str1.substr(pos);     //将str1的第pos位及之后的所有字符赋值给str2
 str2 = str1.substr(pos,len); //将str1从第pos位开始连续len个字符赋值给str2
 
-
+str1 = str2;    //直接将str2覆盖掉str1
 str1.replace(pos,len,str2);  //把str1从第pos位开始的连续len位替换成str2
 str1.replace(pos1,len1,str2,pos2,len2); //多出的两个参数指定了str2参与替换的部分
 ```

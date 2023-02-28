@@ -23,9 +23,9 @@ printf("%.3lf",d);
 ```cpp
 #include  <vector>     //调用
 
-vector  < int > a;     //声明
+vector <int> a;     //声明
 
-a.push_back (3)        //在数组a的最后添加一个元素3
+a.push_back(3)        //在数组a的最后添加一个元素3
  
 a.pop_back()           //删除数组最后一个元素
  
