@@ -189,14 +189,13 @@ sscanf(s, "%d", &d);
 该方法支持整数、小数及多种进制类型，通过格式控制符format来操作。
 
 ##### C++：
+可使用stoi、stol、stof、stod系列的函数。支持字符串及字符数组。
 ```cpp
-#include <sstream>
-...
-string str = "123.45";
-double d;
-stringstream ss;
-ss << str;
-ss >> d;
+#include <string>
+using namespace std;
+
+string s = stoi(123);
+char s[] = stod(12.34);
 ```
 ### 数字转字符串
 ##### C
@@ -212,15 +211,11 @@ sprintf(s, "%d", d);
 该方法支持整数、小数及多种进制类型，通过格式控制符format来操作。
 
 
-##### C++：（同样支持整数和实数）
+##### C++：
+使用标准的to_string函数，支持整数和实数。
 ```cpp
-#include <sstream>
-...
-double a=12.34;
-string str;
-stringstream ss;
-ss << a;
-ss >> str;
+#include <string>
+std::string s = std::to_string(1234);
 ```
 <br/><br/>
 
