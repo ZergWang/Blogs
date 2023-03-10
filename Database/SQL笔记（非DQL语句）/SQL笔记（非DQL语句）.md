@@ -2,6 +2,21 @@
 <br/>
 
 # 环境设置
+### 字符集
+若要创建指定字符集的库，首先在Linux中设置环境变量：（以中文utf8为例）
+```bash
+export DB_LOCALE=zh_cn.utf8
+export CLIENT_LOCALE=zh_cn.utf8 
+```
+然后在dbaccess中直接创建新库，该库的字符集就与环境变量设置的字符集一致了。
+
+查询指定库的字符集：
+```sql
+select * from sysmaster:sysdbslocale where dbs_dbsname='库名';
+```
+在显示的结果中，“zh_CN.57372”即zh_cn.utf8。“zh_CN.5488”即为zh_cn.GB18030-2000。
+
+无法通过dbaccess访问与当前环境变量字符集不匹配的库（错误号：23197）。
 ### 语法格式
 ```sql
 -- 设置语法为oracle模式

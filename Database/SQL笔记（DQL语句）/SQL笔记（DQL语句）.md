@@ -152,6 +152,34 @@ select A.id, A.name, B.sum from A left join B on A.id=B.id;
 同理，合并时对应列中值不相等或者缺少，右表中对应行保留，左表中对应行舍弃。
 <br/><br/>
 
+# pivot
+将某列中的各个字段作为列名，形成多个新列。语法：
+```sql
+select * from 表名 pivot(
+    列表达式 --作为新列的字段
+    for 列名 in(列中字段1, 列中字段2, 列中字段3 ...) -- 字段1、2、3均作为新列的列名
+);
+```
+举个例子：[LeetCode 1179](https://leetcode.com/problems/reformat-department-table/description/)：
+```sql
+select * from Department pivot(
+    sum(revenue) for month in (
+        'Jan' Jan_Revenue, 
+        'Feb' Feb_Revenue, 
+        'Mar' Mar_Revenue, 
+        'Apr' Apr_Revenue, 
+        'May' May_Revenue, 
+        'Jun' Jun_Revenue, 
+        'Jul' Jul_Revenue, 
+        'Aug' Aug_Revenue, 
+        'Sep' Sep_Revenue, 
+        'Oct' Oct_Revenue, 
+        'Nov' Nov_Revenue, 
+        'Dec' Dec_Revenue
+    )
+);
+```
+<br/><br/>
 # unpivot
 将表中多个列（假设这几个列名为C1、C2、C3……）缩减为一个聚合列（假设聚合列列名为A，C1、C2、C3……与A中的值一一对应），而原先C1、C2、C3……列中对应的值也被整合到一个新列C中。语法如下：
 ```sql
@@ -311,13 +339,15 @@ upper(列表达式)
 -- 转小写字母
 lower(列表达式)
 
--- 取字符串从pos开始的连续len个字符（第一位坐标为1）
+-- 取字符串从pos开始的连续len个字符（字符串首位坐标为1）
 substr(列表达式, pos, len)
 
--- 返回子串在主串自第pos位后第k次出现的位置。
--- 若找不到对应子串返回0。参数pos及k可省略。
--- pos以及函数返回结果按字符算位置，若要按字节算，可使用instrB函数
+-- 返回子串在主串自第pos位后第k次出现的位置
+-- 参数pos及k可省略，pos及结果按字符算位置
 instr(主串, 子串, pos, k)
+
+-- 同instr，pos及结果按字节算位置
+instrb(主串, 子串, pos, k)
 ```
 
 ### 数值型相关
