@@ -172,13 +172,12 @@ double angle=arg(a);     //取得a的幅角，以弧度制表示
 
 # 排序  
 #### qsort
-函数声明：  
 ```cpp
 #include <stdlib.h>
 void qsort(a, numSize, size, Cmp)
 ```
 其中：  
-- a：指向待排序数组首个元素
+- a：指向待排序数组首个元素的地址
 - numSize：数组中元素个数  
 - size：每个元素的大小  
 - Cmp：比较函数，按两元素的大小返回1、0或-1。该函数需要用户自定义，其参数为两个空指针，指向待比较元素的地址。
@@ -251,3 +250,22 @@ struct node a[numsSize];
 qsort(a, numsSize, sizeof(a[0]), Cmp);
 ```
 注意：在Cmp函数中，对a和b强制类型转换后要加上括号，否则会报错“request for member XXX in something not a structure or union”。
+
+#### sort
+```cpp
+#include <algorithm>
+sort(begin, end, Cmp) 
+```
+其中：
+- begin：数组中第一个待排序元素的地址
+- end：数组中最后一个待排序元素的地址
+- Cmp：比较函数，与qsort一样，可省略
+
+##### 普通数组排序
+```cpp
+// vector <int> a
+sort(a.begin(), a.end(), Cmp);
+
+// int a[n]
+sort (a, a+n, Cmp);
+```

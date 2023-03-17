@@ -194,8 +194,8 @@ sscanf(s, "%d", &d);
 #include <string>
 using namespace std;
 
-string s = stoi(123);
-char s[] = stod(12.34);
+int a = stoi("123");
+double b = stod("12.34");
 ```
 ### 数字转字符串
 ##### C
