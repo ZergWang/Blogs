@@ -386,7 +386,7 @@ alter fragment on table 分片表名 attach 普通表名;
 | 存储文本文件的类型| text | clob |
 | 存储二进制文件的类型| byte | blob |
 
-简单大对象的insert可通过load命令从文件中加载，智能大对象通过filetoblob和filetoclob函数从文件中加载。
+简单大对象的insert可通过load命令从文件中加载，智能大对象通过filetoblob和filetoclob函数从文件中加载，在Oracle模式下，clob可仿照char类型，直接通过insert插入。
 ### date
 ### datetime
 用于日期和时间的记录。默认格式：YYYY-MM-DD HH:MM:SS:FFF，可通过GL_DATETIME环境变量来修改。

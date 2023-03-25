@@ -2,62 +2,28 @@
 
 # Floyd算法
 
-当要求出一个图中所有的两节点间的最短路径时我们可以用Floyd算法，该算法用DP实现。
+当要求出一个图中所有的两节点间的最短路径时我们可以用Floyd算法，该算法用动态规划实现。
 
-定义dis[i,j,k]表示从点i到j经过k个点的最短路径，那么对于当前的dis[i][j][k]我们有两种情况：
+定义dis[i][j][k]表示从点i到点j，中间经过k个点的最短路径。对于当前的dis[i][j][k]，有：
 
-1.最短路径经过了k点，则dis[i,j,k]=dis[i,k,k-1]+dis[k,j,k-1]
+- 最短路径经过了k点，则$dis[i][j][k]=dis[i,k,k-1]+dis[k][j][k-1]$
 
-2.最短路径没有经过k点，则dis[i,j,k]=dis[i,j,k-1]
+- 最短路径没有经过k点，则有$dis[i][j][k]=dis[i][j][k-1]$
 
-由此我们可以得出状态转移方程：dis[i,j,k]=min{dis[i,k,k-1] + dis[k,j,k-1],dis[i,j,k-1]}
+由此我们可以得出状态转移方程：$dis[i,j,k]=min(dis[i][k][k-1] + dis[k][j][k-1],dis[i][j][k-1])$
 
-边界条件：dis[i,j,0]=len[i][j]    (如果i,j之间无边存在，可以赋一个极大值)
+边界条件：$dis[i][j][0]=len[i][j]$（如果i,j之间无边存在，可以赋一个极大值）
 
 优化：如果我们将k循环放在最外层，那么dis就相当为一个滚动数组，那么我们可以将数组降一维。
 
-该算法的时间复杂度为O(n^3)。
+该算法的时间复杂度为$O(n^3)$。
 
-以下是程序：
+
 ```cpp
-#include <fstream>
-using namespace std;
-ifstream fin("floyd.in");
-ofstream fout("floyd.out");
-
-const int oo=100000007;
-int n,m,dis[505][505];
-void init();
-void work();
-int main()
-{
-init();
-work();
-return 0;
-}
-
-void init()
-{
-fin>>n>>m;
-for (int i=0;i<=n+2;++i)
-for (int j=0;j<=n+2;++j) //初始化
-dis[i][j]=oo;
-
-for (int i=1;i<=m;++i)
-{
-int a,b,len;
-fin>>a>>b>>len; //读入
-dis[a][b]=len;
-}
-}
-
-void work()
-{
-for (int k=1;k<=n;++k)
-for (int i=1;i<=n;++i)
-for (int j=1;j<=n;++j)
-dis[i][j]=min(dis[i][j],dis[i][k]+dis[k][j]); //DP
-fout<<dis[1][n]<<endl;
+for (int k=0; k<n; ++k)
+    for (int i=0; i<n; ++i)
+        for (int j=0; j<n; ++j)
+            dis[i][j] = min(dis[i][j], dis[i][k]+dis[k][j]); 
 }
 ```
 <br/><br/>
