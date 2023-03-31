@@ -1,4 +1,4 @@
-**<font color='ff0000'> 若无特殊说明，则以下SQL语法均适用于GBase数据库，适用于Oracle数据库的操作会特别标明。</font>**
+**<font color='ff0000'> 若无特殊说明，则以下SQL语法均适用于GBase 8s数据库，适用于Oracle数据库的操作会特别标明。</font>**
 <br/>
 
 # 环境设置

@@ -163,6 +163,8 @@ str2 = str1.substr(pos,len); //将str1从第pos位开始连续len个字符赋值
 str1 = str2;    //直接将str2覆盖掉str1
 str1.replace(pos,len,str2);  //把str1从第pos位开始的连续len位替换成str2
 str1.replace(pos1,len1,str2,pos2,len2); //多出的两个参数指定了str2参与替换的部分
+
+reverse(s.begin(), s.end());  //翻转指定范围内的字符串，参数为翻转范围内的首地址和末地址的下一位。可翻转vector和普通数组
 ```
 <br/><br/>
 
@@ -217,7 +219,3 @@ sprintf(s, "%d", d);
 #include <string>
 std::string s = std::to_string(1234);
 ```
-<br/><br/>
-
-# 参考资料
-[菜鸟教程](https://www.runoob.com/)
