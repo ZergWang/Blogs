@@ -1,6 +1,14 @@
 # Warning
 
+ #### operation on 'XXX' may be undefined
+ 举个例子：
+ ```cpp
+int idx = 0;
+a[idx++] = b[idx];
+ ```
+在Windows下的某编译器中，实际执行的是a[0] = b[1]，但在Linux下实际执行是a[0] = b[0]。
 
+因此尽量避免这种可能产生问题的写法……
 <br/><br/>
 
 # Error

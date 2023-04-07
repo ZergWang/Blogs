@@ -48,17 +48,19 @@ select 列表达式 from 表名 where rownum <= K;
 
 # 集合操作
 ```sql
--- union：对两个select的结果进行并集操作，去除重复行，并按默认规则排序
+-- union：对两个select的结果进行并集操作，去除重复结果，并按默认规则排序
 select 列表达式 from 表1 union select 列表达式 from 表2;
 
--- union all：对两个select的结果进行并集操作，不去除重复行也不排序
+-- union all：对两个select的结果进行并集操作，不去重也不排序
 select 列表达式 from 表1 union all select 列表达式 from 表2;
 
--- intersect：对两个select的结果进行交集操作（即取两个select结果的共同部分）
+-- intersect：对两个select的结果进行交集操作（取两个select结果的共同部分）
 select 列表达式 from 表1 intersect select 列表达式 from 表2;
 
--- except：对对两个select的结果取差集（第一个select结果中去掉和第二个select结果相同的部分）
+-- except（minus）：对两个select的结果取差集（前一个select结果减去两select结果的相同部分）
 select 列表达式 from 表1 except select 列表达式 from 表2;
+-- 或者
+select 列表达式 from 表1 minus select 列表达式 from 表2;
 ```
 <br/>
 
@@ -71,6 +73,20 @@ select 列表达式 from 表名 as 别名;
 select 列表达式 as 别名 from 表名;
 ```
 在Oracle中，关键字“as”可省略。
+<br/><br/>
+
+
+# with as 
+将子查询的结果放入语句级的临时表中（临时表在仅可在当前语句中使用，语句结束即销毁），从而简化查询，提高可读性。
+```sql
+-- 单个子查询
+with 临时表名 as 子查询
+
+-- 多个子查询
+with 临时表1 as 子查询1, 
+     临时表2 as 子查询2,
+     临时表3 as 子查询3
+```
 <br/><br/>
 
 # case when
@@ -386,7 +402,7 @@ nvl(列表达式A, 列表达式B)
 ```
 #### listagg
 用于将在某列中，多行的值聚合成一行，语法：
-```
+```sql
 listagg(列名, 分隔符) within group (order by 列名) as 新列名
 ```
 指定列下，同组的多个值将聚合到一行之中，排序后以指定分隔符隔开。举个例子：[LeetCode 1484](https://leetcode.com/problems/group-sold-products-by-the-date/)：
