@@ -125,7 +125,8 @@ memset(void *p, int c, size_t n)
 ```cpp
 string s;
 s.clear();//全部清除
-s.erase(pos,len);
+s.erase(pos);       //清除第pos位及后面的所有字符
+s.erase(pos,len);   //清除从第pos位开始的连续len个字符（包括第pos位）
 ```
 <br/><br/>
 
