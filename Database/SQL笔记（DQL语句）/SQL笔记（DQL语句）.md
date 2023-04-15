@@ -340,6 +340,18 @@ select 列表达式 from 表名 order by 列1 desc, 列2 asc,  ...
 <br/><br/>
 
 
+# limit
+注意：Oracle并不兼容limit语法。
+limit一般用于最后对查询结果的筛选。假设只需要查询结果的前k条，或者需要查询结果的第i条及后面的j-1条：
+```sql
+select * from 表名 limit k;
+
+select * from 表名 limit i, j;
+```
+注意：在limit语句中，查询结果索引从0开始。
+<br/><br/>
+
+
 # 函数
 ### 字符型相关
 ```sql
