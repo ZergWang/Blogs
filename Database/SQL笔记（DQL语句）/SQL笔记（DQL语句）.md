@@ -5,10 +5,10 @@
 # select语法顺序与执行顺序
 ```sql
 -- 语法顺序
-select ... from ... where ... group by ... having ... order by ... limit ...
+select ... from ... join ... where ... group by ... having ... order by ... limit ...
 
 -- 执行顺序
-from -> where -> group by -> having -> select -> distinct -> order by -> limit
+from -> join -> where -> group by -> having -> select -> distinct -> order by -> limit
 ```
 <br/><br/>
 
@@ -166,6 +166,12 @@ select A.id, A.name, B.sum from A left join B on A.id=B.id;
 
 ### right join
 同理，合并时对应列中值不相等或者缺少，右表中对应行保留，左表中对应行舍弃。
+
+### cross join
+注意：cross join不同于上述任何一种join。cross join又称交叉连接，用于计算两张表的笛卡尔积：
+```sql
+select * from 表1 cross join 表2;
+```
 <br/><br/>
 
 # pivot
@@ -280,11 +286,12 @@ select * from Person where name like '_A_';
 regexp_like(列名，正则表达式)
 ```sql
 -- 寻找以“BMW X”开头，后面跟着一个字符3、4或5的字符串，也就是匹配“BMW X3”、“BMW X4” 、“BMW X5”这三种字符串。
-select * from Car where name regexp_like(name, 'BMW X[3-5]');
+select * from Car where regexp_like(name, 'BMW X[3-5]');
 ```
 <br/><br/>
 
 # group by
+#### 基本用法
 一般和聚合函数一起使用。
 group by后接列名，将表中的每行按指定列进行分组。也就是说，对于每一行，它们指定列的值相等的话会被分到同一组。
 ```sql
@@ -320,6 +327,32 @@ select name, id from student group by name;
 -- 合法写法
 select name, id from student group by name, id;
 select name, max(id) from student group by name;
+```
+
+#### group by显示指定行
+对于group by后的每一组，如果需要原来的某一行的值来代表该组进行显示，可嵌套子查询来实现。举个例子，下表为用户登录网站的记录：
+| id | time | action |
+| -- | ---- | ------ |
+| 1  | 2023-4-1  | Read |
+| 1  | 2023-4-5  | Write|
+| 2  | 2023-4-11 | Write|
+| 3  | 2023-3-22 | Read |
+| ...| ...       | ...  |
+
+如果需要知道每个用户首次登录的时间，可通过group by及聚合函数直接实现：
+```sql
+select id, min(time) from t group by id;
+```
+但如果需要知道每个用户首次登录的时间，以及当时用户的行为，action列的选择受制于time列，因此无法对action列使用聚合函数。对此可使用子查询来获取action列对应的值：
+```sql
+select 
+    t1.id, 
+    min(t1.time),
+    (select t0.action from t t0 where t0.id=t1.id order by t0.time limit 1) as action
+from 
+    t t1 
+group by 
+    t1.id;
 ```
 <br/><br/>
 
@@ -399,7 +432,7 @@ min(列表达式)
 -- 求指定列对指定值取模后的结果
 mod(列表达式, 值)
 
--- 对结果保留指定位小数
+-- 对结果四舍五入至指定位小数，第二个参数默认为0，即不保留小数
 round(列表达式, 值)
 ```
 ### 类型转换
