@@ -246,7 +246,7 @@ unpivot (price for store in (
 ### 判断元素是否在集合中
 使用in或not in关键字。
 ```sql
-select 列表达式 from 表名 where 列名 in 集合或子查询;
+select 列表达式 from 表名 where 列表达式 in 集合或子查询;
 ```
 其中，集合可通过以下形式定义：
 ```sql
@@ -256,7 +256,7 @@ select 列表达式 from 表名 where 列名 in 集合或子查询;
 ### 判断元素是否为空
 使用is NULL或is not NULL关键字。
 ```sql
-select 列表达式 from 表名 where 列名 is NULL;
+select 列表达式 from 表名 where 列表达式 is NULL;
 ```
 ### like 模糊查询
 适用于char、varchar等类型，一般用于where子句中，来搜索符合条件的字符串。同样，可以使用“not like”来避开符合条件的字符串。
@@ -283,7 +283,7 @@ select * from Person where name like '_A_';
 
 #### 正则表达式匹配
 使用以下函数：
-regexp_like(列名，正则表达式)
+regexp_like(列表达式，正则表达式)
 ```sql
 -- 寻找以“BMW X”开头，后面跟着一个字符3、4或5的字符串，也就是匹配“BMW X3”、“BMW X4” 、“BMW X5”这三种字符串。
 select * from Car where regexp_like(name, 'BMW X[3-5]');
@@ -293,9 +293,9 @@ select * from Car where regexp_like(name, 'BMW X[3-5]');
 # group by
 #### 基本用法
 一般和聚合函数一起使用。
-group by后接列名，将表中的每行按指定列进行分组。也就是说，对于每一行，它们指定列的值相等的话会被分到同一组。
+group by后接列表达式，将表中的每行按列表达式中的值进行分组。也就是说，对于每一行，它们列表达式的值相等的话会被分到同一组。
 ```sql
-select 列表达式 from 表名 group by 指定列;
+select 列表达式 from 表名 group by 列表达式;
 ```
 假设有表T记录了学校中每个学生的成绩：
 | grade | class | id | score |
@@ -317,17 +317,7 @@ select grade, class, avg(score) from T group by grade, class;
 | 2     | 3     | 99    |
 | ...   | ...   | ...   |
 
-在group by的返回结果中，每组仅显示为一行，但每组是由原表中的多行构成的，对于group by的指定列，这多行的值是一样的，可以直接显示；但对于非指定列，原来的多行数据并不一样，那该显示为什么值呢？因此group by一般需要聚合函数，对非指定列进行求和、求平均、计数等方式计算出一个值来代表这一组。
-
-也就是说，对于select后的列表达式中出现的列，若取列的原值，则该列必须同时作为group by的对象，否则该列必须经聚合函数计算。
-```sql
--- 非法写法
-select name, id from student group by name;
-
--- 合法写法
-select name, id from student group by name, id;
-select name, max(id) from student group by name;
-```
+在group by的返回结果中，每组仅显示为一行，但每组是由原表中的多行构成的，因此需要从这多行数据中选择数据组成代表该组的那一行。此时一般使用聚合函数，对列表达式进行求和、求平均、计数等方式计算出一个值来代表这一组。
 
 #### group by显示指定行
 对于group by后的每一组，如果需要原来的某一行的值来代表该组进行显示，可嵌套子查询来实现。举个例子，下表为用户登录网站的记录：
@@ -361,13 +351,13 @@ group by
 <br/><br/>
 
 # order by
-给出列名，按指定列中的值大小进行升序排序。默认为升序排序。若要按降序排行，添加关键字“desc”。如果排序条件涉及多列，则继续在语句后面添加列名。
+给出列表达式，按列表达式的值大小进行升序排序。默认为升序排序。若要按降序排行，添加关键字“desc”。若存在多个排序条件，则继续在语句后面添加列表达式。
 ```sql
 -- 降序
-select 列表达式 from 表名 order by 列名 desc
+select 列表达式 from 表名 order by 列表达式 desc
 
--- 按列名1排序，若列1对应值相同，则按列2排序
-select 列表达式 from 表名 order by 列1 desc, 列2 asc,  ...
+-- 按列表达式1排序，若对应值相同，则按列表达式2排序
+select 列表达式 from 表名 order by 列表达式1 desc, 列表达式2 asc,  ...
 ```
 注意：order by无法对子查询使用。
 <br/><br/>
@@ -437,12 +427,41 @@ round(列表达式, 值)
 ```
 ### 类型转换
 
-#### to_date
-
 #### to_char
+将数值或日期类型转换成指定格式的字符串。
 
+对于数值类型，支持的格式有：（以下为部分例子）
+| 语句 | 结果 | 备注 |
+| ---  | ---  | --- |
+| to_char(123.45, '999.9')  |  123.5   | 四舍五入至一位小数 |
+| to_char(12.34, '99.999')  |  12.340  | 末尾补零 |
+| to_char(1234.5, '9,999.9')|  1,234.5 |  |
+| to_char(10.73, '$99.00')  |  $10.73  |  |
+| to_char(21, '000099')     |  000021  | 补充前导零 |
+| to_char(63, 'xx')         |  3f      | 十进制转十六进制 |
+
+其中，“9”代表数值本身的占位符，若该占位符数比结果的实际位数多，则多出来的占位符一般以空格替代。“0”为0占位符，会在结果的指定位置补“0”。“x”专门用于进制转换。
+<br/>
+
+对于日期类型，支持的格式有：（以下为部分例子）
+| 语句 | 结果 |
+| ---  | ---  |
+| to_char(date, 'yyyy-mm-dd HH24:MI:SS')  |  1919-08-10 11:45:14  |
+| to_char(date, 'yyyy-mm-dd')  |  2023-04-01   |
+| to_char(date, 'yyyy/mm/dd')  |  2023/04/01   |
+| to_char(date, 'MON dd, yyyy')|  APR 01, 2023 |
+
+其中yyyy、mm、dd等格式符可参考date类型的具体说明。
+#### to_date
+将字符串按照指定的格式转为日期类型，格式参数与to_char函数一致。
+```sql
+to_date('2000-01-01', 'YYYY-MM-DD')
+```
 #### to_number
-
+将字符串转成数值
+```sql
+to_number(列表达式)
+```
 ### 其他
 #### nvl
 空值判断函数，如果列表达式A的结果非NULL，则返回A的值，否则返回B的值。
@@ -450,11 +469,11 @@ round(列表达式, 值)
 nvl(列表达式A, 列表达式B)
 ```
 #### listagg
-用于将在某列中，多行的值聚合成一行，语法：
+将某一列中，多行的值聚合成一行，语法：
 ```sql
 listagg(列名, 分隔符) within group (order by 列名) as 新列名
 ```
-指定列下，同组的多个值将聚合到一行之中，排序后以指定分隔符隔开。举个例子：[LeetCode 1484](https://leetcode.com/problems/group-sold-products-by-the-date/)：
+将指定列中同组的多个值将聚合到一行之中，排序后以指定分隔符隔开。举个例子：[LeetCode 1484](https://leetcode.com/problems/group-sold-products-by-the-date/)：
 
 输入：
 | sell_date  | product    |
@@ -484,6 +503,12 @@ from
 group by 
     sell_date;
 ```
+<br/><br/>
+
+
+# 窗口函数
+
+
 <br/><br/>
 
 # 参考资料
