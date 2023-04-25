@@ -506,12 +506,60 @@ group by
 <br/><br/>
 
 
-# 窗口函数
+# 窗口函数（Window Function）
+窗口函数的语法主要由三部分组成：
+```sql
+窗口函数名() over (
+    partition by 列表达式
+    order by 列表达式    
+)
+```
+执行逻辑如下：
 
+1. 将表中各行按parition子句中列表达式的值进行分组（不同于group by，窗口函数的分组不会减少行数）。若不需要分组，parition子句可省略
 
+2. 对于每一组，单独执行order by子句（若不需要排序，该子句也可省略）。
+   
+3. 对排序后的每一组使用窗口函数，得到的结果作为新列加入表中
+
+举个例子，生成每个学生在本班级内的成绩排名：
+```sql
+select 
+    *, 
+    rank() over (
+        partition by 班级
+        order by 成绩 desc
+    ) as 排序
+from
+    表;
+```
+![](SQL笔记（DQL语句）_2.png)
+
+窗口函数原则上只能用于select子句中，其语句整体可视为列表达式。
+
+#### 窗口函数名
+窗口函数名用于指定要使用的窗口函数，avg、sum、max等聚合函数同样也是窗口函数，可直接使用，另外，还有三种专门的窗口函数：
+- rank
+获得该行的序号，若order by子句中指定的字段相等，则序号相同，且会占用后面行的位置。
+- dense_rank
+功能和rank相似，相同字段的行，其序号也相同，但不会占用后面行的位置。
+- row_number
+无视字段是否相等，直接按行输出序号。
+
+举个例子：
+| 成绩 | rank |  dense_rank | row_number |
+| --- |  --- |  ---------- |  --------- |
+| 99 | 1 | 1 | 1 |
+| 87 | 2 | 2 | 2 |
+| 87 | 2 | 2 | 3 |
+| 87 | 2 | 2 | 4 |
+| 74 | 5 | 3 | 5 |
 <br/><br/>
 
-# 参考资料
+
+# 参考资料及部分图片出处
 [SQL 教程 | 菜鸟教程](https://www.runoob.com/sql/sql-join.html)
 
 [SQL中select的执行顺序](https://blog.csdn.net/weixin_43480466/article/details/122974596)
+
+[(七)数据分析之窗口函数](https://zhuanlan.zhihu.com/p/351822793)
