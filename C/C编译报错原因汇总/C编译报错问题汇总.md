@@ -4,7 +4,8 @@ struct的定义在使用之后，或者是包含该struct定义的头文件引�
 <br/>
 
 ### operation on 'XXX' may be undefined
- 举个例子：
+自增、自减运算符（即++和--运算符）与其他运算符混用时可能会报这种错
+例如：
  ```cpp
 int idx = 0;
 a[idx++] = b[idx];
