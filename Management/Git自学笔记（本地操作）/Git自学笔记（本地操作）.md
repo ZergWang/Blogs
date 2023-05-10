@@ -23,7 +23,7 @@ git config --global user.name  "YourName"
 git init 
 ```
 设置后会在该目录下生成.git目录，存放Git用于跟踪管理该仓库的文件。
-#### config相关设置
+## config相关设置
 每台计算机中的git都会有三个配置文件，分别是：
 - 针对仓库的设置文件（即local设置），文件路径：仓库路径/.git/config，此设置仅对该仓库生效。
 - 针对全局的设置文件（即global设置），文件路径：~/.gitconfig （Linux系统） 或者 C:/Users/用户名/.gitconfig （Windows系统），此设置对该计算机中指定用户下所有仓库生效。
@@ -41,10 +41,10 @@ git init
 <br/><br/>
 
 # 文件管理
-#### Git工作原理
+## Git工作原理
 Git工作目录中的文件会存放在三个区：工作区（Workspace，即工作目录内非.git目录下的文件）、暂存区（Index）和分支（Branch）。暂存区和分支在.git目录中，每当工作区的文件被跟踪后，这些文件就会被放入暂存区，commit后暂存区内容会整体作为一个版本被并入分支，暂存区也会被清空。仓库在创建时会自动创建一个名为master的分支，若对分支没有修改，则所有的commit都在该分支下，分支的具体作用在后面会提到。
 ![](Git自学笔记（本地操作）_1.png)
-#### 仓库状态（status）
+## 仓库状态（status）
 ```bash
 git status
 ```
@@ -56,7 +56,7 @@ git status -uno
 
 对于工作区中新增的文件，在其add前使用git status，会被告知这些文件“Untracked files”。这说明git检测到新文件，但不会去追踪其更改。在add这些文件后使用git status，git会告知用户“Changes to be committed”，说明文件已被跟踪， 但还未提交。如果这些被add的文件在提交前又被更改过（此时git status告知“Changes not staged for commit”），则在提交前要再add一次，否则文件会以之前add时的内容提交上去。因此，add命令相当于是要求git“跟踪最新版本的文件”。
 
-#### 文件跟踪（add）
+## 文件跟踪（add）
 在工作区中进行了代码文件的创建、修改或删除，那如何让git去跟踪文件的变化呢？使用以下命令即可：
 ```bash
 git add 文件名
@@ -73,7 +73,7 @@ git add -u      add所有被删除、被修改的文件
  
 git add -A      add所有新增、被删除、被修改的文件
 ```
-#### 提交（commit）
+## 提交（commit）
 这里所谓的“提交”，相当于将所有被add的文件整合为一个“节点”（或版本），类似于Windows的系统还原点，可通过这些“节点”来找回代码的早期版本，commit命令为：
 ```bash
 git commit -m "Describe this commit"
@@ -87,14 +87,14 @@ git commit 部分可选参数：
 --allow-empty   允许本次提交和上次提交相比无任何改动
 ```
 
-#### 文件对比（diff）
+## 文件对比（diff）
 对于被修改的文件，在add前可通过以下命令查看更改前后的内容差别：
 ```bash
 git diff 文件名
 ```
 以上命令将以行为单位对更改内容进行说明。查看完毕后单击“q”退出对比界面。
 如果文件被add了，则diff命令就无效了。
-#### 文件清理（clean）
+## 文件清理（clean）
 用于删除工作目录下从来没有被add的文件和目录。以下参数可连用，如-xdf这样。
 ```bash
 git clean -n    显示将要删除的文件，而不会真正删除
@@ -102,10 +102,10 @@ git clean -d    连文件带目录一起删
 git clean -x    连.gitignore中的未被add的文件一起删
 git clean -f    强制运行
 ```
-#### 撤销修改
+## 撤销修改
 分为以下三种情况：
 
-**情况一：工作区中的文件被误修改但还未add**
+### 1. 文件被误修改但还未add
 ```bash
 git checkout -- 文件名
 ```
@@ -116,18 +116,18 @@ git checkout -- 文件名
 git checkout .
 ```
 
-**情况二：文件被误修改且已经add了**
+### 2. 文件被误修改且已经add了
 ```bash
 git reset HEAD 文件名
 ```
 该命令会将指定文件在暂存区的内容清空（即回到提交上个版本时的状态，因此使用这条命令的前提是该仓库至少commit过一次 ）， 然后再运行git checkout的命令将工作区内文件的更改撤销即可。
 
-**情况三：文件被误修改且add，而且还commit了**
+### 3. 文件被修改且add，而且还commit了
 
 直接进行版本回退，相关内容在后面会提到。
 <br/>
 
-#### 文件删除
+## 文件删除
 如果要将某个已经提交到版本库中的文件在下个版本中删除，步骤如下：
 1. 在工作区中手动删除它。
 2. 使用命令确认操作并刷新暂存区：（实际上也可以使用add刷新，效果一样）
@@ -139,7 +139,7 @@ git rm 文件名
 
 
 # 日志与版本控制
-#### 查看日志（log）
+## 查看日志（log）
 ```bash
 git log 
 ```
@@ -148,7 +148,7 @@ log中所显示的“HEAD”表示当前版本（节点），上一次commit的�
 
 git log后同时进入一个类似vim的编辑模式，可按vim语法进行搜索、查找、跳转，只是不能更改内容。
 
-#### 版本回退
+## 版本回退
 举个例子，回退到上一个版本：
 ```bash
 git reset --hard HEAD^
@@ -170,7 +170,7 @@ git reflog
 <br/><br/>
 
 # 分支（branch）
-#### 简介
+## 简介
 使用以下命令可查看分支信息：
 ```bash
 git branch
@@ -185,7 +185,7 @@ Git允许我们以任意节点开始，创建新的分支（相当于在当前�
 ![](Git自学笔记（本地操作）_2.png)
 如图，展示了一个有三个分支的仓库（master、branch 1、branch 2），其中branch 1创建后提交了两次（长了两个节点），branch 2创建后提交了一次。当然，此图是为了形象，实际上应该是：
 ![](Git自学笔记（本地操作）_3.png)
-#### 分支创建与更换
+## 分支创建与更换
 ```bash
 git branch 新的分支名
 git checkout 新的分支名
@@ -197,7 +197,7 @@ git checkout 新的分支名
 git checkout -b 新的分支名
 ```
 刚创建新分支后，工作区内容不会变化，但如果在新分支下做了修改并commit了，再切换回原分支，则工作区中的内容也回瞬间被还原回原分支的样子。
-#### 分支合并
+## 分支合并
 将当前分支与指定分支合并：
 ```bash
 git merge 分支名
@@ -213,7 +213,7 @@ git merge 分支名
 ```bash
 git merge --no-ff -m "合并信息" 分支名
 ```
-#### 分支删除
+## 分支删除
 ```bash
 git branch -d 分支名
 ```
@@ -222,13 +222,13 @@ git branch -d 分支名
 git branch -D 分支名
 ```
 
-#### Rebase
+## Rebase
 该命令可对某分支上的连续多个commit进行移动或合并，主要有以下两个用途：
 - 将某分支上的连续多个commit合并成一个commit。
 
 - 将某分支上的连续多个commit复制到另一分支上。
   
-##### 合并多个commit
+### 合并多个commit
 假设待合并commit中，第一个commit的前一个commit的ID为A。待合并commit中，最后一个commit的ID为B，
 ```
 git rebase -i A B
@@ -281,7 +281,7 @@ s fe85718 4
 
 如果仅合并第2、3次commit，则合并后仅存在第一次commit以及2、3合二为一的commit，共两个commit，第4次commit会消失。
 
-##### 复制多个commit至目标分支
+### 复制多个commit至目标分支
 ```bash
 git rebase --onto 目标分支名 commitID_1  commitID_2
 ```
@@ -307,7 +307,7 @@ git reset --hard D
 <br/><br/>
 
 # 其他
-#### CRLF与LF转换
+## CRLF与LF转换
 config中用**core.autocrlf**和**core.safecrlf**来控制仓库中文本文件的换行方式：
 
 **core.autocrlf**可设置为：
@@ -327,7 +327,7 @@ config中用**core.autocrlf**和**core.safecrlf**来控制仓库中文本文件�
 注意：当**core.autocrlf**设置为false时**core.safecrlf**失效。
 
 
-#### stash操作
+## stash操作
 若有突发情况，需要在其他分支或版本工作，又不想通过commit来保存当前工作区、暂存区内容，可以通过以下命令暂时保存当前的工作现场：
 ```bash
 git stash
@@ -344,7 +344,7 @@ git stash pop
 ```bash
 git stash apply
 ```
-#### 标签
+## 标签
 对于所有commit（或者说，节点），单纯通过描述信息或者commitID来寻找、区分过麻烦，而标签功能能令我们赋予这些节点一个别名。
 ```bash
 git tag 标签名
@@ -364,18 +364,18 @@ git tag -a 标签名 -m 描述信息 commitID
 git tag -d 标签名
 ```
 
-#### 忽略特殊文件
+## 忽略特殊文件
 代码编译运行或者在文件操作时可能会在同目录下产生一些临时文件，这些文件并无使用git来跟踪的必要，但在add或commit的时候不得不一并操作，其实可以在工作区的根目录下创建文件并编辑.gitignore来自定义忽略的规则即可，每一行写一个规则，可使用通配符，符合规则的文件名在git操作中被自动忽略。例如，我要忽略掉文件名中含有cache或者后缀名为.ini的文件：
 ```bash
 *.ini
 cache
 ```
 .gitignore作为工作区中的文件，本身也会被git跟踪，然而.gitignore在被跟踪、识别前，其内部的规则就已经在起作用了。
-#### git status无法正常显示中文
+## git status无法正常显示中文
 ```bash
 git config --global core.quotepath false
 ```
-#### git diff查看txt时无法正常显示中文
+## git diff查看txt时无法正常显示中文
 txt对中文的保存格式有误，设置为utf-8即可。
 <br/><br/>
 

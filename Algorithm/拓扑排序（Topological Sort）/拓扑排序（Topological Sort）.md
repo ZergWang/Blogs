@@ -20,7 +20,10 @@
 
 为了防止每次找入度为0的点时都要遍历图中所有点，可以在一开始就将所有入度为0的点记录下来，记为 $Q = \{K_1, K_2 ... K_n\}$，每次从 $Q$ 中找点 $N_i (1\le i \le n)$ 删边后，只会改变 $N_i$ 指向的点的入度，因此每次删边后将 $N_i$ 指向的点中入度为0的加入到 $Q$ 即可。在代码上，$Q$ 可以使用队列来实现。
 
-#### LeetCode 207 & 210
+<br/><br/>
+
+# 例题
+## LeetCode 207 & 210
 LeetCode 207链接：[207. Course Schedule](https://leetcode.com/problems/course-schedule/) 
 
 LeetCode 210链接：[210. Course Schedule II](https://leetcode.com/problems/course-schedule-ii/) 
@@ -65,7 +68,7 @@ int* findOrder(int n, int** prerequisites, int prerequisitesSize, int* prerequis
 <br/><br/>
 
 
-#### LeetCode 2392
+## LeetCode 2392
 链接：https://leetcode.com/problems/build-a-matrix-with-conditions/
 
 将1到k的k个数字放在一个k*k的方格中（不放这k个数字的地方用0填充）。在放置时，还要满足某些数字要在另一些数字的左边或上边。给出这些限制条件，生成一个满足上述条件的方格。

@@ -1,6 +1,6 @@
 # echo
 用于显示消息。
-#### 开关
+## 开关
 通过echo off和echo on来控制每次输入命令的时候当前路径信息（图中为C:\Users\lm\Desktop>）是否显示。
 ![](Windows下cmd使用技巧（持续更新）_1.png)
 
@@ -13,7 +13,7 @@
 @echo off
 ```
 该命令仅在批处理文件中生效。在控制台中输入不起作用（效果与echo off一样）。
-#### 消息显示
+## 消息显示
 ```bash
 echo AnythingYouWannaToSay
 ```
@@ -38,7 +38,7 @@ echo ^G
 ```
 这个“\^G”是用Ctrl+G打出来的，直接输入"\^G"没用。因此只适用于控制台，写在批处理文件里面没用。
 
-#### 文件写入
+## 文件写入
 ```bash
 echo 123>a.txt
 ```
@@ -64,7 +64,7 @@ echo 123>>a.txt
 <br/><br/>
 
 # 文件管理
-#### 删除目录
+## 删除目录
 ```bash
 rd 目录名
 ```
@@ -72,7 +72,7 @@ rd 目录名
 /s：递归删除（同时删除目录内的内容）
 /q：安静模式（不经询问）
 
-#### 复制
+## 复制
 推荐使用功能更为强大的xcopy，而不是copy命令。
 ```bash
 xcopy 源路径 目标路径
@@ -104,7 +104,7 @@ pause
 <br/><br/>
 
 # 其他
-#### 任意目录下右键在当前路径打开cmd
+## 任意目录下右键在当前路径打开cmd
 参考资料：https://www.cnblogs.com/ssooking/p/8536468.html
 
 打开注册表编辑器（Win+R后regedit），找到如下目录：HKEY_CLASSES_ROOT\Directory\Background\shell\，在Shell下新建key，命名为Open CMD here（名字可自定义，即右键后显示的名字），在此值下新建REG_DWORD类型的值，设置键名为“ShowBasedOnVelocityId”，键值为“639bc8”。
@@ -112,7 +112,7 @@ pause
 再在Open CMD here下新建key，名为command，其默认string的值为cmd.exe /s /k pushd "%V"。
 ![](Windows下cmd使用技巧（持续更新）_2.png)
 实际上，按住Shift再右键，即可在当前目录打开PowerShell，这个东西兼容cmd的命令，而且比cmd功能更多。
-#### 中文无法正常显示
+## 中文无法正常显示
 输入chcp，可以查看当前cmd控制台的编码格式。如果是936，编码格式为GBK，若为65001，则为UTF-8的编码格式。
 
 若中文无法正常显示，可用以下命令更改编码格式：
@@ -120,10 +120,10 @@ pause
 chcp 65001
 ```
 936和65001两种都切换试试，总有一种能显示中文。
-#### 使用的字符串或路径含有空格
+## 使用的字符串或路径含有空格
 将整个字符串或路径用双引号引起来即可。
 
-#### 清除剪贴板内容：
+## 清除剪贴板内容
 ```bash
 cmd/c "echo off" | clip
 ```

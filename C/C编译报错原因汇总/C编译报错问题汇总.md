@@ -22,6 +22,8 @@ a[idx++] = b[idx];
 <br/>
 
 ### Control reaches end of non-void function
+C++版本的报错信息是“non-void function does not return a value”。
+
 有返回值的函数最后没写return……
 
 <br/>
@@ -29,3 +31,7 @@ a[idx++] = b[idx];
 ### Conflicting types for ...
 函数使用的位置位于声明之前，或未声明函数原型就使用函数。
 
+<br/>
+
+### reference to non-static member function must be called
+对于非静态成员函数，其参数表会隐式地加上this指针，这可能导致

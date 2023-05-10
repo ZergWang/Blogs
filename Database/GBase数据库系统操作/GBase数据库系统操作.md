@@ -1,5 +1,5 @@
 # GBase管理命令
-### onstat
+## onstat
 用于查看数据库各项信息，后面可接参数查看指定信息
 ```sql
 -     查看数据库基本信息及运行模式（有On-Line、Off-Line、Quiescent、Read-Only、Recovery等模式）
@@ -22,7 +22,7 @@ onstat -g命令用于查看数据库调试信息
 -g glo    查看实例虚拟处理器的信息
 -g sql    查看隔离级别和锁模式
 ```
-### oninit
+## oninit
 用于启动数据库软件，不加任何参数时将数据库从Off-Line模式转为On-Line模式。
 ```sql
 -i    初始化rootdbs并从Off-Line模式转为On-Line模式（一般仅安装完成后第一次启动时使用该命令）
@@ -30,7 +30,7 @@ onstat -g命令用于查看数据库调试信息
 -v    启动时显示提示信息 
 -y    对所有交互信息均以“yes”回应
 ```
-### onmode
+## onmode
 主要用于更改数据库运行模式，部分命令可更改数据库运行参数。
 ```sql
 -k    将数据库转为Off-Line模式
@@ -40,19 +40,19 @@ onstat -g命令用于查看数据库调试信息
 -u    立即从On-Line模式转为Quiescent模式
 ```
 -s和-u的区别在于，执行前者后，现存用户仍能继续使用，但新用户会被拒绝连接至数据库。待所有用户退出后数据库才转为Quiescent模式。后者执行后所有用户立刻被断开，所有未提交事务rollback，数据库立刻切换为Quiescent模式。
-### onclean
+## onclean
 当使用onmode命令无法关闭数据库，或数据库无法重启时，使用onclean强制关闭
 ```sql
 -k    清空共享内存，关闭数据库
 -y    对所有交互信息均以“yes”回应
 ```
-### oncheck
+## oncheck
 用于查看磁盘结构，包括其中的索引、表空间等结构。
 ```sql
 -pt 数据库名:表名    查看表的存储情况
 -pT 数据库名:表名    和-pt类似，但会额外显示索引的情况
 ```
-### onspaces
+## onspaces
 用于管理数据库的存储空间。
 ```sql
 -a dbspace名       往指定dbspace中添加chunk
@@ -68,7 +68,7 @@ onstat -g命令用于查看数据库调试信息
 -o 数字    为达到dbspace所需的偏移量
 ```
 
-### onparams 
+## onparams 
 用于增减逻辑日志文件
 ```sql
 -a -d dbspace名 -s 整数    在指定dbspace中添加一个指定大小的逻辑日志

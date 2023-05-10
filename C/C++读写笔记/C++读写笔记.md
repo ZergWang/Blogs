@@ -5,13 +5,13 @@
 <br/><br/>
 
 # 输入函数
-### get与cin.get
+## get与cin.get
 
 
-### getline与cin.getline
+## getline与cin.getline
 
 
-### 含空格的字符串（字符数组）输入输出
+## 含空格的字符串（字符数组）输入输出
 若字符串（字符数组）中无空格，可直接cin、cout。
 对于C风格字符数组：
 ```cpp

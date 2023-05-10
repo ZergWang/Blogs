@@ -1,25 +1,25 @@
 # 基本概念
-#### TeX
+## TeX
 由计算机科学家Donald E. Knuth发明的排版软件，也代指该系统使用的标记语言，这种标记语言将控制命令和文本结合起来。文本是内容主体，控制命令用于实现排版的效果。
 
-#### LaTeX
+## LaTeX
 Leslie Lamport开发的基于plain TeX格式的排版系统。plain TeX是Donald E. Knuth为方便用户，自己基于原始TeX定义的格式。
 
 LaTeX 实际上是一个工具，它将用户按照它的格式编写的文档解释成TeX软件能理解的形式并交付给TeX软件处理，再将最终结果返回给用户。
 
-#### pdfTeX
+## pdfTeX
 TeX生成的文件是dvi格式，但作为文档pdf格式更为常用，因此推出了pdfTeX，直接输出 pdf 格式文档。
 
-#### pdfLaTeX
+## pdfLaTeX
 pdfLaTeX与pdfTex的关系和TeX与LaTeX的关系相似。pdfLaTeX主要工作是将 LaTeX 格式的文档进行解释并交付给pdfTeX软件处理。
 
-#### XeTeX
+## XeTeX
 TeX的排版不支持中日韩等文字，只支持 ASCII 字符。因此推出了XeTeX，该软件直接支持 Unicode 字符。一般使用XeTeX时，会用UTF-8编码。
 
-#### XeLaTeX
+## XeLaTeX
 与XeTeX的关系同上。
 
-#### 发行版
+## 发行版
 发行版就是在原来的TeX、pdfTeX等软件的基础上，加入文档类、模板、字体文件、辅助程序等等，做成了一个排版软件及各类辅助软件的合集。比较常用的发行版有TeX Live、CTeX、MiKTeX等。
 <br/><br/>
 

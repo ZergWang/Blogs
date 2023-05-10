@@ -25,26 +25,6 @@ select name from v$database;
 ```
 <br/>
 
-# 基本操作
-```sql
--- 查询全部列
-select * from 表名;
-
--- 返回满足指定条件的结果集
-select 列表达式 from 表名 where 条件;
-
--- 返回去重后的结果集
-select distinct 列表达式 from 表名;
-
--- 跳过查询结果的前K行
-select skip K 列表达式 from 表名;
-
--- 返回查询结果的前K行
-select first K 列表达式 from 表名;
--- 或者
-select 列表达式 from 表名 where rownum <= K;
-```
-<br/>
 
 # 集合操作
 ```sql
@@ -125,7 +105,7 @@ join语法中常用的有inner join、full join、left join和right join四种�
 | 1  | 80  |
 | 2  | 75  |
 | 4  | 95  |
-### inner join
+## inner join
 将多张表对应列中值相等的合并为一行，若不相等或者值缺少，则整行舍弃。
 执行如下sql语句：
 ```sql
@@ -139,7 +119,7 @@ select A.id, A.name, B.sum from A join B on A.id=B.id;
 
 在sql语法中“inner”可省略，直接写“join”即可。
 
-### full join
+## full join
 将多张表中对应列中值相等的合并为一行，若不相等或者值缺少，行仍然保留。
 ```sql
 select A.id, A.name, B.sum from A full join B on A.id=B.id;
@@ -152,7 +132,7 @@ select A.id, A.name, B.sum from A full join B on A.id=B.id;
 | 3  | kai  |     |
 | 4  |      | 95  |
 
-### left join
+## left join
 将多张表中对应列中值相等的合并为一行，若不相等或者值缺少，左表中对应行保留，右表中对应行舍弃。
 ```sql
 select A.id, A.name, B.sum from A left join B on A.id=B.id;
@@ -164,10 +144,10 @@ select A.id, A.name, B.sum from A left join B on A.id=B.id;
 | 2  | liu  | 75  |
 | 3  | kai  |     |
 
-### right join
+## right join
 同理，合并时对应列中值不相等或者缺少，右表中对应行保留，左表中对应行舍弃。
 
-### cross join
+## cross join
 注意：cross join不同于上述任何一种join。cross join又称交叉连接，用于计算两张表的笛卡尔积：
 ```sql
 select * from 表1 cross join 表2;
@@ -202,6 +182,7 @@ select * from Department pivot(
 );
 ```
 <br/><br/>
+
 # unpivot
 将表中多个列（假设这几个列名为C1、C2、C3……）缩减为一个聚合列（假设聚合列列名为A，C1、C2、C3……与A中的值一一对应），而原先C1、C2、C3……列中对应的值也被整合到一个新列C中。语法如下：
 ```sql
@@ -243,7 +224,7 @@ unpivot (price for store in (
 <br/><br/>
 
 # where
-### 判断元素是否在集合中
+## 判断元素是否在集合中
 使用in或not in关键字。
 ```sql
 select 列表达式 from 表名 where 列表达式 in 集合或子查询;
@@ -253,16 +234,16 @@ select 列表达式 from 表名 where 列表达式 in 集合或子查询;
 (值1, 值2, 值3 ...)
 ```
 
-### 判断元素是否为空
+## 判断元素是否为空
 使用is NULL或is not NULL关键字。
 ```sql
 select 列表达式 from 表名 where 列表达式 is NULL;
 ```
-### like 模糊查询
+## like 模糊查询
 适用于char、varchar等类型，一般用于where子句中，来搜索符合条件的字符串。同样，可以使用“not like”来避开符合条件的字符串。
 
 使用like查询，可使用类似于正则表达式的特殊字符来匹配目标字符串。若不使用特殊字符，则like功能与“=”相同，进行全词匹配。
-#### 使用“%”来匹配0个或多个字符
+### 使用“%”来匹配0个或多个字符
 ```sql
 -- 寻找以“Tom”开头的字符串
 select * from Person where name like 'Tom%';
@@ -271,7 +252,7 @@ select * from Person where name like '%Jackson';
 -- 寻找含有“Van”的字符串
 select * from Person where name like '%Van%';
 ```
-#### 使用“_”限制匹配的字符数量
+### 使用“_”限制匹配的字符数量
 每个“_”表示匹配一个任意字符。
 ```sql
 -- 寻找以“Tom”开头，且后面还有任意4个字符的字符串
@@ -281,7 +262,7 @@ select * from Person where name like 'Tom____';
 select * from Person where name like '_A_';
 ```
 
-#### 正则表达式匹配
+### 正则表达式匹配
 使用以下函数：
 regexp_like(列表达式，正则表达式)
 ```sql
@@ -291,7 +272,7 @@ select * from Car where regexp_like(name, 'BMW X[3-5]');
 <br/><br/>
 
 # group by
-#### 基本用法
+## 基本用法
 一般和聚合函数一起使用。
 group by后接列表达式，将表中的每行按列表达式中的值进行分组。也就是说，对于每一行，它们列表达式的值相等的话会被分到同一组。
 ```sql
@@ -319,7 +300,7 @@ select grade, class, avg(score) from T group by grade, class;
 
 在group by的返回结果中，每组仅显示为一行，但每组是由原表中的多行构成的，因此需要从这多行数据中选择数据组成代表该组的那一行。此时一般使用聚合函数，对列表达式进行求和、求平均、计数等方式计算出一个值来代表这一组。
 
-#### group by显示指定行
+## group by显示指定行
 对于group by后的每一组，如果需要原来的某一行的值来代表该组进行显示，可嵌套子查询来实现。举个例子，下表为用户登录网站的记录：
 | id | time | action |
 | -- | ---- | ------ |
@@ -376,7 +357,24 @@ select * from 表名 limit i, j;
 
 
 # 函数
-### 字符型相关
+## 列筛选函数
+```sql
+-- 查询全部列
+select * from 表名;
+
+-- 返回去重后的结果集
+select distinct 列表达式 from 表名;
+
+-- 跳过查询结果的前K行
+select skip K 列表达式 from 表名;
+
+-- 返回查询结果的前K行
+select first K 列表达式 from 表名;
+-- 等价于
+select 列表达式 from 表名 where rownum <= K;
+```
+
+## 字符处理函数
 ```sql
 -- 连接两个字符串
 concat(列表达式, 列表达式)
@@ -402,7 +400,7 @@ instr(主串, 子串, pos, k)
 instrb(主串, 子串, pos, k)
 ```
 
-### 数值型相关
+## 数值处理函数
 ```sql
 -- 计算指定列中行的数量
 count(列表达式)
@@ -425,9 +423,9 @@ mod(列表达式, 值)
 -- 对结果四舍五入至指定位小数，第二个参数默认为0，即不保留小数
 round(列表达式, 值)
 ```
-### 类型转换
+## 类型转换
 
-#### to_char
+### to_char
 将数值或日期类型转换成指定格式的字符串。
 
 对于数值类型，支持的格式有：（以下为部分例子）
@@ -452,23 +450,23 @@ round(列表达式, 值)
 | to_char(date, 'MON dd, yyyy')|  APR 01, 2023 |
 
 其中yyyy、mm、dd等格式符可参考date类型的具体说明。
-#### to_date
+### to_date
 将字符串按照指定的格式转为日期类型，格式参数与to_char函数一致。
 ```sql
 to_date('2000-01-01', 'YYYY-MM-DD')
 ```
-#### to_number
+### to_number
 将字符串转成数值
 ```sql
 to_number(列表达式)
 ```
-### 其他
-#### nvl
+## 其他
+### nvl
 空值判断函数，如果列表达式A的结果非NULL，则返回A的值，否则返回B的值。
 ```sql
 nvl(列表达式A, 列表达式B)
 ```
-#### listagg
+### listagg
 将某一列中，多行的值聚合成一行，语法：
 ```sql
 listagg(列名, 分隔符) within group (order by 列名) as 新列名
@@ -507,7 +505,7 @@ group by
 
 
 # 窗口函数（Window Function）
-#### 语法规则
+## 语法规则
 窗口函数的语法主要由三部分组成：
 ```sql
 窗口函数名(参数) over (
@@ -540,7 +538,7 @@ from
 
 
 窗口函数名用于指定要使用的窗口函数，下面将详细介绍各种窗口函数
-#### 专用窗口函数
+## 专用窗口函数
 
 - rank()
 获得当前行的序号，若order by子句中指定的字段相等，则序号相同，且会占用后面行的位置。
@@ -565,7 +563,7 @@ from
 - lag(列表达式, offset, default)
 用法与lead相似，获取第i组第j-offset行的列表达式的值。
 
-#### 聚合函数作为窗口函数使用
+## 聚合函数作为窗口函数使用
 聚合函数作为窗口函数使用时，假设当前行是第i组的第j行，该行的窗口函数的计算范围为：始于第i组第1行，结束于第i组第j行。举个例子，下表记录了1到3月每日的收入，现在按天统计每个月的累计收入：
 | Month | Day | Income |
 | ----- | --- | ------ |

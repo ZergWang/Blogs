@@ -7,7 +7,7 @@
 
 
 # 字符串字面量
-### 定义
+## 定义
 在程序中以明文展示的字符串，例如"123"、"AB\nCD"这种，被称为字符串字面量，也称字符串常量。
 
 在C中，字符串字面量被视为字符数组：
@@ -27,7 +27,7 @@ for (int i=0; i<n; i++)
         //cout << a[i][j] << " \n"[j == m-1];      //C++版本
 ```
 
-### 存储与赋值
+## 存储与赋值
 字符串字面量可以初始化数组的方式赋值给字符数组：
 ```cpp
 char s[4] = "123";
@@ -46,7 +46,7 @@ s = "456";         //合法
 
 
 # 获取长度
-### C
+## C
 ```cpp
 size_t strlen(const char *str) //返回字符串的长度
 ```
@@ -54,7 +54,7 @@ size_t strlen(const char *str) //返回字符串的长度
 
 另外，strlen函数不会计算字符串末尾的空字符，但对字符数组名进行sizeof，会返回数组实际大小（也就是会算上末尾的空字符）。
 
-### C++
+## C++
 ```cpp
 string s;
 s.size()
@@ -66,7 +66,7 @@ s.size()
 
 字符串（string、char []、char*类型）则需要调用相关函数。比较规则：自左向右逐个字符，按其对应的ASCII码的大小进行比较。若字符串长度不一致，则短字符串末尾之后被视为空字符进行比较（空字符的ASCII码为0）。
 
-### C
+## C
 无论是char []或char*都必须使用函数strcmp或strncmp，直接用>、<、==可能导致结果不准。
 ```cpp
 int strcmp(const char *str1, const char *str2) 
@@ -78,7 +78,7 @@ int strncmp(const char *str1, const char *str2, size_t n)
 ```
 若相等，则返回零；若str1<str2，则返回负数；若str1>str2，则返回正数。
 
-### C++
+## C++
 直接>、<、==即可，或者：
 ```cpp
 string str1, str2;
@@ -88,7 +88,7 @@ str1.compare(pos1,len1,str2,pos2,len2);
 <br/><br/>
 
 # 查找
-### C
+## C
 ```cpp
 char *strchr(const char *str, int c)
 //找到字符c在str中首次出现的位置p，返回str中从第p位开始的所有字符。找不到返回NULL。
@@ -98,7 +98,7 @@ char *strrchr(const char *str, int c)
 char *strstr(const char *s1, const char *s2)
 //找到字符串s2在s1中首次出现的位置p，返回s1中从第p位开始的所有字符。找不到返回NULL。
 ```
-### C++
+## C++
 ```cpp
 str1.find(str2);  //返回一个整数，表示str2在str1中第一次出现的位置，若没有返回-1
 str1.rfind(str2); //同上，但从后往前找
@@ -106,7 +106,7 @@ str1.rfind(str2); //同上，但从后往前找
 <br/><br/>
 
 # 清除或填充
-### C
+## C
 ```cpp
 memset(void *p, int c, size_t n)
 ```
@@ -120,8 +120,7 @@ memset(void *p, int c, size_t n)
 
 因此，若要用memset初始化整型数组，仅0和-1可起到预期效果。
 
-
-### C++
+## C++
 ```cpp
 string s;
 s.clear();//全部清除
@@ -131,7 +130,7 @@ s.erase(pos,len);   //清除从第pos位开始的连续len个字符（包括第p
 <br/><br/>
 
 # 修改
-### C
+## C
 ```cpp
 char *strcat(char * s1, const char *s2)
 //在s1末尾添加s2，返回值为指向s1的指针
@@ -145,7 +144,7 @@ char *strncpy(char *s1, const char *s2, size_t n)
 ```
 此外，也可以使用memcpy，直接从内存中复制对应值实现对字符串的修改。
 
-### C++
+## C++
 ```cpp
 str1.append(str2);          
 //与str1+=str2等效
@@ -171,15 +170,15 @@ reverse(s.begin(), s.end());  //翻转指定范围内的字符串，参数为翻
 
 # 格式转换
 
-### C与C++转换
+## C与C++转换
 C字符串可直接赋值给C++字符串。
 
 C++字符串s转C字符串c：
 ```cpp
 strcpy(c, s.c_str());
 ```
-### 字符串转数字
-##### C
+## 字符串转数字
+### C
 使用sscanf函数，方法与参数与scanf类似，区别在于scanf从设备（键盘）中取得内容放入变量，而sscanf从str中获得内容放入变量。
 ```cpp
 int sscanf(const char *str, const char *format, ...)
@@ -191,7 +190,7 @@ sscanf(s, "%d", &d);
 ```
 该方法支持整数、小数及多种进制类型，通过格式控制符format来操作。
 
-##### C++：
+### C++：
 可使用stoi、stol、stof、stod系列的函数。支持字符串及字符数组。
 ```cpp
 #include <string>
@@ -200,8 +199,8 @@ using namespace std;
 int a = stoi("123");
 double b = stod("12.34");
 ```
-### 数字转字符串
-##### C
+## 数字转字符串
+### C
 使用sprintf函数，方法与参数与printf类似，区别在于printf将变量内容输出到屏幕，而sprintf将变量内容输出到str。
 ```cpp
 int sprintf(char *str, const char *format, ...)
@@ -214,7 +213,7 @@ sprintf(s, "%d", d);
 该方法支持整数、小数及多种进制类型，通过格式控制符format来操作。
 
 
-##### C++：
+### C++：
 使用标准的to_string函数，支持整数和实数。
 ```cpp
 #include <string>

@@ -1,7 +1,8 @@
 **<font color="ff0000">以下操作，若无特殊说明，均在Ubuntu 18.04LTS下亲测可用。</font>**
 <br/>
+
 # 软件安装与更新
-#### 换源
+## 换源
 Ubuntu默认使用的国外的软件安装源，在国内使用的话，软件的安装和更新会较慢，换源方式：
 
 编辑/etc/apt/sources.list，源的地址都在该文件中，编辑前可对原有源进行备份。
@@ -36,7 +37,7 @@ deb-src http://mirrors.aliyun.com/ubuntu/ bionic-updates main restricted univers
 deb-src http://mirrors.aliyun.com/ubuntu/ bionic-proposed main restricted universe multiverse
 deb-src http://mirrors.aliyun.com/ubuntu/ bionic-backports main restricted universe multiverse
 ```
-#### update与upgrade
+## update与upgrade
 前者为更新软件源（相当于更新一下软件版本的列表），后者为更新当前已安装的包。
 
 在更新软件前一般要update一下，确保软件更新到最新版本，然后复原损坏的软件包，尝试卸载出错的包，重新安装正确版本，最后upgrade，命令如下：
@@ -45,7 +46,7 @@ sudo apt-get update
 sudo apt-get -f install
 sudo apt-get upgrade
 ```
-#### 安装包操作
+## 安装包操作
 后缀名为deb的，是Debian，Ubuntu等Linux发行版的软件安装包，安装方式：（先到安装包目录下）
 ```bash
 dpkg -i 安装包文件名
@@ -59,7 +60,7 @@ tar -xvf  文件名
 # zip
 unzip 文件名
 ```
-#### 为软件设置快捷方式
+## 为软件设置快捷方式
 以Pycharm为例：
 
 在/usr/share/applications下新建文件pycharm.desktop，编辑：
@@ -81,7 +82,7 @@ Icon为该快捷方式指定图标，Exec相当于该快捷方式指定的exe…
 # 显卡驱动及cuda安装
 开始以下内容安装前，请确保gcc、g++已正确安装。
 
-#### Nvidia显卡驱动
+## Nvidia显卡驱动
 
 ```bash
 # 查看显卡相关信息
@@ -101,7 +102,7 @@ ubuntu-drives devices
 
 自行选择驱动下载安装，之后重启即可。
 
-#### cuda安装
+## cuda安装
 上Nvidia官网按指示下载安装对应的cuda包，安装完成后为cuda添加环境变量：
 
 打开~/.bashrc，在末尾添加：
@@ -130,7 +131,7 @@ sudo make
 ```
 最后有Result = PASS输出说明cuda可正常使用。
 
-#### cudnn安装
+## cudnn安装
 注册Nvidia账号，根据cuda版本下载对应的cudnn：
 
 
@@ -148,19 +149,19 @@ cudnn版本为7.6.5。
 <br/><br/>
 
 # 特殊软件安装
-#### 画图软件
+## 画图软件
 推荐Kolourpaint，和Windows下的画图差不多，胜在简单、方便。
 ```bash
 sudo apt-get install kolourpaint4
 ```
-#### 硬盘管理
+## 硬盘管理
 推荐拥有图形界面的软件GParted，功能和Windows下的磁盘管理类似。安装：
 ```bash
 sudo apt-get install gparted
 ```
 最初安装的时候给“/”文件系统分配空间太小，后面不够用了，本来打算重装了（因为GParted不能操作已挂载的硬盘），其实可以通过Ubuntu18.04LTS的装机U盘，利用“Try Ubuntu”进入试用版系统，该系统自带GParted，此时便可以对系统硬盘进行操作。
 
-#### 截图软件
+## 截图软件
 先讲讲Ubuntu自带截图软件的快捷键：
 
 PrintScreen键是全屏截图，Shift+PrintScreen是自选截图区域，截完之后的图默认保存在~/下。
@@ -179,13 +180,13 @@ sudo apt-get install flameshot
 
 ![](Ubuntu软件管理（持续更新）_5.png)
 
-#### gcc、g++安装
+## gcc、g++安装
 ```bash
 sudo apt-get update
 sudo apt install build-essential
 ```
 
-#### 中文输入法设置
+## 中文输入法设置
 以搜狗输入法为例，首先安装如图两个软件：
 
 ![](Ubuntu软件管理（持续更新）_6.png)

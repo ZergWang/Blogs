@@ -1,15 +1,15 @@
 # 基本概念
-### 流
+## 流
 用户使用C语言指令控制流（stream），从而控制各类硬件进行读写。流就是沟通C与各类硬件读写的桥梁。
 
-在C语言中，用户通过文件指针（FILE *）来控制流（为了方便理解，实际上我们可以把这些文件指针当作流）。文件指针指向特定的文件或硬件设备。将文件指针作为输入输出函数的参数，即可将精准地控制指定文件或硬件的输入输出。
+在C语言中，用户通过文件指针（FILE *）来控制流（为了方便理解，实际上我们可以把这些文件指针当作流）。文件指针指向特定的文件或硬件设备。将文件指针作为输入输出函数的参数，即可将精准地控制指定文件或硬件的输入输出。文件指针在使用前需要定义和手动指向指定文件或设备，使用后要手动关闭。
 
 C语言中有三个特殊的流（文件指针）。这三个指针在程序运行时会自动打开，结束时会自动关闭。
 - 标准输入流（stdin）：控制键盘。通过stdin，即可从键盘输入信息到程序中。
 - 标准输出流（stdout）：控制屏幕。通过stdout，即可将程序中的信息输出到屏幕。
 - 标准错误流（stderr）：控制屏幕。通过stdout将错误信息输出到屏幕。
 
-### 缓冲区
+## 缓冲区
 缓冲区是内存中的一块区域。在程序运行时，为了减少对硬件的IO，提高运行效率，系统会将多次的输入输出的信息先放到缓冲区中，等到特殊时机再执行实际的IO，然后刷新缓冲区。
 
 缓冲一般分为以下三种机制：
@@ -17,8 +17,8 @@ C语言中有三个特殊的流（文件指针）。这三个指针在程序运�
 - 行缓冲：输入输出过程中遇到换行符时，才对硬件执行IO操作。Linux系统中的stdin和stdout一般为行缓冲。
 - 无缓冲：不设置缓冲区，每条输入输出的指令都将直接对硬件进行IO操作。
 
-### 特殊符号
-#### CR与LF
+## 特殊符号
+### CR与LF
 全称“Carriage Return”和“Line Feed”。
 |字符|ASCII码|转义字符|功能| 十六进制编码
 | ------- | --- | ---| --- | --- |
@@ -42,7 +42,7 @@ fclose(fp);
 
 如果 fprintf 输出“\r\n”或者“\n\r”，实际上会输出为“0D 0D 0A”或者“0D 0A 0D”。
 
-#### 空字符
+### 空字符
 又称为“字符串结束符”。
 |字符|ASCII码|转义字符| 十六进制编码
 | ---| --- | ---| --- |
@@ -51,7 +51,7 @@ fclose(fp);
 打印空字符会发现其没有形状且不占位置，例如，打印“a\0b”，显示为“ab”。
 
 C一般以空字符作为字符串结束的标志。使用scanf 及 “%s” 读入的字符串会在字符串末尾自动补上一个空字符。
-#### 空白字符
+### 空白字符
 共有六种空白字符，除了回车（CR）和换行（LF），还有：
 
 |字符|ASCII码|转义字符|功能| 十六进制编码
@@ -64,7 +64,7 @@ C一般以空字符作为字符串结束的标志。使用scanf 及 “%s” 读
 <br/><br/>
 
 # 输入函数
-### fscanf
+## fscanf
 从指定流中读入信息，函数原型：
 ```cpp
 int fscanf(FILE *stream, const char *format, ...)
@@ -88,8 +88,8 @@ int fscanf(FILE *stream, const char *format, ...)
 | %u  | 无符号的十进制整数（unsigned int）|
 | %lld  | long long类型整数|
 
-使用fscanf读入信息时，空白字符会被忽略，或者作为连续fscanf时多个类型的分隔符。因此，在使用fscanf读入含空格的信息给字符串时会产生信息不全的情况。
-### scanf
+使用fscanf读入信息时，空白字符会被忽略，或者作为连续fscanf时多个类型的分隔符。因此，在使用fscanf读入含空格的字符串时可能会发生信息不全的情况。
+## scanf
 等价于fscanf(stdin, format, ...)
 
 scanf一样会将空白字符忽略，或者将其作为连续scanf时的分隔符。另外，由于scanf是行缓冲的，最后的换行键不会被scanf捕获，该换行键会留在缓冲区内。
@@ -101,7 +101,7 @@ char c[100];
 scanf("%[^\n]",&c); //遇到回车才算读入结束
 ```
 
-### fgetc，getc与getchar
+## fgetc，getc与getchar
 ```cpp
 int fgetc(FILE *stream)
 int getc(FILE *stream)
@@ -113,23 +113,23 @@ getc本质上是宏，而不是函数，其他与fgetc一致。
 
 getchar函数等价于fgetc(stdin)，除了无参数外，其他与fgetc一致。
 
-### fgets与gets
+## fgets与gets
 ```cpp
 char *fgets(char *str, int n, FILE *stream)
 ```
-从指定流中读取最多n个字符（包括空字符）。读取过程中若遇到换行、文件末尾或者已达到n个字符则结束。将读取到的字符存入str中。
+从指定流中读取最多n-1个字符（包括空字符）。读取过程中若遇到换行、文件末尾或者已经读入n-1个字符则结束。将读取到的字符存入str中。
 
 函数返回值与str相同。如果到达文件末尾、没有读取到任何字符或者发生错误，str的内容不变，返回空指针。
 
+gets函数和fgets类似，但由于gets函数没有参数约束最多读入的字符数，当流中给出的字符超过了字符数组的上限，gets函数仍然会执行，将字符写入数组之后的地址，导致系统被破坏，因此不建议使用gets函数。
 
-
-### fread
+## fread与read
 
 <br/><br/>
 
 
 # 输出函数
-### fprintf
+## fprintf
 将信息输出到指定流中，函数原型：
 ```cpp
 int fprintf(FILE *stream, const char *format, ...)
@@ -137,19 +137,35 @@ int fprintf(FILE *stream, const char *format, ...)
 用法和printf类似，多了一个FILE指针类型的参数，用于指定流。
 
 函数执行成功则返回写入的字符数，否则返回EOF。
-### printf
+## printf
 等价于fprintf(stdout, format, ...)
-### fputc
+## fputc，putc与putchar
+```cpp
+int fputc(int c, FILE *stream)
+int putc(int c, FILE *stream)
+int putchar(int c)
+```
+fputc将c转换为一个无符号char型字符，然后将其输出到指定流中。返回值等于c，若执行出错返回EOF。
 
-### fputs
+putc本质上是宏，而不是函数，其他与fputc一致。
 
+putchar等价于fputc(int c, stdout)，其他与fputc一致。
 
-### fwrite
+## fputs与puts
+```cpp
+int fputs(const char *s, FILE *stream);
+int puts(const char *s)
+```
+fputs将字符数组s输出到指定流中，直到遇到\0才停止。为安全起见，在使用fputs之前需保证s以\0结尾。fputs成功执行的返回值在不同平台编译器上不同（有些返回输出的字符数，有些返回0），但若遇到错误返回EOF。
+
+puts将字符串输出到stdout中，直到遇到\0才停止。输出完s后会多输出一个回车。其他方面和fputs一样。
+
+## fwrite与write
 
 <br/><br/>
 
 # 其他函数
-### fopen
+## fopen
 打开一个流，并指定其要读写的文件或硬件设备。函数原型：
 ```cpp
 FILE *fopen(const char *filename, const char *mode)
@@ -167,16 +183,20 @@ filename为文件路径，mode为读写模式，其中：
 
 函数返回值为一个FILE指针。若函数执行错误，返回NULL，并设置全局变量errno来标识错误。
 
-### fclose
+## fclose
 关闭流，函数原型：
 ```cpp
 int fclose(FILE *stream)
 ```
 参数为FILE指针。成功关闭返回零，否则返回EOF。
 
-### feof
+## feof
 
-### fflush
+## fseek
+
+## ferror
+
+## fflush
 
  
 <br/><br/>

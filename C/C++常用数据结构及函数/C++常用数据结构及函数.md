@@ -107,14 +107,14 @@ s.clear()   //清空集合
 # 计时
 需要调用头文件time.h
 
-#### 获取系统时间
+## 获取系统时间
 
 ```cpp
 time_t time(time_t *timer)
 ```
 返回值为time_t类型（实际为long long）。若参数为空，则返回自UTC时间1970年1月1日零点到当前经过的秒数。若不为空，则将系统时间设置为timer。
 
-#### 计算运行时间
+## 计算运行时间
 
 使用clock函数。返回值为自程序进程开始后到调用clock()时经过的时间，单位为毫秒。在要计时的代码前后调用clock()，获得两个时间戳，相减后得到代码执行所用时间。
 
@@ -171,7 +171,7 @@ double angle=arg(a);     //取得a的幅角，以弧度制表示
 
 
 # 排序  
-#### qsort
+## qsort
 ```cpp
 #include <stdlib.h>
 void qsort(a, numSize, size, Cmp)
@@ -183,9 +183,10 @@ void qsort(a, numSize, size, Cmp)
 - Cmp：比较函数，按两元素的大小返回1、0或-1。该函数需要用户自定义，其参数为两个空指针，指向待比较元素的地址。
 
 <font color="ff0000">注意：本文为了方便，在Cmp函数的返回值处使用“return 元素a-元素b”这种简单形式，但这可能导致运行结果溢出。为保险起见建议使用if语句比较元素大小并返回相应值。</font>
+<br/>
 
-### 特殊数组排序函数
-##### 一维整型数组
+## 对特殊数组使用qsort排序
+### 一维整型数组
 ```cpp
 int Cmp(const void * a, const void * b) {
     return *(int*)a - *(int*)b;
@@ -194,7 +195,7 @@ int Cmp(const void * a, const void * b) {
 int a[numsSize];
 qsort(a, numsSize, sizeof(a[0]), Cmp);
 ```
-##### 浮点型数组
+### 浮点型数组
 浮点型强制转换成整型时会直接截掉小数部分，导致无法正确判断两数之差的正负性。因此需单独用if语句判断正负。
 ```cpp
 int Cmp(const void * a, const void * b) {
@@ -209,7 +210,7 @@ int Cmp(const void * a, const void * b) {
 double a[numsSize];
 qsort(a, numsSize, sizeof(a[0]), Cmp);
 ```
-##### 直接定义的二维数组
+### 直接定义的二维数组
 ```cpp
 int Cmp(const void * a, const void * b) {
     int *x = (int*)a;   
@@ -221,7 +222,7 @@ int a[100][2];  //100行2列的数组，按第1列的大小排序（首列为第
 qsort(a, numsSize, sizeof(a[0]), Cmp);
 ```
 
-##### malloc的二维数组或指针数组
+### malloc的二维数组或指针数组
 
 在Cmp的参数中，void型指针存储的是待排序元素的地址，而malloc的二维数组或指针数组，其元素本身为指针类型，因此void指针内存储的是指针的地址，因此要在Cmp中将参数转为二级指针，取地址后得到一级指针，再取索引使用。
 ```cpp
@@ -235,7 +236,7 @@ int **a = (int**)malloc(numsSize*sizeof(int*));
 qsort(a, numsSize, sizeof(a[0]), Cmp);
 ```
 
-##### 按结构体中某成员的值排序
+### 按结构体中某成员的值排序
 ```cpp
 struct node {
     int n, i;
@@ -251,18 +252,30 @@ qsort(a, numsSize, sizeof(a[0]), Cmp);
 ```
 注意：在Cmp函数中，对a和b强制类型转换后要加上括号，否则会报错“request for member XXX in something not a structure or union”。
 
-#### sort
+<br/><br/>
+
+## sort
+### 简介
 ```cpp
 #include <algorithm>
-sort(begin, end, Cmp) 
+void sort(begin, end, Cmp) 
 ```
 其中：
 - begin：数组中第一个待排序元素的地址
 - end：数组中最后一个待排序元素的地址
-- Cmp：比较函数，与qsort一样，可省略
+- Cmp：比较函数，可省略（sort默认以升序排序）
+### 比较函数写法
+Cmp函数接收两个参数，参数类型为待排序数组的元素类型，而不是该类型对应的指针。例如，对int型数组排序，Cmp接收int型参数，而不是int*。
 
-##### 普通数组排序
+Cmp函数返回值为bool型，用于指定第一个参数是否大于（小于）第二个参数，是则返回1，否则返回0。
+<br/>
+
+## 对特殊数组使用sort排序
+### 普通数组排序
 ```cpp
+bool Cmp(int a, int b) {
+    return a > b;
+}
 // vector <int> a
 sort(a.begin(), a.end(), Cmp);
 

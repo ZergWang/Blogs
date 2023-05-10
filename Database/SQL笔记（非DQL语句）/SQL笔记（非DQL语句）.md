@@ -2,7 +2,7 @@
 <br/>
 
 # 环境设置
-### 字符集
+## 字符集
 若要创建指定字符集的库，首先在Linux中设置环境变量：（以中文utf8为例）
 ```bash
 export DB_LOCALE=zh_cn.utf8
@@ -17,14 +17,14 @@ select * from sysmaster:sysdbslocale where dbs_dbsname='库名';
 在显示的结果中，“zh_CN.57372”即zh_cn.utf8。“zh_CN.5488”即为zh_cn.GB18030-2000。
 
 无法通过dbaccess访问与当前环境变量字符集不匹配的库（错误号：23197）。
-### 语法格式
+## 语法格式
 ```sql
 -- 设置语法为oracle模式
 set environment sqlmode 'oracle';
 -- 设置语法为gbase模式
 set environment sqlmode 'gbase';
 ```
-### 锁等待策略
+## 锁等待策略
 ```sql
 -- 设置全局锁等待时间
 set lock mode to wait 秒数;
@@ -33,7 +33,7 @@ set lock mode to not wait;
 -- 设置锁一直等待
 set lock mode to wait;
 ```
-### 隔离级别
+## 隔离级别
 ```sql
 -- 设置为脏读
 set isolation to dirty read;
@@ -47,7 +47,7 @@ set isolation to repeatable read;
 <br/><br/>
 
 # Create
-### 创建数据库
+## 创建数据库
 ```sql
 -- 无日志的数据库
 create database 数据库名;          
@@ -58,18 +58,18 @@ create database 数据库名 with log;
 -- ANSI日志的数据库
 create database 数据库名 with log mode ansi
 ```
-### 创建视图
+## 创建视图
 ```sql
 -- 创建视图
 create view 视图名 as 子查询;
 -- 创建限制修改的视图
 create view 视图名 as 子查询 with check option;
 ```
-### 创建普通表
+## 创建普通表
 ```sql
 create table 表名 (列名 类型, 列名 类型 ... );
 ```
-### 创建含约束条件的表：
+## 创建含约束条件的表：
 ```sql
 create table 表名 
     (列名 类型 列约束, 列名 类型 列约束, 表约束, 表约束...);
@@ -92,7 +92,7 @@ constraint 约束名 约束类型 约束内容
 ```
 若不想起名，可省略“constrint 约束名”这两部分。
 
-#### 主键
+### 主键
 一个表的主键可唯一标识表中所有元组。受到主键约束的列必须是unique且not null。每张表最多只能有一个主键。
 
 主键可以是某一列，也可以是多个列组成的属性组。例如某表记录了某学校每个班级的情况，若要在学校中唯一标识每个班级，则需要班级号和年级号共同决定，因此(年级，班级)为主键。
@@ -104,7 +104,7 @@ primary key (列名, 列名, ...)
 -- 写成表约束，同时为主键命名
 primary key (列名, 列名 ...) constraint 主键名 
 ```
-#### 外键
+### 外键
 外键用于关联两张表，防止表间关系被破坏，同时防止非法插入。
 所有的外键都是另一张表的主键，或者说，依赖于另一张表的主键。主键所在表为父表，外键所在表为子表。
 
@@ -119,7 +119,7 @@ create table Score (id int, sum int,
 ```sql
 foreign key (列名, 列名) references 表名(列名, 列名) constraint 外键名);
 ```
-#### check
+### check
 用于限制列中值的范围。可以写为列约束，对单个列进行约束；也可以写为表约束，同时约束多个列。举个例子
 ```sql
 create table score (id int, 
@@ -129,7 +129,7 @@ create table boy (height int, gender char(5),
     check (height>0 and gender='male'));
 ```
 
-#### 其他约束
+### 其他约束
 ```sql
 -- 以下均为列约束写法
 -- default：当表中元组在该列的值为空时，补上一个默认值。
@@ -148,8 +148,8 @@ unique
 distinct
 ```
 
-### 创建分片表
-#### 轮转法分片
+## 创建分片表
+### 轮转法分片
 轮转分片表的数据会均匀分布在各个分片中。在创建此类分片表时，需要指定一个至多个datadbs，每个datadbs对应一个分片（当然也可以将多个分片存在同一个datadbs中）。
 ```sql
 -- 不指定分片名
@@ -163,7 +163,7 @@ create table 表名 (列名 类型, 列名 类型 ...) fragment by round robin
     partition 分片名3 in datadbs3;
 ```
 
-#### 表达式分片
+### 表达式分片
 表达式分片表的数据会根据各个分片的表达式来存储到对应分片中。
 ```sql
 create table 表名 (列名 类型, 列名 类型 ...) fragment by expression 
@@ -173,7 +173,7 @@ create table 表名 (列名 类型, 列名 类型 ...) fragment by expression
 ```
 可以省略分片名和partition关键字。
 
-#### 列表分片
+### 列表分片
 当表中数据较为离散、无序，或者对表需要等值查询时，可以通过列表分片的形式创建分片表。
 ```sql
 create table 表名 (列名 类型, 列名 类型 ...) fragment by list(列名) 
@@ -182,7 +182,7 @@ create table 表名 (列名 类型, 列名 类型 ...) fragment by list(列名)
     partition 分片名3 values (值3) in datadbs3;
 ```
 一个分片可以对应多个值，在values关键字后的括号里用逗号隔开即可。
-#### 间隔分片
+### 间隔分片
 当表中数据连续增长，且增加的数据值不确定但易于分类时，可以使用间隔分片。对于持续增加的数据，间隔分片表可自动为新数据按照间隔规则创建新的分片。例如一个记录员工上班时间的表，其中时间相关的数据会持续增加，可以一个月为间隔划分分片，同一个月的数据放在一个分片中。之后每个月的数据系统会自动创建新的分片进行存储。
 ```sql
 create table 表名 (列名 类型, 列名 类型 ...) 
@@ -202,7 +202,7 @@ create table 表名 (列名 int)
     fragment by range(列名) interval (10) partition minus values<0 in datadbs;
 ```
 
-### 为表中某一列创建唯一索引
+## 为表中某一列创建唯一索引
 <font color='FF0000'>一旦为某一列创建唯一索引，则表中任意两行的该列对应的属性值不能相同</font>
 ```sql
 create unique index 索引名 on 表名 (列名 asc);
@@ -212,11 +212,11 @@ create unique index 索引名 on 表名 (列名 desc);
 <br/><br/>
 
 # drop & delete 
-### 删除数据库
+## 删除数据库
 ```sql
 drop database 数据库名; 
 ```
-### 删除视图
+## 删除视图
 ```sql
 drop view 视图名;
 
@@ -224,11 +224,11 @@ drop view 视图名;
 drop view 视图名 cascade;
 ```
 举个例子，假设视图v2依赖v1，v3依赖v2，v4依赖v3……则级联删除v1时v2、v3、v4……全都会被删除。
-### 删除索引
+## 删除索引
 ```sql
 drop index 索引名;
 ```
-### 删除表
+## 删除表
 ```sql
 -- 保留表但清空其内容
 truncate 表名;
@@ -245,41 +245,41 @@ drop table 表名 cascade;
 -- 限制删除（表如果被视图或其他表的外键引用则无法删除）
 drop table 表名 restrict;
 ```
-### 删除表中的元组
+## 删除表中的元组
 ```sql
 delete from 表名 where 条件;
 ```
 <br/><br/>
 
 # insert
-### 插入单条元组
+## 插入单条元组
 ```sql
 insert into 表名 values( 列1对应值 , 列2对应值 ... );  
 ```
-### 指定列插入单条元组
+## 指定列插入单条元组
 ```sql
 insert into 表名 (列1 , 列2 , 列3 ....) values ( 值1, 值2, 值3 ... )
 ```
-### 从查询结果中插入
+## 从查询结果中插入
 ```sql
 insert into 表名 子查询语句;
 ```
-### 相同数据插入多张表
+## 相同数据插入多张表
 ```sql
 insert all into 表1 into 表2 into 表3 values或者查询语句;
 ```
-### 各表插入不同数据
+## 各表插入不同数据
 ```sql
 insert all into 表1  values(...)  into 表2 values(...);
 ```
-### 根据查询结果插入不同的表
+## 根据查询结果插入不同的表
 ```sql
 insert all 
     when 条件1 then into 表1 
     when 条件2 then into 表2 
     else into 表3 查询语句;
 ```
-### 仅执行首个匹配条件的插入操作
+## 仅执行首个匹配条件的插入操作
 ```sql
 insert first 
     when 条件1 then into 表1 
@@ -289,8 +289,8 @@ insert first
 <font color=#ff0000>使用first关键字时：对于select出来的每个元组，仅执行首个匹配的when语句中的插入操作。
 使用all关键字时：对于select出来的每个元组，执行所有匹配的when语句中的插入操作。</font>
 
-### 从外部文件导入数据（load命令）
-#### GBase操作步骤
+## 从外部文件导入数据（load命令）
+### GBase操作步骤
 ```sql
 load from 数据文件路径 insert into 表名;
 ```
@@ -300,7 +300,7 @@ load from 数据文件路径 insert into 表名;
 ```sql
 insert into 表名 values (filetoclob(路径名, 文件位置));
 ```
-#### Oracle操作步骤
+### Oracle操作步骤
 导入前需准备数据文件和导入脚本两个文件
 
 导入脚本编写：
@@ -320,15 +320,15 @@ sqlldr userid=用户名/密码@库名 control=脚本文件路径
 <br/><br/>
 
 # update & alter
-### 重命名表
+## 重命名表
 ```sql
 rename table 旧表名 to 新表名;
 ```
-### 单条元组修改
+## 单条元组修改
 ```sql
 update 表名 set 列名=新值 where 条件;
 ```
-### 修改表中列
+## 修改表中列
 ```sql
 -- 添加列
 alter table 表名 add 列名 列类型;
@@ -337,13 +337,13 @@ alter table 表名 add 列名 列类型;
 alter table 表名 drop column 列名;
 ```
 
-### 约束
-#### 添加约束
+## 约束
+### 添加约束
 ```sql
 alter table 表名 add constraint 约束类型 约束内容 constraint 约束名;
 ```
 若不需要为约束起名，可省略“constraint 约束名”这两部分。
-#### 删除约束
+### 删除约束
 ```sql
 -- 通过约束名删除约束
 alter table 表名 drop constraint 约束名;
@@ -351,7 +351,7 @@ alter table 表名 drop constraint 约束名;
 -- 删除主键
 alter table 表名 drop primary key;
 ```
-### 修改分片表
+## 修改分片表
 ```sql
 -- 新建分片
 alter fragment on table 分片表名 
@@ -375,7 +375,7 @@ alter fragment on table 分片表名 attach 普通表名;
 
 
 # 特殊数据类型
-### 大对象
+## 大对象
 用于存储大文件、多媒体文件的一种数据类型。有简单大对象和智能大对象两种类型。每种类型下通过存储文本文件还是二进制文件又可分为总计四种类型。
 
 | 类型 | 简单大对象 | 智能大对象 |
@@ -387,8 +387,8 @@ alter fragment on table 分片表名 attach 普通表名;
 | 存储二进制文件的类型| byte | blob |
 
 简单大对象的insert可通过load命令从文件中加载，智能大对象通过filetoblob和filetoclob函数从文件中加载，在Oracle模式下，clob可仿照char类型，直接通过insert插入。
-### date
-### datetime
+## date
+## datetime
 用于日期和时间的记录。默认格式：YYYY-MM-DD HH:MM:SS:FFF，可通过GL_DATETIME环境变量来修改。
 建一个含datetime列的表：
 ```sql
@@ -396,13 +396,13 @@ create table 表名  (列名 datetime year to second);
 ```
 “year to second”规定了datetime列的格式为YYYY-MM-DD HH:MM:SS，若只需精确到月份，可“year to month”，最大可精确到3位毫秒（YYYY-MM-DD HH:MM:SS.FFF），即“year to fraction(3)”。
 
-#### 相关函数
+### 相关函数
 NUMTOYMINTERVAL
 
 <br/><br/>
 
 # 其他
-### 执行sql脚本
+## 执行sql脚本
 ```sql
 -- gbase写法，在终端中执行
 dbaccess 库名 脚本路径
@@ -425,7 +425,7 @@ spool off
 ```sql
 set termout off
 ```
-### 查看sql执行时间
+## 查看sql执行时间
 ```sql
 -- gbase写法，在终端中执行
 export DBACCESS_SHOW_TIME=1
@@ -433,7 +433,7 @@ export DBACCESS_SHOW_TIME=1
 -- Oracle写法，在sql中执行
 set timing on;
 ```
-### 查看执行计划
+## 查看执行计划
 ```sql
 -- gbase写法，在sql中执行，在当前路径下生成文件sqexplain.out
 set explain on;
@@ -443,7 +443,7 @@ set explain on;
 explain plan for SQL语句
 select * from table (DBMS_XPLAN.DISPLAY);
 ```
-### 注释
+## 注释
 单行注释
 ```sql
 -- 注释内容
@@ -454,7 +454,7 @@ select * from table (DBMS_XPLAN.DISPLAY);
    注释内容
    ... */
 ```
-### 事务
+## 事务
 ```sql
 -- 开始事务
 begin;
@@ -463,7 +463,7 @@ commit;
 -- 回滚事务
 rollback;
 ```
-### Oracle用户管理
+## Oracle用户管理
 ```sql
 create user 用户名 identified by 密码;
 -- 若提示“invalid common user or role name”，在用户名前面加上“C##”

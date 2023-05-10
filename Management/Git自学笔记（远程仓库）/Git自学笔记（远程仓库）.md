@@ -1,7 +1,7 @@
 # 使用Github作为远程仓库
 例如，本地有一个仓库，暂且设其名字为“Documents”，现在想将该仓库推送到Github上，具体步骤为：
 
-#### 设置SSH密钥
+## 设置SSH密钥
 在当前用户主目录下（即C:/Users/用户名/，若是Linux系统则在/home/用户名）下查看是否有.ssh目录，若没有说明在本机上还未创建SSH密钥，创建方法：（以cmd命令为例）
 ```bash
 ssh-keygen -t rsa -C "zergwang@example.com"
@@ -14,7 +14,7 @@ ssh-keygen -t rsa -C "zergwang@example.com"
 ![](Git自学笔记（远程仓库）_1.png)
 title随便写，key项就将.ssh目录下id_rsa.pub打开，内容复制进去即可。
 
-#### 在Github创建对应仓库并与本地关联
+## 在Github创建对应仓库并与本地关联
 本地要推送的仓库为“Documents”，则可以在Github中创建对应的一个仓库（名字一不一样其实无所谓）
 
 之后，在本地仓库的工作目录中：
@@ -74,7 +74,7 @@ git pull
 <br/><br/>
 
 # 其他操作
-#### 查看远程库信息
+## 查看远程库信息
 ```bash
 git remote -v
 ```
@@ -85,7 +85,7 @@ origin  https://github.com/用户名/XXXX.git (push)
 ```
 以上信息说明了远程仓库的克隆地址以及推送地址，若无推送权限，则无第二行信息。
 
-#### 标签推送
+## 标签推送
 推送某个标签到远程：
 ```bash
 git push origin 标签名
@@ -99,7 +99,7 @@ git push origin --tags
 git tag -d 标签名
 git push origin :refs/tags/标签名
 ```
-#### 推送冲突解决
+## 推送冲突解决
 对于同一仓库的同一分支，在多人协作时会由于多人推送的版本冲突而导致当前的推送失败。对此，需要先将他人推送后的版本抓取下来，在本地解决冲突后再推送：
 ```bash
 git pull
@@ -109,7 +109,7 @@ git pull
 git branch --set-upstream-to=origin/远程分支名 本地分支名
 ```
 一般这两个分支名是一样的。
-#### push/pull/clone报错
+## push/pull/clone报错
 平时push/pull/clone正常，但突然某一天报错：
 ```
 kex_exchange_identification: Connection closed by remote host

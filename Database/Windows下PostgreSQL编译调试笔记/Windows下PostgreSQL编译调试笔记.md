@@ -2,7 +2,7 @@
 
 本笔记适用于个人开发者在单机单节点下PostgreSQL 13软件的安装与调试。
 
-#### 下载并配置编译环境
+## 下载并配置编译环境
 
 MSYS2是一个集成了MinGW、Cygwin等编译引擎的软件，同时集成了Shell命令以及编译环境配置等功能，专门用于在Windows平台下编译各类C/C++软件。
 
@@ -16,7 +16,7 @@ pacman --needed -S mingw-w64-x86_64-gdb
 ```
 遇到选择时全都输入“y”即可。
 
-#### 下载并解压PostgreSQL源码
+## 下载并解压PostgreSQL源码
 
 可通过PostgreSQL的官网下载。注意选择PostgreSQL 13版本（13.0到13.9均可，本人使用的是13.9版本）
 
@@ -25,7 +25,7 @@ pacman --needed -S mingw-w64-x86_64-gdb
 <br/><br/>
 
 # 编译与安装
-#### 生成makefile文件
+## 生成makefile文件
 MSYS2 MinGW x64下的命令与Shell一致，C盘根目录对应的地址为“/c/”。
 
 打开MSYS2 MinGW x64，进入PostgreSQL源码目录后执行以下命令：
@@ -36,14 +36,14 @@ MSYS2 MinGW x64下的命令与Shell一致，C盘根目录对应的地址为“/c
 
 编译完成后进入源码目录，修改src目录下的Makefile.global文件，找到以“CFLAGS = -Wall”以及“CXXFLAGS = -Wall”开头的两行，将这两行命令中的“-O2”参数去掉。（注意：以上Makefile.global的修改仅适用于PostgreSQL 13的源码）
 
-#### 编译并安装PostgreSQL
+## 编译并安装PostgreSQL
 打开MSYS2 MinGW x64，进入PostgreSQL源码目录后执行以下命令：
 ```bash
 make
 make install
 ```
 
-#### 初始化数据库
+## 初始化数据库
 在Windows下的cmd命令行中进入安装目录下的bin中，执行：
 ```bash
 initdb -D C:\pg\data
@@ -52,7 +52,7 @@ initdb -D C:\pg\data
 
 如果不想每次都要进入安装目录下的bin中执行命令，可将该目录加入系统环境变量。
 
-#### 数据库注册（该步骤可跳过）
+## 数据库注册（该步骤可跳过）
 将数据库服务注册为Windows的系统服务，方便以后启停数据库服务。以下命令需要在有管理员权限的cmd中使用。
 ```bash
 pg_ctl register -N pg -D "C:\pg\data" -w -S demand
@@ -96,12 +96,11 @@ psql -d 数据库名
 <br/><br/>
 
 # 调试PostgreSQL
-#### gdb调试
 首先在psql命令行下查找数据库服务的进程号：
 ```sql
 select pg_backend_pid();
 ```
-然后直接在cmd中：
+然后使用gdb命令即可：
 ```bash
 gdb attach 进程号
 ```
