@@ -344,15 +344,23 @@ select 列表达式 from 表名 order by 列表达式1 desc, 列表达式2 asc, 
 <br/><br/>
 
 
-# limit
-注意：Oracle并不兼容limit语法。
-limit一般用于最后对查询结果的筛选。假设只需要查询结果的前k条，或者需要查询结果的第i条及后面的j-1条：
+# limit 与 offset
+注意：limit与offset为MySQL特有语法。在limit语句中，查询结果索引从0开始。
+
+limit与offset一般用于最后对查询结果的筛选。其中，limit有两种使用方式：
+1. 单参数limit。假设要查询结果的前k条
 ```sql
 select * from 表名 limit k;
-
+```
+2. 双参数limit。需要查询结果的第i条开始的连续j条：
+```sql
 select * from 表名 limit i, j;
 ```
-注意：在limit语句中，查询结果索引从0开始。
+
+offset只能与单参数limit搭配使用，可以起到与双参数limit同样的效果。假设要查第i条开始的连续j条：
+```sql
+select * from 表名 limit j offset i;
+```
 <br/><br/>
 
 
@@ -376,8 +384,8 @@ select 列表达式 from 表名 where rownum <= K;
 
 ## 字符处理函数
 ```sql
--- 连接两个字符串
-concat(列表达式, 列表达式)
+-- 将多个列的内容合并，或者拓展某列的内容
+concat(列表达式或常量, 列表达式或常量 ...)
 
 -- 取字符串的字符长度
 length(列表达式)

@@ -71,7 +71,7 @@ su - 用户名
 passwd
 ```
 ## 环境变量
-通过export命令设置环境变量，仅可在当前登录的shell中生效。
+通过export命令设置变量，仅可在当前登录的shell中生效。
 ```bash
 export 变量名=值
 
