@@ -34,4 +34,21 @@ C++版本的报错信息是“non-void function does not return a value”。
 <br/>
 
 ### reference to non-static member function must be called
-对于非静态成员函数，其参数表会隐式地加上this指针，这可能导致
+在C++中，对于非静态成员函数，其参数表会隐式地加上this指针，这可能导致在调用该函数时参数表无法匹配。例如，在成员函数中调用sort，且用户自定义的比较函数Cmp也作为了成员函数：
+```cpp
+class Solution {
+public:
+    bool Cmp(int a, int b) {
+        ...
+    }
+
+    int Func(vector<int> a) {
+        sort(a.begin(), a.end(), Cmp);
+    }
+}
+```
+由于Cmp为非静态成员函数，编译后其参数表会变成：
+```cpp
+bool Cmp(Solution *this, int a, int b)
+```
+此时，sort函数调用Cmp，会发现参数表匹配不上，因此报错。将Cmp改为静态成员函数即可。
