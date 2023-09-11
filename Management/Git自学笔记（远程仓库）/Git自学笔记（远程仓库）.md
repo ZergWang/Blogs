@@ -19,7 +19,7 @@ title随便写，key项就将.ssh目录下id_rsa.pub打开，内容复制进去�
 
 之后，在本地仓库的工作目录中：
 ```bash
-git remote add origin https://github.com/用户名/Documents.git
+git remote add origin git@github.com:用户名/Documents.git
 ```
 其中，后面的网址要对应为自己的Github账号以及对应的远程库。假如远程库名为“Documents”，则地址如同以上示例代码，为“Documents.git”。
 <br/><br/>

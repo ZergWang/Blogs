@@ -1,5 +1,5 @@
 # 路径问题
-#### 目录增删
+## 目录增删
 ```python
 import os, shutil
 os.mkdir(path)        #创建单级目录
@@ -10,14 +10,14 @@ os.chdir(path)        #更改当前工作所处目录
 shutil.rmtree(path)   #删除目录及目录内所有文件
 ```
 
-#### 相对路径
+## 相对路径
 Python与Linux一致，支持相同路径和绝对路径，且语法一致。
 
 注意：在Windows中，文件的从属关系用“\”表示，然而在Python中该符号为转义符号，因此建议在Python中表示路径时使用“/”或“\\”。（非Windows系统如Linux本身就用“/”表示）。
 
 如果将Python中的某些文件路径打印出来，可能会看到“\\”、“\”和“/”共存的情况，这个不影响，只要代码中使用“/”或“\\”即可。
 
-#### 获取当前文件的位置
+## 获取当前文件的位置
 ```python
 import os
 print(os.getcwd())
@@ -34,7 +34,7 @@ C:\Users\Zerg Wang\Desktop\a.py
 ```
 同样的路径，不同函数混用“\”和“/”。
 
-#### 完整路径下分离路径、文件名、拓展名：
+## 完整路径下分离路径、文件名、拓展名：
 ```python
 import os 
 st = '1/2/3/4/5.jpg' 
@@ -51,7 +51,7 @@ filename = os.path.splitext(st)[0]
 extensionname = os.path.splitext(st)[1]
 ```
 
-#### 获取文件夹下所有文件名
+## 获取文件夹下所有文件名
 ```python
 os.listdir(dir_path)
 ```
@@ -92,7 +92,7 @@ airplane00.tif
 airplane01.tif
 ```
 
-#### glob
+## glob
 Python自带的库，无需pip安装，功能类似于Windows中的搜索，其函数glob.glob(path)通过在path中插入通配符“\*”或“?”起到搜索的功能，返回为一个列表，包含所有符合的结果路径。除了常用的glob.glob，还有glob.iglob，两者功能类似，后者返回迭代器。
 
 以VOC数据集的路径为例：
@@ -125,7 +125,7 @@ f.close()              #一般要在最后关闭文件的读写，防止其持�
 
 以上方法可接参数，表示每次读取的字节数，因此以上方法可迭代使用。
 
-#### 文件写入
+## 文件写入
 ```python
 f = open(path,'w')       #若文件不存在会自动创建
 
@@ -136,7 +136,7 @@ f.write('context...')    #向文件写入内容
 print(something, file=f) #将原本print到控制台或屏幕的内容写入到文件f
 ```
 
-#### 读写模式
+## 读写模式
 如果要使文件可在程序中既能被读也能被写：模式可以设置为'r+'、'w+'、'a+‘。
 
 文件读写的进度靠一个指针控制，读取和写入共用该指针，也就是说，要实现'a'模式，可以先：
@@ -154,14 +154,14 @@ f.read()
 
 图片出处：http://www.runoob.com/python/python-files-io.html
 
-#### 二进制形式读写：
+## 二进制形式读写：
 在对应的模式下加上'b'即可，例如：
 ```python
 f1 = open(path,'rb')
 f2 = open(path,'wb')
 f3 = open(path,'ab')
 ```
-#### With...as读写方式
+## With...as读写方式
 为防止文件读写过程中出错中止程序以至于f.close()未能执行，一般会使用try...finally保证文件被正常关闭：
 ```python
 try:
@@ -177,13 +177,13 @@ with open(path, 'r') as f:
     print(f.read())
 ```
 
-#### 删除与重命名
+## 删除与重命名
 ```python
 import os
 os.rename(old_path, new_path)
 os.remove(path)
 ```
-#### 复制与移动
+## 复制与移动
 ```python
 import shutil
 shutil.move(file_path, target_path)    #文件移动
@@ -195,7 +195,7 @@ shutil.copyfile功能与shutil.copy相似，但使用前者可能会遇到权限
 
 前面的file_path也可以填写目录名，但shutil.copy复制目录可能会遇到权限问题……
 
-#### 特殊数据类型与文件的交互
+## 特殊数据类型与文件的交互
 字典、列表的内容若要存储于文件，或从文件中读取（代码中的d可以是列表，也可以是字典）：
 ```python
 #保存

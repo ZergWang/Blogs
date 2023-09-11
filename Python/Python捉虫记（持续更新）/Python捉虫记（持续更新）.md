@@ -3,7 +3,7 @@
 <br/><br/>
 
 # Import
-#### import pyx
+## import pyx
 pyx文件的import需要Cython库的支持，因此要先装Cython，并在import相应pyx库前加入：
 ```python
 import pyximport
@@ -15,10 +15,10 @@ python setup.py build_ext --include-dirs=C:\ProgramData\Anaconda3\envs\pytorch\L
 ```
 后面的地址因人而异，填自己电脑里的numpy地址即可。
 
-#### 缺少concurrent模块
+## 缺少concurrent模块
 python 3.X版本自带，python 2.X安装：pip install futures
 
-#### 同级文件引用
+## 同级文件引用
 
 同文件夹下的a.py要引用b.py：
 
@@ -44,7 +44,7 @@ config = tf.ConfigProto()
 config.gpu_options.per_process_gpu_memory_fraction = 0.3
 session = tf.Session(config=config, ...)
 ```
-#### Keras
+## Keras
 ```python
 import os
 import tensorflow as tf
@@ -67,15 +67,15 @@ K.clear_session()
 <br/><br/>
 
 # Pytorch下的维度问题
-#### slice index 1 of dimension 0 out of bounds
+## slice index 1 of dimension 0 out of bounds
 在跑深度学习模型的时候遇到的错误，一般是模型参数的问题，如果经检查发现参数没问题，改下batch_size试试（改大或改小，不改维度）……
 
-#### invalid argument 0: Sizes of tensors must match except in dimension 0.
+## invalid argument 0: Sizes of tensors must match except in dimension 0.
 可能情况一：数据集中图片尺寸不一致，统一尺寸即可。
 
 可能情况二：数据集中样本总数与batch size不匹配，如样本总数无法整除以batch size，更改batch size即可。
 
-#### 1only batches of spatial targets supported
+## 1only batches of spatial targets supported
 图像分割任务中，训练时经模型预测输出的内容格式为[batchsize, n_class, height, weight]，而图像分割任务中的标签一般是单通道的，格式为[batchsize, channel=1, height, weight]。若损失函数为CrossEntropyLoss()，则在计算损失函数时应将真实标签格式调整为[batchsize, height, weight]，否则便会报出上述错误。因此，需要对标签的tensor降维：
 ```python
 true_labels = true_labels.squeeze()
@@ -83,10 +83,10 @@ true_labels = true_labels.squeeze()
 <br/><br/>
 
 # 其他
-#### %matplotlib inline
+## %matplotlib inline
 用于Jupyter Notebook的.ipynb文件中，作用是可令matplotlib的画图函数以Jupyter Notebook为画布绘制图像，在Jupyter中使用很方便，但移植到普通的.py中则是错误命令，注释掉即可。
 
-#### 文件读写时的转义字符
+## 文件读写时的转义字符
 ```python 
 f = open('a.txt','w')
 f.write('132\n321')

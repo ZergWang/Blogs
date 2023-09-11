@@ -28,7 +28,7 @@ plt.savefig(path)
 <br/><br/>
 
 # 设置图像大小及子图
-### 图像大小、精细程度、边框等
+## 图像大小、精细程度、边框等
 ```python
 plt.figure(figsize=(length, width))
 ```
@@ -42,7 +42,7 @@ import matplotlib as mpl
 mpl.rcParams['axes.linewidth'] = 3
 ```
 
-### 绘制多个子图
+## 绘制多个子图
 假如要绘制如下的三张图：
 ![](Matplotlib绘图操作极简笔记_2.png)
 
@@ -72,7 +72,7 @@ plt.show()
 <br/><br/>
 
 # 坐标轴设置
-### 坐标轴刻度与间隔
+## 坐标轴刻度与间隔
 ```python
 plt.xticks(list, label, rotation)
 plt.yticks(list, label, rotation)
@@ -89,7 +89,7 @@ plt.bar(x, y)
 
 实际上list参数可以与x不一致，虽然会比较奇怪……
 在没有使用该刻度设置函数的前提下，实际成图的时候会通过x轴表示信息的坐标范围而自动设置刻度。如果不想显示刻度，则list为空即可。
-### 坐标轴范围
+## 坐标轴范围
 ```python
 plt.ylim(ymin, ymax)
 ```
@@ -97,13 +97,13 @@ plt.ylim(ymin, ymax)
 <br/><br/>
 
 # 设置曲线特征
-### 颜色
+## 颜色
 ```python
 plt.plot(time, east, color='red', label='Eastern Region')
 plt.plot(time, west, color='green', label='Western Region')
 ```
 颜色可以为单个str值，指定该条曲线（散点，柱）的统一的颜色，也可以为与x、y同样size的string类型的列表，为每个值指定颜色（为每个值设置颜色不适用于折线图）。
-### 粗细及样式
+## 粗细及样式
 柱状图中柱子的宽度：
 ```python
 plt.bar(x, y, width=0.5)
@@ -135,7 +135,7 @@ plt.bar(x, y_low)
 plt.show()
 ```
 ![](Matplotlib绘图操作极简笔记_6.png)
-### 曲线标签设置
+## 曲线标签设置
 为了使多条曲线间具有区分度，可设置曲线的标签和颜色，若要在图中显示图例（说明什么颜色的曲线表示什么），则label必须要设置，并在绘图函数后加以下语句以显示不同曲线的标签信息
 ```python
 plt.legend(loc='upper left')
@@ -148,11 +148,11 @@ plt.legend(loc='upper left')
 <br/><br/>
 
 # 为图像添加文字信息
-### 设置图表名称
+## 设置图表名称
 ```python
 plt.title('Economic vitality scores of cities in 2028')
 ```
-### X、Y轴标签信息
+## X、Y轴标签信息
 设置x、y轴的信息，从而进行单位说明：
 ```python
 plt.xlabel('City')
@@ -165,7 +165,7 @@ plt.ylabel('文字信息', fontsize=文字大小, labelpad=与坐标轴的距离
 
 ![](Matplotlib绘图操作极简笔记_8.png)
 
-### 曲线上标注具体数值
+## 曲线上标注具体数值
 若要在图中每个点、柱、折线处显示具体数值，可以：
 ```python
 for i, j in zip(x, y):
@@ -176,7 +176,7 @@ for i, j in zip(x, y):
 
 当然，这些文字的大小、颜色、样式均可在相应函数中进行设置，方法与设置X、Y轴标签信息类似。
 
-### 中文显示
+## 中文显示
 直接输出中文是无法显示的，因为matplotlib默认使用的字体中无中文。因此应更换默认的字体为包括中文的字体样式。
 
 全局更换，也就是把图中所有的字体都换成指定字体（如以下代码指定的SimHei字体，也就是黑体）：
