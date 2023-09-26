@@ -182,10 +182,16 @@ void sort(begin, end, Cmp)
 Cmp函数接收两个参数，参数类型为待排序数组的元素类型，而不是该类型对应的指针。例如，对int型数组排序，Cmp接收int型参数，而不是int*。
 
 Cmp函数返回值为bool型，用于指定第一个参数是否大于（小于）第二个参数，是则返回1，否则返回0。
+
+若不想写比较函数，但又想按降序排序，可使用std:greater比较函数：
+```cpp
+//对int型数组a：
+sort (a, a+n, greater<int>());
+```
 <br/>
 
 ## 对特殊数组使用sort排序
-### 普通数组排序
+### 普通一维数组
 ```cpp
 bool Cmp(int a, int b) {
     return a > b;
@@ -196,3 +202,4 @@ sort(a.begin(), a.end(), Cmp);
 // int a[n]
 sort (a, a+n, Cmp);
 ```
+### 结构体数组
