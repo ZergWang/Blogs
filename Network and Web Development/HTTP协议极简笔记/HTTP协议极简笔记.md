@@ -67,11 +67,11 @@ STATUS为状态，CODE为状态代码，不同的状态对应不同的代码。�
 | 505 | HTTP Version Not Supported | 不支持该HTTP版本|
 
 ## header
-header部分的每行由一对key-value构成：
+header部分的每行由一域（field）构成，每个“域”实际上一对key-value，用来描述报文、主机或数据的一些属性：
 ```
 KEY: VALUE
 ```
-常见的KEY信息有Host（主机名）、Content-Length（传输内容的大小）、Range（指定接受object的某个部分）等。
+常见的KEY信息有Host（主机名）、Content-Length（传输内容的大小）、Range（通过字节数指定接受object的某个部分）等。
 
 header最后一行完全留空，用于标识header的结束。
 
@@ -81,4 +81,37 @@ header最后一行完全留空，用于标识header的结束。
 <br/><br/>
 
 
-# Cookies与Cache
+# Cookies
+## 简介
+HTTP是无状态协议，过去客户端与服务器进行的交互不会被记录，也无法影响未来的交互。虽然无状态协议简单高效，计算资源消耗也小，但也无法满足现在越来越多样化的Web服务。例如在论坛网站上，由于无状态协议无法记录之前的登录信息，因此每次评论都需要重新登录，这会非常麻烦。
+
+Cookies功能解决了上述麻烦。其功能通过三个部分实现：报文header中Cookies相关的域、客户端本机的Cookies文件、服务器后端存储Cookies信息的数据库。
+
+## Cookies工作流程
+1. 客户端在首次登录某网站后，网站服务器便会为该客户端生成一个独一无二的Cookies信息（其中包括了分配给该客户端的sid、Cookies过期时间等信息）。该Cookies信息会保存在服务器的数据库中。
+   
+2. 服务器通过回应报文中的Set-Cookie域将Cookies信息传回给客户端。
+   
+3. 收到服务器生成的Cookies信息后，客户端将其保存在本机的Cookies文件中。
+   
+4. 客户端在Cookies有效期内再访问该网站，在请求报文中的Cookies域中加入对应的sid，服务器收到该报文后与数据库进行比对，便可知道来者何人。
+   
+## 应用
+简单来说，Cookies就是一个用户认证机制，服务器通过Cookies识别出不同的客户端（用户），因此，服务器可在后台数据库中记录不同用户的个性化需求（例如用户设置、用户收藏夹、个性化推送等功能）
+
+# Cache
+## 简介
+为了进一步提高Web服务质量，减少网络流量，对于网页上比较常用的object会进行缓存（Cache）操作。客户端在访问网站时，首先会对Cache发送请求，若客户端要访问的object存在于Cache中则可直接返回该object。若没有，则Cache负责向服务器发送请求，得到对应object，缓存并返回给客户端。
+
+Cache机制实际上不一定仅部署在客户端本地。很多ISP会将Cache机制部署在代理服务器中，从而优化其用户的体验。
+
+## Conditional GET
+如果服务器中某个object更新了，且该object有对应的Cache，客户端如何才能保证自己访问到最新的object呢？因此引入Conditional GET方法来解决上述问题。
+
+简单来说，就是Cache缓存object时，同时会记录该object的更新时间（假设为t1）。客户端每次请求该object时，Cache会向服务器发送Conditional GET的请求报文来检查该object是否被更新。请求报文使用GET方法，并在header中加入“If-modified-since”域，告知服务器该object的更新时间t1。如果服务器中的object在t1后确实被更新了（假设更新于t2），则返回最新版的object和t2，Cache则缓存最新的object并将更新时间记录为t2。如果服务器中的object没更新，则仅返回状态代码304：Not Modified。
+
+<br/><br/>
+
+
+# 参考资料
+[认识HTTP----Cookie和Session篇](https://zhuanlan.zhihu.com/p/27669892)

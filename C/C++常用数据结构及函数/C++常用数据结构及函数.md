@@ -157,8 +157,8 @@ struct node {
 };
 
 int Cmp(const void * a, const void * b) {
-    return ((struct node *)a)->n - ((struct node *)a)->n;
-    //也可以写成：return (*(struct node *)a).n - (*(struct node *)a).n;
+    return ((struct node *)a)->n - ((struct node *)b)->n;
+    //也可以写成：return (*(struct node *)a).n - (*(struct node *)b).n;
 }
 
 struct node a[numsSize];
