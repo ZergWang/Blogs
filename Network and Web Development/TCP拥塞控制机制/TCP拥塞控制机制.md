@@ -58,5 +58,5 @@ SWND = min(CWDN, RWDN)
 
 <br/><br/>
 
-# 参考资料
+# 参考资料及部分图片出处
 [小林coding：图解网络](https://xiaolincoding.com/network/)

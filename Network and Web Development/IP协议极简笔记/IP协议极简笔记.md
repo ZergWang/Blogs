@@ -46,3 +46,35 @@ fragment 3共1040字节，header20字节，数据1020字节（$3980-1480-1480=10
 ## header checksum
 占用16bit，为header部分作校验和。
 ## IP address
+
+
+### IP地址分类
+
+A类地址以“0”开头，接下来7位用于表示subnet，剩下的表示host。
+
+B类地址以“10”开头，接下来14位表示subnet，剩下的表示host。
+
+C类地址以“110”开头，接下来21位表示subnet，剩下的表示host。
+
+D类地址一般用于多点广播（multicast），不指向特定的网络。D类地址以“1110”开头。
+
+E类地址为将来使用保留，以“1111”开头。
+
+![](IP协议极简笔记_3.png)
+
+<br/><br/>
+
+
+# DHCP协议
+
+
+<br/><br/>
+
+# NAT
+即Network Address Translation。本地网络（LAN）
+
+
+# ICMP
+即Internet Control Message Protocol。该协议用于在网络中传输控制消息，反馈通信过程中可能发生的各种问题，方便网络管理者对所发生的问题作出诊断并采取措施。
+
+ICMP属于网络层协议，但在IP协议“之上”。换句话说，IP报文会携带ICMP报文内容来进行传输。
