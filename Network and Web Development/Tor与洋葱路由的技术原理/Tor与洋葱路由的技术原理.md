@@ -14,7 +14,7 @@
 ![](Tor与洋葱路由的技术原理_2.png)
 
 ### Step 1：节点选择
-首先，客户端在访问服务器前，需要从目录节点（directory node）中选择多个节点来构成本次访问的路由路径（该路径一般称为“chain”或者“circuit”）。这些节点是分布在世界各地的服务器，由Tor Project的志愿者维护。
+当客户端需要访问指定服务器时，他首先要从目录节点（directory node）中选择多个节点来构成本次访问的路由路径（该路径一般称为“chain”或者“circuit”）。这些节点是分布在世界各地的服务器，由Tor Project的志愿者维护。
 ### Step 2：准备阶段
 假设为本次访问选择了三个节点（实际上的circuit可能由上百个节点构成）。这三个节点对应了三把密钥，每个节点只能知道自身对应的密钥，而客户端可以获知所有的密钥信息。客户端需要逐一使用这三把密钥对消息进行加密，加密过程如下图所示：
 
@@ -52,7 +52,7 @@ Node 3收到后使用Key 3进行解密，解密后得到明文（“洋葱”的
 ### 恶意志愿者可能会破坏匿名性
 恶意志愿者设置的节点可能会令消息在传输过程中离开洋葱路由网络，失去保护的消息可能会被破解从而导致客户端身份的暴露。
 ### 复杂流量分析可能会破坏匿名性
-如果黑客在多个节点处窃听并进行流量分析（消息进出洋葱路由网络的时间、频率等信息），则客户端的活动模式可能会被分析并记录，从而猜测处客户端的身份。
+如果黑客同时在多个节点处窃听并进行流量分析（消息进出洋葱路由网络的时间、频率等信息），则客户端的活动模式可能会被分析并记录，从而猜测处客户端的身份。
 
 ### Exit node易遭受攻击
 根据前文所述，Exit Node和目标服务器之间传输的消息并不会藉由洋葱路由技术加密。也就是说，如果这段通信没有使用加密协议（如HTTPS），则黑客还是能获知通信内容，从而获知客户端的具体信息。
@@ -61,7 +61,17 @@ Node 3收到后使用Key 3进行解密，解密后得到明文（“洋葱”的
 <br/><br/>
 
 # Tor 
+2004年，Roger Dingledine、Nick Mathewson、Paul Syverson三人发表论文《Tor: The Second-Generation Onion Router》，在原来Onion Routing的基础上，提出了第二代Onion Routing的技术：Tor。相比前代，Tor有更加详细、规范的实现细节和技术标准：
 
+- 规范化的通信流程：Tor详细制定通信时stream创建及关闭的规则，节点的选择流程，加密算法的选择（Diffie-Hellman）、各个节点的密钥的协商步骤、circuit的创建等。
+
+- 规范化的消息格式：Tor网络中通信的消息被称为“cell”，每个cell都固定为512字节。cell分成control cell和relay cell两种。stream创建关闭、各个节点的密钥协商、错误控制都通过前者实现，后者用于传输data。
+
+- 通信加密：Tor规定了客户端与各个节点通信时必须使用TLS加密，解决了上文所述Exit node易遭受攻击的问题。
+
+- 拥塞控制：Tor基于TCP传输运行，因此Tor可以利用TCP的拥塞控制机制。此外，作者还额外制定了Circuit-level throttling和Stream-level throttling两个不同层级的拥塞控制机制。
+
+- 数据完整性检验：为了兼顾效率与成本，Tor仅在每个通信stream的边缘检查数据的完整性。节点之间通过SHA-1算法生成摘要并对此进行验证来确保数据完整性。
 
 <br/><br/>
 
@@ -72,3 +82,5 @@ Node 3收到后使用Key 3进行解密，解密后得到明文（“洋葱”的
 [Onion routing: Definition, mechanism, and key features](https://nordvpn.com/zh/blog/onion-routing/)
 
 [Onion Routing](https://en.wikipedia.org/wiki/Onion_routing)
+
+[Tor: The second-generation onion router](https://svn-archive.torproject.org/svn/projects/design-paper/tor-design.pdf)
