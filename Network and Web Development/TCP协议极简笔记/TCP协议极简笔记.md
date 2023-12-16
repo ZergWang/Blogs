@@ -55,7 +55,7 @@ Options为可选字段，无固定长度（最小为0，最大为40字节），�
 
 
 # TCP中实际使用的RDT模型
-TCP实际采用的RDT模型实际上比较复杂，发送方的行为机制与Go-Back-N比较类似，但在一些细节上不同。例如，通信双方采用的序列号和确认号都是通过segmetn的字节数确定，而不是简单的按segment的数量累加。接收方的行为机制与Selective Repeat类似，在收到乱序的segment时会的机制，不会丢弃，而是缓存下来等待缺失的segment。因此，接收方也需要维持一个窗口来管理这些segment，但在回复机制上，还是采用cumulative ACK。
+TCP实际采用的RDT模型实际上比较复杂，发送方的行为机制与Go-Back-N比较类似，但在一些细节上不同。例如，通信双方采用的序列号和确认号都是通过segment的字节数确定，而不是简单的按segment的数量累加。接收方的行为机制与Selective Repeat类似，在收到乱序的segment时不会丢弃，而是缓存下来等待缺失的segment。因此，接收方也需要维持一个窗口来管理这些segment，但在回复上，还是采用cumulative ACK机制。
 
 实际上，RFC对TCP如何实现RDT并没有非常具体的规定，下面将介绍普遍采用的一些RDT机制。下文将发送方简称为S，接受方简称为R。
 ## 超时重传
@@ -63,11 +63,11 @@ S在发送segment的同时，会启用一个计时器，若在既定时间内没
 
 首先我们要计算一个segment正常来回所用的时间（也就是Round-Trip Time，简称RTT）。考虑到网络波动，每次传输的RTT不是一成不变的。对此，一般对最新采样的RTT和历史估算的RTT计算exponential weighted moving average来估算当前的RTT：
 
-$RTT_{estimate} = (1-\alpha)RTT_{estimate} + \alpha RTT_{sample}$，在Linux中$\alpha=0.125$。
+$RTT_{estimate} = (1-\alpha)RTT_{old\_estimate} + \alpha RTT_{sample}$，在Linux中$\alpha=0.125$。
 
 RTO要比最新估算的RTT略长，这个略长的时间就是网络波动可能造成的延迟。该延迟的计算与RTT类似，也是通过计算最新采样的延迟与历史估算的延迟的exponential weighted moving average得出：
 
-$RTT_{dev} = (1-\beta)RTT_{dev} + \beta(RTT_{sample}-RTT_{estimate})$，在Linux中$\beta=0.25$。
+$RTT_{dev} = (1-\beta)RTT_{old\_dev} + \beta(RTT_{sample}-RTT_{estimate})$，在Linux中$\beta=0.25$。
 
 最后我们得到：
 
@@ -81,7 +81,7 @@ $RTO = RTT_{estiamte} + \sigma RTT_{dev}$，一般$\sigma=4$
 
 ![](TCP协议极简笔记_3.png)
 
-考虑到网络波动，segment 2有可能会延迟到达，这就会让S连续收到多个确认号为2的回复。但要是连续收到3个相同ACK，说明segment 2后面的三个包都抵达R了，这个时候segment 2还没抵达R，那就说明大概率是丢包，直接重传即可。
+考虑到网络波动，segment 2有可能会延迟到达，这就会让S连续收到多个确认号为2的回复。但要是连续收到3个相同ACK，说明segment 2后面的三个包都抵达R了，但segment 2还没抵达R，那就说明大概率丢包了，所以S直接重传即可。
 
 ## Flow Control
 S和R都要各自维持一个窗口，但这个窗口大小不是一成不变的。在实际传输中，一般要求S的窗口不能比R的窗口大，否则S发送的segmetn将淹没R，造成网络拥堵与资源浪费。因此，R在回复S的segment中，会通过Advertising Window字段来告知S方，自己剩余窗口大小（也就是还能接受多少字节的segment），S收到该segment后会动态调整自己的窗口大小，来匹配R的接收能力。
@@ -92,9 +92,9 @@ S和R都要各自维持一个窗口，但这个窗口大小不是一成不变的
 按照上面快速重传的例子，不启用SACK的情况下，S遵循Go-Back-N模型，要重传序号为2到5的这4个segment。如果启用了SACK，R在收到segment 5后，在回复的报文中就可告知S自己收到了segment 3、4、5，这样一来S就只需要重传segment 2。
 
 ## 延迟应答（Delayed ACK）
-该方法同样是一种可选的优化手段。当R接收到S发送的segment后，R不会立即回复ACK，而是等待一小段时间。假如在等待时间内，又收到了新的segment，则R会直接回复后一个segment对应的ACK，从而节省带宽。如果等待时间内无新的segment进来，则R会正常回复。
+该方法同样是一种可选的优化手段。当R接收到期望的segment后（假设为segment K），R不会立即回复ACK，而是等待一小段时间。假如在等待时间内，又收到了新的segment K+1，则R会直接回复ACK K+1，从而节省带宽。如果等待时间内无新的segment进来，则R会正常回复。如果一开始就收到了乱序的segment，或者在等待过程中收到了乱序的segment，则会立即以cumulative ACK的方式回复。
 
-延迟应答一般最多仅为两个segment合并成一个ACK进行回复。简单来说，就是一段时间内凑够两个人立即发车（不会等第三个人），要是这段时间内就只来了一个，那也得发，不能再等。
+延迟应答一般最多仅为两个segment合并成一个ACK进行回复。简单来说，就是一段时间内凑够两个人立即发车（不会等第三个人），要是这段时间内就只来了一个，到点了也得发，不能再等。
 
 <br/><br/>
 

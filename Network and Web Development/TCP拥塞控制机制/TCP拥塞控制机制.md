@@ -18,7 +18,7 @@ SWND = min(CWDN, RWDN)
 
 ![](TCP拥塞控制机制_1.png)
 
-如图所示，一开始S一次只能发送一个segment，收到R的回复后，CWND增大为2，可以一次发送两个segment。R会为这两个segment回复两个ACK，CWND就增大到四个segment......
+如图所示，一开始S一次只能发送一个segment，收到R的回复后，CWND增加至2，可以一次发送两个segment。R会为这两个segment回复两个ACK，CWND就增加到四个segment......
 
 # Congestion Avoidance
 即“拥塞避免”。CWND不会无限增长下去，当其值超出一个阈值（ssthresh）后，拥塞控制机制就从Slow Start（指数增长）转变为Congestion Avoidance（线性增长）。每收到一个ACK，CWND仅增长1/CWND。换句话说，CWDN的大小会在每轮通信中增长1（也就是一次RTT的时间内增长1）。
@@ -30,7 +30,7 @@ SWND = min(CWDN, RWDN)
 ## 超时重传：回到Slow Start阶段
 在任何阶段发生超时重传，S会重发segment，并将ssthresh设为当前CWND值的一半，然后将CWND初始化为1，并重新回到Slow Start阶段。
 ## 快速重传：执行Fast Recovery
-当S收到正常回复的ACK后，又收到连续三个相同ACK时，会触发快速重传机制（Fast Retransmit）。实际上拥塞控制机制会认为快速重传被触发时的网络情况并不算差，毕竟还能收到后续的多个相同ACK。此时，S同样会重发segment，CWND被设置为原来的一半，ssthresh被设置为与减半后的CWND相同，然后进入Fast Recovery阶段。
+当S收到正常回复的ACK后，又收到连续三个相同ACK时，会触发快速重传机制（Fast Retransmit）。实际上拥塞控制机制会认为快速重传被触发时的网络情况并不算差，毕竟还能收到后续的多个相同ACK。在这种情况下，S同样会重发segment，CWND被设置为原来的一半，ssthresh被设置为与减半后的CWND相同，然后进入Fast Recovery阶段。
 
 在Fast Recovery阶段，S每收到一个重复ACK，其CWND会加1。一旦S收到了新的ACK回复，则CWND重新设置为ssthresh，并进入Congestion Avoidance阶段。如果在Fast Recovery阶段中出现了超时重传，则遵循上述拥塞控制对超时重传情况的操作。
 

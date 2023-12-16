@@ -15,7 +15,7 @@ path后面是一些用于定位到资源具体某个部分的参数，在此不�
 
 # HTTP工作流程
 ## 非持久连接（Nonpersistent HTTP）
-HTTP/1.0版本采用的连接方式，每次TCP连接后仅能通过HTTP传输一个object。我们定义RTT为客户端向服务器发出请求一直到客户端接受到服务器响应的这段时间。则在非持久连接下，每个object要花费2个RTT的时间（建立TCP + 向服务器请求object）再加上object本身传输的时间。在非持久连接下，浏览器往往需要并行多个TCP连接来提高效率。
+HTTP/1.0版本采用的连接方式，每次TCP连接后仅能通过HTTP传输一个object。我们定义RTT为客户端向服务器发出请求一直到客户端接受到服务器响应的这段时间。则在非持久连接下，每个object要花费2个RTT的时间（建立TCP连接 + 向服务器请求object）再加上object本身传输的时间。在非持久连接下，浏览器往往需要并行多个TCP连接来提高效率。
 
 ## 持久连接（Persistent HTTP）
 客户端和服务器初次建立TCP连接后即可开始持续请求和响应多个object。持久连接分为流水线式（Pipeline）和无流水线式。
@@ -103,10 +103,10 @@ Cookies功能解决了上述麻烦。其功能通过三个部分实现：报文h
 ## 简介
 为了进一步提高Web服务质量，减少网络流量，对于网页上比较常用的object会进行缓存（Cache）操作。客户端在访问网站时，首先会对Cache发送请求，若客户端要访问的object存在于Cache中则可直接返回该object。若没有，则Cache负责向服务器发送请求，得到对应object，缓存并返回给客户端。
 
-Cache机制实际上不一定仅部署在客户端本地。很多ISP会将Cache机制部署在代理服务器中，从而优化其用户的体验。
+Cache机制实际上不一定仅部署在客户端本地。很多ISP会将Cache机制部署在代理服务器中，从而优化旗下所有用户的体验。
 
 ## Conditional GET
-如果服务器中某个object更新了，且该object有对应的Cache，客户端如何才能保证自己访问到最新的object呢？因此引入Conditional GET方法来解决上述问题。
+如果服务器中某个object更新了，且该object有对应的Cache，客户端如何才能保证自己访问到最新的object呢？Conditional GET方法可以解决该问题。
 
 简单来说，就是Cache缓存object时，同时会记录该object的更新时间（假设为t1）。客户端每次请求该object时，Cache会向服务器发送Conditional GET的请求报文来检查该object是否被更新。请求报文使用GET方法，并在header中加入“If-modified-since”域，告知服务器该object的更新时间t1。如果服务器中的object在t1后确实被更新了（假设更新于t2），则返回最新版的object和t2，Cache则缓存最新的object并将更新时间记录为t2。如果服务器中的object没更新，则仅返回状态代码304：Not Modified。
 

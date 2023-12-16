@@ -85,3 +85,16 @@ s.clear()   //清空集合
 
 
 # unordered_map
+C++11版本加入的数据类型，简单来说是一个以键值对（Key, Value）为元素的数组，其中Key可以是复杂数据类型，如string、double或者用户自定义的类型
+
+```cpp
+unordered_map <Key类型, Value类型> a //创建unordered_map，a为变量名
+
+a.emplace(Key, Value);     //插入键值对
+a.insert(); 
+
+
+
+for (auto i = a.begin(); i != a.end(); ++i)  
+// 迭代，其中i为对应的键值对，i->first为Key，i->second为Value
+```
