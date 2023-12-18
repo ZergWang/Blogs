@@ -58,34 +58,58 @@ s.push(a)  //在栈顶加入元素a
 ```
  <br/><br/>
 
+
+# pair
+将两个值视为一个单元，是map、unordered_map等复杂类型的基础构成。
+
+```cpp
+pair<类型1, 类型2> p;  //新建一个pair变量，变量名为p
+pair<类型1, 类型2> p(值1, 值2); //新建pair变量的同时初始化值
+
+p.first  // 取pair中的前一个值
+p.second // 取pair中的后一个值
+
+```
+
 # 集合set
-该数据类型与vector相似，但也有以下特性：（1）集合中的元素互不相同；（2）每次向set中插入的元素都会被自动按顺序排列。
+## 基本用法
+集合类型，底层通过红黑树实现。该数据结构有以下特性：1. 集合中的元素互不相同；2. 每次向set中插入的元素都会被自动排序。
 ```cpp
 #include <set> 
 
 set <int> s;
 
 s.size()    //返回集合中元素个数
-
-s.begin()   //返回第一个元素的迭代器，若要取得集合中的第一个（也是值最小的）元素，则为*s.begin()
-
+s.begin()   //返回第一个元素的迭代器，若要取集合中的第一个（也是值最小的）元素，则为*s.begin()
 s.end()     //返回最后一个元素的迭代器，若要取集合中的最后一个（也是值最大的）元素，则为*--s.end()
-
 s.empty()   //判断集合是否为空，为空返回True
-
 s.count(k)  //判断集合中是否有元素k
+s.emplace(k) //向集合中插入元素k，一般效率高于insert方法
+s.insert(k)  //向集合中插入元素k（若原集合中已有k，则自动忽略此次插入）
+s.erase(k)   //在集合中删除元素k（若本来没有，也自动忽略）
+s.clear()    //清空集合
+```
 
-s.insert(k) //向集合中插入元素k（若原集合中已有k，则自动忽略此次插入）
+## 自定义排序规则
+### 函数指针
 
-s.erase(k)  //在集合中删除元素k（若本来没有，也自动忽略）
+### 伪函数
+使用伪函数定义排序规则，如下所示，定义了一个元素类型为pair的集合s，按pair第二项从大到小排序，若相等则pair第一项字典序小的排前面。
+```cpp
+class MyCompare {
+public:
+    bool operator()(const pair<string, int> & a, const pair<string, int> & b) const{
+        return a.second > b.second || (a.second == b.second && a.first < b.first);
+    }
+};
 
-s.clear()   //清空集合
+set<pair<string, int>, MyCompare> s;
 ```
 <br/> <br/>
 
 
 # unordered_map
-C++11版本加入的数据类型，简单来说是一个以键值对（Key, Value）为元素的数组，其中Key可以是复杂数据类型，如string、double或者用户自定义的类型
+C++11版本加入的数据类型，底层为开链的哈希表。unordered_map简单来说是一个以键值对（Key, Value）为元素的数组，其中Key可以是复杂数据类型，如string、double或者用户自定义的类型。
 
 ```cpp
 unordered_map <Key类型, Value类型> a //创建unordered_map，a为变量名
