@@ -1,22 +1,49 @@
-# 动态数组（vector）
-不存东西时不占空间，来多少数据就用多少空间，用于节省空间。
+# STL简介
+STL（Standard Template Library）即标准模版库，目前已成为国际标准，并被内置到C++编译器中，令用户能非常方便地调用各种复杂数据类型和算法。
+
+## 容器
+容器可以简单理解为兼容各种数据类型的复杂数据结构。在STL中，各种容器通过模板类实现。
+
+STL中容器主要分成以下三类：序列容器（array、vector、list、deque）、有序关联容器（set、map）以及无序关联容器（unordered_map、unordered_set）
+
+## 迭代器
+
+
+<br/><br/>
+
+
+# 向量容器（vector）
+又称“动态数组”，和普通数组相比，vector无需事先声明数组大小，它会根据元素数量动态分配内存空间。vector在使用前需声明vector中元素的数据类型（支持各种复杂数据类型及用户自定义类型）
+## 声明与初始化
+vector容器在声明后是空的，没有任何元素，因此无需额外的清空操作。
 ```cpp
 #include  <vector>     //调用
 
-vector <int> a;     //声明
-
-a.push_back(3)        //在数组a的最后添加一个元素3
- 
-a.pop_back()           //删除数组最后一个元素
- 
-a.size()               //返回元素个数
- 
-a.clear()              //清空
-
-a[0]                    //该数组第一个元素
-
-a.back()                //该数组最后一个元素
+vector <类型> 变量名;     //声明
+vector <vector <int>> a;  //声明一个二维int型vector容器
 ```
+
+## 成员函数
+```cpp
+push_back(value) //在容器末尾添加一个元素value
+ 
+pop_back()       //删除容器末尾的一个元素
+ 
+size()           //返回容器中当前元素数量
+
+capacity()       //返回容器当前最多可容纳的元素数量。若容器的size超出capacity时，容器会额外开辟内存，capacity也会增大
+
+clear()          //清空容器
+
+empty()          //当容器为空，返回true，否则为false
+
+front()          //返回容器中的首个元素
+
+at(i)            //返回容器中第i个元素。此外也可通过 operator []对元素进行访问或更改。两者均不能访问尚未存在元素的区域，但at函数会进行越界检查，可以使用try ... catch捕获异常，operator []则会直接报错
+
+back()           //返回容器中最后一个元素
+```
+除了以上成员函数，vector和普通数组一样，可通过下标“[]”对元素进行访问或更改。但不可使用下标访问尚未存在元素的区域，否则会报错。
 <br/><br/>
  
 
@@ -111,15 +138,19 @@ set<pair<string, int>, MyCompare> s;
 
 
 # unordered_map
-C++11版本加入的数据类型，底层为开链的哈希表。unordered_map简单来说是一个以键值对（Key, Value）为元素的数组，其中Key可以是复杂数据类型，如string、double或者用户自定义的类型。
+C++11版本加入的数据类型，底层为开链的哈希表。unordered_map简单来说是一个以键值对（Key, Value）为元素的开链哈希表，其中Key可以是复杂数据类型，如string、double或者用户自定义的类型。
 
+## 声明及初始化
 ```cpp
-unordered_map <Key类型, Value类型> a //创建unordered_map，a为变量名
+unordered_map <Key类型, Value类型> a; //创建一个名为a的unordered_map变量
 
-a.emplace(Key, Value);     //插入键值对
-a.insert(); 
+a.clear();   //清空所有键值对   
+```
 
-
+## 插入新元素
+```cpp
+a.emplace(Key, Value); //插入键值对，如果Key已经存在了，则该语句无效
+a[Key] = Value;        //直接赋值可以起到插入、修改的作用
 
 for (auto i = a.begin(); i != a.end(); ++i)  
 // 迭代，其中i为对应的键值对，i->first为Key，i->second为Value
