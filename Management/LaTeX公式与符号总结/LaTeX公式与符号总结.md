@@ -45,7 +45,8 @@
 | 正负号| $\pm$    | ```\pm```   |
 | 根号  | $\sqrt 4$  | ```\sqrt``` |
 |开多次方根 | $\sqrt[n]4$ | ```\sqrt[n]```|
-
+| 向上取整 | $\lceil x \rceil$ | ```\lceil x \rceil```|
+| 向下取整 | $\lfloor x \rfloor$ | ```\lfloor x \rfloor```|
 ## 不等式
 | 符号 | 效果 | 指令 |
 | --   | --  |  --  |
@@ -70,15 +71,13 @@
 
 <br/><br/>
 
-# 统计
+# 上标符号
 
-```
-平均数：\bar x
-预测值：\hat y
-```
-效果：
-$\bar x \ \ \hat y$
+| 效果 | 指令 |
+| --  | --   |
+|$\bar x$| ```\bar x``` |
+|$\hat x$| ```\hat x```|
+|$\tilde x$   | ```\tilde x```   |
+|$\widetilde x$ | ```\widetilde x``` |
 
 <br/><br/>
-
-# 
