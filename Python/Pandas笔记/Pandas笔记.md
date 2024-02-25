@@ -40,6 +40,8 @@ for index, data in df.iterrows():
 itertuples 在每次迭代时，仅返回一个pandas类型的tuple，该tuple的第一项为当前行的index number，后面各项为当前行的各项数据。
 
 
+## 提取指定列的数据
+
 
 <br/><br/>
 
