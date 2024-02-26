@@ -42,7 +42,7 @@ import matplotlib as mpl
 mpl.rcParams['axes.linewidth'] = 3
 ```
 
-## 绘制多个子图
+## 绘制多张子图
 假如要绘制如下的三张图：
 ![](Matplotlib绘图操作极简笔记_2.png)
 
@@ -108,6 +108,8 @@ plt.plot(time, east, color='red', label='Eastern Region')
 plt.plot(time, west, color='green', label='Western Region')
 ```
 颜色可以为单个str值，指定该条曲线（散点，柱）的统一的颜色，也可以为与x、y同样size的string类型的列表，为每个值指定颜色（为每个值设置颜色不适用于折线图）。
+
+库中有多种颜色可选，具体可参考[List of named colors](https://matplotlib.org/stable/gallery/color/named_colors.html)
 ## 粗细及样式
 柱状图中柱子的宽度：
 ```py
@@ -150,6 +152,25 @@ plt.legend(loc='upper left')
 ![](Matplotlib绘图操作极简笔记_7.png)
 
 一般可以写loc='best'，会根据曲线自动调整显示的位置，另外loc可填的有：upper center、upper right、lower left、lower center、lower right、center left、center right、center等。
+
+## 左右双坐标轴
+可用如下代码，绘制x-y1及x-y2两条曲线，其中左侧坐标轴为y1所设，右侧坐标轴为y2所设
+```py
+# 绘制曲线y1，同时设置左坐标轴
+fig, ax1 = plt.subplots()
+ax1.set_ylabel(y1Name, color=y1Color)
+ax1.plot(x, y1, color=y1Color, label=y1Name)
+ax1.legend(loc='upper left')
+
+# 绘制曲线y2，同时设置右坐标轴
+ax2 = ax1.twinx()
+ax2.set_ylabel(y2Name, color=y2Color)
+ax2.plot(x, y2, color=y2Color, label=y2Name)
+ax2.legend(loc='upper right')
+
+plt.show()
+```
+
 <br/><br/>
 
 # 为图像添加文字信息

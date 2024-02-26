@@ -40,8 +40,16 @@ for index, data in df.iterrows():
 itertuples 在每次迭代时，仅返回一个pandas类型的tuple，该tuple的第一项为当前行的index number，后面各项为当前行的各项数据。
 
 
-## 提取指定列的数据
+## 提取指定行、列的数据
+可使用[iloc](https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.iloc.html)函数
 
+
+```py
+# 从dataframe中取第i行数据
+data = pd.iloc[i]
+# 从dataframe中取第j列数据
+data = pd.iloc[:, j]
+```
 
 <br/><br/>
 
@@ -59,6 +67,16 @@ pd.Series(data=my_list)
 
 ```py
 df = df._append(new_row) # 在df末尾添加一行，其中new_row为series类型
+```
+
+<br/><br/>
+
+# 格式转换
+## Series转为list
+直接使用[Series.to_list](https://pandas.pydata.org/docs/reference/api/pandas.Series.to_list.html)函数
+
+```py
+dataList = S.to_list
 ```
 
 <br/><br/>
