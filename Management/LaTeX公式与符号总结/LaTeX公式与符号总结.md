@@ -35,7 +35,8 @@
 ## 特殊数值
 | 符号 | 效果 | 指令 |
 | --   | --  |  --  |
-| 无限  | $\infty$| ```\infty```|
+| 无限 | $\infty$| ```\infty```|
+| 角度 | $\circ$| ```\circ```  |
 
 ## 运算符
 | 符号 | 效果 | 指令 |
@@ -45,6 +46,8 @@
 | 正负号| $\pm$    | ```\pm```   |
 | 根号  | $\sqrt 4$  | ```\sqrt``` |
 |开多次方根 | $\sqrt[n]4$ | ```\sqrt[n]```|
+| 对数     | $\log$ | ```\log```|
+| 以$e$为底的对数     | $\ln$ | ```\ln```|
 | 向上取整 | $\lceil x \rceil$ | ```\lceil x \rceil```|
 | 向下取整 | $\lfloor x \rfloor$ | ```\lfloor x \rfloor```|
 | 连续求和 | $\sum$ |```\sum``` |
@@ -61,7 +64,16 @@
 | 约等于   | $\approx$| ```\approx```|
 
 ## 三角函数
+| 符号 | 效果 | 指令 |
+| --   | --  |  --  |
+| 正弦 | $\sin$ | ```\sin```|
+| 余弦 | $\cos$ | ```\cos```|
+| 正切   | $\tan$  | ```\tan``` |
+| 正割   | $\sec$  | ```\sec``` |
+| 余割   | $\csc$ | ```\csc```|
+| 反余弦   | $\arccos$ | ```\arccos```|
 
+其他的反三角函数同理，前面加上“arc”即可。
 
 ## 微积分
 | 符号 | 效果 | 指令 |
@@ -74,12 +86,27 @@
 
 
 ## 箭头
+### 普通箭头
 | 效果 | 指令 |
 | --  | --   |
 |$\leftarrow$ | ```\leftarrow``` |
 |$\rightarrow$| ```\rightarrow```|
 |$\uparrow$   | ```\uparrow```   |
 |$\downarrow$ | ```\downarrow``` |
+
+### 向量、内容上方加箭头
+| 效果 | 指令 |
+| --  | --   |
+|$\overrightarrow{AB}$|```\overrightarrow{AB}```|
+|$\overleftarrow{AB}$|```\overleftarrow{AB}```|
+|$\overleftrightarrow{AB}$|```\overleftrightarrow{AB}```|
+
+### 箭头上下均有内容
+| 效果 | 指令 |
+| --  | --   |
+|$\xrightarrow{b}$|```\xrightarrow{b}```|
+|$\xrightarrow[a]{b}$|```\xrightarrow[a]{b}```|
+
 
 <br/><br/>
 
