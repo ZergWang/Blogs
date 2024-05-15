@@ -183,23 +183,29 @@ Cmp函数接收两个参数，参数类型为待排序数组的元素类型，�
 
 Cmp函数返回值为bool型，用于指定第一个参数是否大于（小于）第二个参数，是则返回1，否则返回0。
 
-若不想写比较函数，但又想按降序排序，可使用std:greater比较函数：
+若不想写比较函数，但又想按降序排序，可使用std:greater比较函数。同理升序排序时可使用std:less。
 ```cpp
 //对int型数组a：
 sort (a, a+n, greater<int>());
 ```
 <br/>
 
-## 对特殊数组使用sort排序
-### 普通一维数组
+## 自定义比较函数
+比较函数传入的参数类型为待排序数组中单个元素的类型，例如对int型数组排序，则将传入int比较函数即可。对结构体数组排序传入单个结构体类型即可。
 ```cpp
+// 对vector <int>类型或者int型数组排序
 bool Cmp(int a, int b) {
     return a > b;
 }
-// vector <int> a
-sort(a.begin(), a.end(), Cmp);
 
-// int a[n]
-sort (a, a+n, Cmp);
+//对vector <vector<int>>类型的容器排序
+bool Cmp(vector<int> &a, vector<int> &b) {
+    return a[0] > b[0];   //按二维数组中第0列的值的大小排序
+}
+
+//对vector <pair<int, int>>类型的容器排序
+bool Cmp(pair<int, int> &a, pair<int, int> &b) {
+    return a.first > b.first;  
+}
 ```
-### 结构体数组
+
