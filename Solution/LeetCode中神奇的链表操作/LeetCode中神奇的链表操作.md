@@ -86,3 +86,33 @@ struct ListNode* swapNodes(struct ListNode* head, int k){
 ```
 
 对于此类要处理链表中倒数某个节点的题目，以上思路同样适用。例如[LeetCode 19](https://leetcode.com/problems/remove-nth-node-from-end-of-list/)，删除链表中倒数第k个节点这种题目。
+
+<br/><br/>
+
+# 链表翻转
+
+不使用递归，来翻转一个链表：[LeetCode 206](https://leetcode.com/problems/reverse-linked-list/description/)
+
+```cpp
+struct ListNode* reverseList(struct ListNode* head){
+    if (!head)
+        return NULL;
+    
+    struct ListNode* prev = head;
+    struct ListNode* now = head->next;
+    prev->next = NULL;
+
+    struct ListNode* next = NULL;
+
+    while (now) {
+        next = now->next;
+        now->next = prev;
+        prev = now;
+        now = next;
+    }
+
+    return prev;
+}
+
+
+```

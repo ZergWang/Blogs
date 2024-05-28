@@ -26,7 +26,9 @@ TeX的排版不支持中日韩等文字，只支持 ASCII 字符。因此推出�
 
 # 软件安装与配置
 本人系统为win10，使用的发行版为Tex Live，编辑器Visual Studio Code，PDF阅读器使用SumatraPDF。
+
 Tex Live安装：本人版本为texlive2019，除了安装位置，其他全部默认即可，之后为VS Code安装插件LaTeX Workshop，为该插件写好配置文件。建议新建一个文件夹，作为LaTeX的专用workspace，其中保存有相关的配置文件。
+
 在以上文件夹下建立子文件夹.vscode（前面的点不可忽略），在该文件夹下建立settings.json，编辑内容如下：
 ```
 {
