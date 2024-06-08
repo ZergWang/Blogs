@@ -40,29 +40,18 @@ int sign = a >> 31;
 （a为int型，有32位，右移31位即可得到符号位，若a<0，则sign为-1，其他则为0）。如果a右移31位后的值赋值给布尔型变量，则a<0时布尔值为1，其他为0。
 
 ## 取任意位
-取得变量a的第p位（从右往左数，最右边为第0位），赋值给b。
+取a的第p位（从右往左数，最右边为第0位），赋值给b。
 ```cpp
 int b = a >> p & 1; 
 ```
 若a的第p位为0，则b为0，否则为1。
 
-实际上还有一种方法：
-```cpp
-int b = a & (1 << p); 
-```
-但该方法没有上一种好，当a的第p位为0时，b为0。当a的第p位为1时，b并非为1，而是随着p变化（等于$2^p$）。
 ## 将任意位置为0或1
 ```cpp
 a |= 1 << p;    //将变量a的第p位（从右往左数）置为1
 b &= ~(1 << p); //将变量b的第p位（从右往左数）置为0
 ```
-## 模拟开关
-由于“~”是按位取反，因此对于值为True的bool型变量（8位存储空间，实际值为00000001），取反后变成11111110，还是True。因此要模拟开关，需使用异或操作。
 
-```cpp
-bool s = 0;
-s = 1^s;   //每执行一次，就会从0变1，或从1变0。
-```
 ## 取相反数
 ```cpp
 int signReverse = ~a+1;
@@ -71,36 +60,55 @@ int signReverse = ~a+1;
 
 上述两种方法结合，可以写出一种非常高端的取绝对值的函数：
 ```cpp
-int GetAbs(int a)
-{
+int GetAbs(int a) {
     int t=a>>31;
     return (a^t)-t;
 } 
 ```
 用t取得a的符号位，任何数与0异或值不变，与1异或值取反，之后若a为负数 再减去-1，即加1。
 （该方法同样对-2^31无效）
+
+## 判断是否为2的次方
+[LeetCode 231](https://leetcode.com/problems/power-of-two/)
+```cpp
+bool isPowerOfTwo(int n){
+    return n > 0 && (n & (n - 1)) == 0;
+}
+```
+
+<br/><br/>
+
+# 异或运算技巧 
+
+
+
+## 模拟开关
+由于“~”是按位取反，因此对于值为True的bool型变量（8位存储空间，实际值为00000001），取反后变成11111110，还是True。因此要模拟开关，需使用异或操作。
+
+```cpp
+bool s = 0;
+s = 1^s;   //每执行一次，s就会从0变1，或从1变0。
+```
+
 ## 两数交换
 ```cpp
-void Swap(int a, int b)  
-{  
+void Swap(int a, int b) {  
     a ^= b;  
     b ^= a;  
     a ^= b; 
 }  
 ```
-异或满足交换律，且一个数对另一个数连续异或两次，得到它自己。（即a\^b\^b==a）
+异或满足交换律，且一个数a对另一个数b连续异或两次，得到它自己。（即a\^b\^b=a）
 
-**这里放一道比较有意思的题：LeetCode 136**
+## 异或在LeetCode中的使用技巧
 
-题目链接：https://leetcode.com/problems/single-number/
+### [LeetCode 136](https://leetcode.com/problems/single-number/)
 
-数组中有n个元素，除了其中的一个元素，其他每个元素会在数组中出现两次。找出这个特殊的元素（该元素仅在数组中出现一次）。
 
-常规思路1：排序后查找相邻的数（时间复杂度为$O(n*log_2(n))$）
+数组中有n个元素。其中一个特殊元素仅在数组中出现一次，其他每个元素会在数组中出现两次。在$O(N)$时间找出这个特殊的元素。
 
-常规思路2：直接扫一遍列表计算每个数出现的次数（时间复杂度为$O(n)$但数组会很大）
+利用异或运算的特性（a\^b\^b=a），令0与数组中每个元素相异或，最终结果即为特殊元素。
 
-位运算的思路：0与任意数字a连续异或两次，值仍为0，若只异或一次，值为a。
 ```cpp
 int singleNumber(int* a, int n){
     int ans = 0;
@@ -109,10 +117,37 @@ int singleNumber(int* a, int n){
     return ans;
 }
 ```
-## 判断是否为2的次方
-[LeetCode 231](https://leetcode.com/problems/power-of-two/)
+
+### [LeetCode 137](https://leetcode.com/problems/single-number-ii/solutions/)
+
+数组中有n个元素。其中一个特殊元素仅在数组中出现一次，其他每个元素会在数组中出现三次。在$O(N)$时间找出这个特殊的元素。
+
+
+首先可以累计数组所有元素在每个bit位“1”的数量（假设该结果为sum），sum mod 3后即可得到特殊元素。
+
+值得注意的是，除了特殊元素，数组中其他所有元素的在各个bit位“1”的数量之和，必定都是3的倍数，因此我们可以统计数组所有元素在每个bit位“1”的数量之和。假设$s_i$为数组所有元素在第$i$位的“1”数量之和，$s_i \mod 3$即为特殊元素第$i$位的值。
+
 ```cpp
-bool isPowerOfTwo(int n){
-    return n > 0 && (n & (n - 1)) == 0;
-}
+class Solution {
+public:
+    int singleNumber(vector<int>& a) {
+        int ans = 0;
+        for (int i=0; i<32; ++i) {  
+        // 统计数组所有元素在第i位上“1”的数量
+            int cnt = 0;
+            for (int j: a) 
+                cnt += j >> i & 1;
+            if (cnt % 3)
+                ans |= 1 << i; 
+        }
+        return ans;
+    }
+};
 ```
+
+
+异或操作本质上来说，是一种不进位的加法运算，或者说是一种“模2加法”运算。a\^b等价于a和b逐位相加再mod 2。例如 1100 ^ 1001，首先逐位相加得到 2101，然后逐位mod 2，得到 0101。
+
+那么在这道题中，可以将异或运算改造成“模3加法”，这样就能使用与[LeetCode 136](https://leetcode.com/problems/single-number/)相同的思路去找特殊元素。
+
+具体改造可参考以下教程： [带你一步步推导出位运算公式！](https://leetcode.cn/problems/single-number-ii/solutions/2482832/dai-ni-yi-bu-bu-tui-dao-chu-wei-yun-suan-wnwy/)
