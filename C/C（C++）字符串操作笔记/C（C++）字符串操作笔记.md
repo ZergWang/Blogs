@@ -22,7 +22,7 @@ printf("%c", "ABC"[0]);    //输出A
 此方法可用于打印二数组：
 ```cpp
 for (int i=0; i<n; i++)
-    for (int j=0; j<m; j++)
+    for (int j=0; j<m; ++j)
         printf("%d%c", a[i][j], " \n"[j == m-1]);  //C版本
         //cout << a[i][j] << " \n"[j == m-1];      //C++版本
 ```
