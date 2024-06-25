@@ -63,10 +63,8 @@ void work() {
 ```
 <br/><br/>
 
-# LeetCode 1402
+# [LeetCode 1402](https://leetcode.com/problems/reducing-dishes/)
 ## 题目简介
-题目链接：https://leetcode.com/problems/reducing-dishes/
-
 有n道菜，每道菜有一个值a[i] ( 0 <= i < n) ，现在可以按任意顺序煮这n道菜，每道菜最多煮一次，煮每一道菜需要花费1个单位时间，但会得到该道菜的满意度，该满意度等于a[i]与当前时间的乘积。也就是说，第t个单位时间煮第i道菜，则从该菜中获得的满意度为a[i]*t，总满意度为各道菜满意度之和。求能得到的最大满意度。
 <br/>
 
@@ -117,8 +115,7 @@ int maxSatisfaction(int* a, int n){
 本方法时间复杂度为$O(n^3)$，空间复杂度$O(n^2)$，均劣于贪心算法。
 <br/><br/>
 
-# LeetCode 910
-题目链接：https://leetcode.com/problems/smallest-range-ii/
+# [LeetCode 910](https://leetcode.com/problems/smallest-range-ii/)
 
 给出一个长为n的数组和一个非负数k，现在需要对数组中的每个数加上k或者减去k，从而让新数组中的最大值和最小值的差最小。
 
@@ -141,9 +138,7 @@ int smallestRangeII(int* a, int n, int k){
 ```
 <br/><br/>
 
-# LeetCode 621
-题目链接：https://leetcode.com/problems/task-scheduler/
-
+# [LeetCode 621](https://leetcode.com/problems/task-scheduler/)
 ```cpp
 int Cmp(const void * a, const void * b) {
     return *(int*)a - *(int*)b;

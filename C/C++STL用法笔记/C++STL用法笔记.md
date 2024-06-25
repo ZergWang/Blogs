@@ -4,23 +4,15 @@ STL（Standard Template Library）即标准模版库，目前已成为国际标�
 ## 容器
 容器可以简单理解为兼容各种数据类型的复杂数据结构。在STL中，各种容器通过模板类实现。
 
-STL中容器主要分成以下三类：顺序容器（array、vector、list、deque）、关联容器（set、map）以及无序关联容器（unordered_map、unordered_set）
+STL中容器主要分成以下三类：顺序容器（array、vector、list、deque）、关联容器（set、map）以及无序关联容器（unordered_map、unordered_set）。除了以上三种容器类型之外，还有一些诸如pair、bitset等容器类型，将单独介绍。
 
 ## 迭代器
-### pair
-由两个相同或不同类型的变量构成的值对。
+简单来说，迭代器可以视为一种访问容器中元素的指针。不同的容器有其对应类型的迭代器。迭代器可使用解引用符号“*”来访问指定元素，也可使用自增符号“++”来实现遍历容器中的元素。例如下面的代码可用于遍历unordered_map，其中变量i即为unordered_map类型的迭代器。
 ```cpp
-#include <utility>
-
-pair<类型1, 类型2> p;  //新建一个pair变量，变量名为p
-pair<类型1, 类型2> p {值1, 值2}; //新建pair变量的同时初始化值
-
-
-//成员函数
-first  // 取pair中的前一个值
-second // 取pair中的后一个值
+for (auto i = a.begin(); i != a.end(); ++i)  
+//i可以视为指向unordered_map中元素的指针
+// i->first为元素的Key，i->second为元素的Value
 ```
-
 <br/><br/>
 
 
@@ -38,7 +30,7 @@ vector <元素类型> 变量名;     //直接声明，此时容器的size为0
 初始化可指定容器的初始大小，也能指定部分元素的值。
 ```cpp
 vector <元素类型> 变量名 (N);   
-//声明一个vector容器并为该容器预留内存（N个int的空间），这样可以在N范围内直接使用 operator []访问元素
+//声明一个vector容器并为该容器预留内存（N个int的空间），并初始化为0。这样可以在N范围内直接使用 operator []访问元素
 
 vector <元素类型> 变量名 (N, k);   
 //声明一个vector容器并为该容器预留N个元素的空间，同时将每个元素初始化为k
@@ -131,7 +123,7 @@ push(a)  //在栈顶加入元素a
 此类容器基本以红黑树为底层数据结构。因此此类容器中基于元素Key值对元素进行增删改操作均可在$O(\log N)$时间内完成。此类容器中的元素互不相同，并按顺序排列。
 ## set
 ### 基本用法
-以红黑树为底层数据结构的集合类型。红黑树基于集合中元素本身的值而生成。
+以红黑树为底层数据结构的集合类型。红黑树基于集合中元素本身的值而生成。set中的元素不可直接更改（可通过删除再插入的方式进行）。
 ```cpp
 #include <set> 
 
@@ -144,7 +136,9 @@ count(k)  //判断集合中是否有元素k
 emplace(k) //向集合中插入元素k，一般效率高于insert方法
 empty()   //判断集合是否为空，为空返回True
 end()     //返回最后一个元素再后一个位置的迭代器（该迭代器不指向任何元素）
-erase(k)   //在集合中删除元素k（若本来没有，则忽略该命令）
+erase(iterator) //删除某迭代器对应的元素
+erase(k)   //在集合中删除值为k的元素（若本来没有，则忽略该命令）
+erase(iterator lef, iterator rig) //删除所有大于等于lef对应元素且小于rig对应元素的元素
 find(k)    //查找是否存在元素k，若存在返回k对应迭代器，否则返回end迭代器
 insert(k)  //向集合中插入元素k（若原集合中已有k，则自动忽略此次插入）
 rbegin()  //r开头的为逆序迭代器，rbegin实际上是返回末尾元素的迭代器，因此可用*s.rbegin()取set中的最大值
@@ -169,8 +163,19 @@ set<pair<string, int>, MyCompare> s;
 ```
 <br/> <br/>
 
+## multiset
+和set类型基本一致，区别在于multiset允许其中有重复元素，而set不允许。两者的声明、初始化及成员函数基本相同。与set不同之处会在下面列出：
+
+### multiset与set的部分成员函数不同
+```cpp
+find(k)  //寻找值为k的元素，返回第一个找到的元素的迭代器
+erase(k) //在multiset中会删除所有值为k的元素
+erase(iterator) // //在multiset中删除只删除迭代器对应的那一个元素
+```
+
+
 ## map
-map是一个以键值对（Key, Value）为元素的容器结构。底层红黑树基于元素的键值（Key）生成，因此元素按Key值排序，不同元素的Key值均不相同。
+map是一个以键值对（Key, Value）为元素的容器结构。底层红黑树基于元素的键值（Key）生成，因此元素按Key值排序，不同元素的Key值均不相同。map不允许其中的多个元素具有相同的key。
 ### 声明
 ```cpp
 #include <amp>
@@ -189,6 +194,11 @@ erase(k)      //删除Key值为k的元素
 size()        //返回元素个数
 [k]           //可使用下标直接查找键值为k的元素并对其value进行修改
 ```
+
+## multimap
+和map类型基本一致，区别在于multimap允许其中有多个元素有相同的key，而map不允许。两者的声明、初始化及成员函数基本相同。
+
+
 <br/><br/>
 
 # 无序关联容器（Unordered associative containers）
@@ -214,12 +224,74 @@ size()          //返回键值对的数量
                 //如果不存在Key为k的元素，“[k]” 的访问会默认执行emplace(k, 0)
 ```
 
-### 遍历unordered_map
-```cpp
-for (auto i = a.begin(); i != a.end(); ++i)  
-// 迭代，其中i为对应的键值对，i->first为Key，i->second为Value
-```
 
 
 ## unordered_set
 底层为开链哈希表的集合类型。哈希表以元素本身的值为Key存储元素。
+
+
+
+
+# 其他容器
+## pair
+由两个相同或不同类型的变量构成的值对。
+```cpp
+#include <utility>
+
+pair<类型1, 类型2> p;  //新建一个pair变量，变量名为p
+pair<类型1, 类型2> p (值1, 值2); //新建pair变量的同时初始化值
+
+p = make_pair(值1, 值2); //可通过make_pair函数对变量进行赋值
+
+//成员函数
+first  // 取pair中的前一个值，也可对其进行赋值操作
+second // 取pair中的后一个值
+```
+
+相同类型的pair变量之间可直接赋值，也可直接使用“>”、“<”等符号进行比较，首先比较first的值，若相同再比较second的值。
+
+
+## bitset
+### 声明
+正常布尔数组中每个元素均为布尔类型，占用1字节。但如果使用bitset（位图）来作为布尔数组，每个bit都可起到单个布尔值的作用，1字节大小的bitset相当于原来8个布尔类型，大大减少空间占用。此外，基于bitset的位运算也能提高运算效率。
+
+C++自带bitset类型，定义如下：
+```cpp
+#include <bitset>
+
+std::bitset<10> bs;  //声明一个含10个bit的bitset变量。默认全部bit位为0
+
+std::bitset<10> bs (25);//使用无符号整数来初始化bitset，该整数的二进制即为bitset的值
+
+std::bitset<10> bs ("11001");  //也可使用仅“0”和“1”构成的字符串来初始化bitset
+
+```
+bitset中bit的坐标是从右到左设置的，例如上面使用“11001”初始化的bitset，其值实际为“0000011001”，该变量的第0位（即bs[0]）是最右边的bit，即“1”。
+
+
+### 成员函数
+```cpp
+all()       //若所有bit都为1则返回True
+any()       //若至少有一个bit为1则返回True
+count()     //返回bitset中值为1的bit的个数
+flip()      //翻转每个bit
+flip(pos)   //翻转第pos个bit
+none()      //若所有bit都为0则返回True
+reset()     //将所有bit位设为0
+set()       //将所有bit位设为1
+set(pos, value)  //将第pos位设置为value
+size()      //返回bitset大小，即所有bit的个数
+to_ullong() //返回unsigned long long形式的bitset变量
+to_ulong()  //返回unsigned long形式的bitset变量
+to_string() //返回字符串形式的bitset变量
+operator [] //可对变量直接进行下标访问并修改
+```
+
+此外，可直接使用“==”或“!=”对不同bitset变量进行比较，也可直接对bitset变量使用位运算操作。
+
+
+# 参考资料
+
+[OI Wiki：迭代器](https://oi-wiki.org/lang/csl/iterator/)
+
+[C++ reference](https://en.cppreference.com/w/)

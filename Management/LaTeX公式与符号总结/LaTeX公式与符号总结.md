@@ -109,6 +109,16 @@
 |$\xrightarrow{b}$|```\xrightarrow{b}```|
 |$\xrightarrow[a]{b}$|```\xrightarrow[a]{b}```|
 
+## 集合
+| 符号 | 效果 | 指令 |
+| --   | --  |  --  |
+| 真包含 | $\subset$ | ```\subset```|
+| 包含 | $\subseteq$ | ```\subseteq```|
+| 交 | $\cap$| ```\cap```|
+| 并 | $\cup$  | ```\cup```|
+| A的补集 | $\overline{A}$  | ```\overline{A}```|
+| 实数集 | $\mathbb{R}$ | ```\mathbb{R}```|
+| 空集 | $\emptyset$| ```\emptyset```|
 
 <br/><br/>
 
