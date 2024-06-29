@@ -63,6 +63,7 @@ queue <元素类型> 变量名;
 
 //成员函数
 back()   //返回队尾元素
+clear()  //清空队列
 empty()  //队列为空返回true 否则返回false
 front()  //返回队首元素
 pop()    //删除队首元素
@@ -95,11 +96,33 @@ priority_queue <int, vector<int>, greater<int>> a;
 
 ### 成员函数
 ```cpp
-push(x)   //在队列中元素a，并重新维护堆
-top()     //返回队首（堆顶）元素
-pop()     //删除队首（堆顶）元素，并重新维护堆
 empty()   //队列为空返回true 否则返回false 
-size()    //返回队列素个数
+pop()     //删除队首（堆顶）元素，并重新维护堆
+push(x)   //在队列中元素a，并重新维护堆
+size()    //返回队列元素个数
+top()     //返回队首（堆顶）元素
+```
+
+
+## 双端队列（deque）
+一种特殊的队列，此种队列两端均可插入元素，队首、队尾元素均可删除。
+### 声明
+```cpp
+#include <deque>
+
+deque <元素类型> 变量名;
+```
+### 成员函数
+```cpp
+back()        //返回队尾元素
+clear()       //清空队列
+empty()       //队列为空返回true 否则返回false 
+front()       //返回队首元素
+pop_back()    //删除队尾元素
+pop_front()   //删除队首元素。
+push_back()   //在队尾插入元素
+push_front()  //在队首插入元素
+size()        //返回队列元素个数
 ```
 <br/><br/>
 
