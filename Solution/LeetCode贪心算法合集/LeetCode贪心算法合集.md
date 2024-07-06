@@ -115,6 +115,44 @@ int maxSatisfaction(int* a, int n){
 本方法时间复杂度为$O(n^3)$，空间复杂度$O(n^2)$，均劣于贪心算法。
 <br/><br/>
 
+# [LeetCode 134](https://leetcode.com/problems/gas-station/)
+
+n段公路构成了一个环，连接着n个城镇。第i个城镇会有```gas[i]```升的汽油补给，但是要通过连接第i个城镇和第i+1个城镇的公路会消耗掉```cost[i]```升的汽油（连接第0个城镇和第n-1个城镇的公路汽油消耗量为```cost[n-1]```）。现在给出```gas, cost```两数组，问应该从哪个城镇出发，可以环绕一圈回到起点。如果无论从哪个城镇出发都到不了起点，返回-1。
+
+n最大为$10^5$，暴力肯定超时。实际上我们可以从任意一个城镇出发开始模拟（假设起点为a），假如走到城镇b就走不下去了，则说明城镇a到城镇b之间的所有城镇都不能作为起点。因为从城镇a出发，抵达这些中间城镇还未取补给时，汽油余量肯定是大于等于0的。经过某个中间城镇的补给后，汽油余量肯定大于等于直接从这个中间城镇为起点出发时的汽油余量。在这种情况下都不能绕圈，那从这些中间城镇出发，先天条件更差的情况下就更不可能绕圈了。所以下次模拟直接从城镇b开始。使用以上贪心思维可以$O(N)$复杂度求解。
+
+```cpp
+class Solution {
+public:
+    int canCompleteCircuit(vector<int>& gas, vector<int>& cost) {
+        int n = gas.size();
+        for (int i=0; i<n; ++i) {
+            gas.push_back(gas[i]);
+            cost.push_back(cost[i]);
+        }
+        // 如果想避免处理环，可直接将数组延长一倍    
+        int start = 0;
+        int now = 0;
+        int fuel = gas[0];
+        while (start < n) {
+            fuel -= cost[now++];
+            if (fuel < 0) {
+                start = now;
+                fuel = gas[now];
+            }
+            else {
+                if (now == start + n)
+                    return start;
+                fuel += gas[now];
+            }
+        }
+        return -1;
+    }
+};
+```
+<br/><br/>
+
+
 # [LeetCode 910](https://leetcode.com/problems/smallest-range-ii/)
 
 给出一个长为n的数组和一个非负数k，现在需要对数组中的每个数加上k或者减去k，从而让新数组中的最大值和最小值的差最小。

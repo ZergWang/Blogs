@@ -108,8 +108,9 @@ public:
 };
 ```
 
+<br/><br/>
 
-# 周赛402第4题：[LeetCode 3197](https://leetcode.com/problems/find-the-minimum-area-to-cover-all-ones-ii/)
+# 周赛403第4题：[LeetCode 3197](https://leetcode.com/problems/find-the-minimum-area-to-cover-all-ones-ii/)
 
 给出一个仅由0和1构成的二维数组，现在需要三个矩形去覆盖其中所所有的1。这三个矩形面积至少为1，且互不重叠。问符合要求的三个矩形面积最小为多少。
 
@@ -177,3 +178,11 @@ public:
     }
 };
 ```
+
+<br/><br/>
+
+# 周赛404第4题：[LeetCode 3203](https://leetcode.com/problems/find-minimum-diameter-after-merging-two-trees/)
+
+
+
+# 双周赛133第4题：[LeetCode 3193](https://leetcode.com/problems/count-the-number-of-inversions/)

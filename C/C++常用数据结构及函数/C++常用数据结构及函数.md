@@ -193,14 +193,14 @@ sort (a, a+n, greater<int>());
 ## 自定义比较函数
 比较函数传入的参数类型为待排序数组中单个元素的类型，例如对int型数组排序，则将传入int比较函数即可。对结构体数组排序传入单个结构体类型即可。
 ```cpp
-// 对vector <int>类型或者int型数组排序
+// 对vector <int>类型或者int型数组降序排序
 bool Cmp(int a, int b) {
     return a > b;
 }
 
-//对vector <vector<int>>类型的容器排序
+//对vector <vector<int>>类型的容器降序排序
 bool Cmp(vector<int> &a, vector<int> &b) {
-    return a[0] > b[0];   //按二维数组中第0列的值的大小排序
+    return a[0] > b[0];   //按二维数组中第0列的值降序排序
 }
 
 //对vector <pair<int, int>>类型的容器排序

@@ -30,26 +30,30 @@ vector <元素类型> 变量名;     //直接声明，此时容器的size为0
 初始化可指定容器的初始大小，也能指定部分元素的值。
 ```cpp
 vector <元素类型> 变量名 (N);   
-//声明一个vector容器并为该容器预留内存（N个int的空间），并初始化为0。这样可以在N范围内直接使用 operator []访问元素
+//声明一个vector容器并预留内存（N个int的空间），并初始化为0。从而在N范围内可直接使用 operator []访问元素
 
 vector <元素类型> 变量名 (N, k);   
 //声明一个vector容器并为该容器预留N个元素的空间，同时将每个元素初始化为k
 
 vector <元素类型> 变量名 {值1, 值2, 值3}; 
 //使用列表初始化的方式指定容器前三个元素的值，此时容器size为3
+
+vector <元素类型> arr1 = arr2; 
+//使用其他相同元素类型的vector初始化   
 ```
 
 ### 成员函数
 ```cpp
-push_back(value) //在容器末尾添加一个元素value
-pop_back()       //删除容器末尾的一个元素
-size()           //返回容器中当前元素数量
+at(i)            //返回容器中第i个元素。此外也可通过 operator []对元素进行访问或更改。两者均不能访问尚未存在元素的区域，但at函数会进行越界检查，可以使用try ... catch捕获异常，operator []则会直接报错
+back()           //返回容器中最后一个元素
 capacity()       //返回容器当前最多可容纳的元素数量。若容器的size超出capacity时，容器会额外开辟内存，capacity也会增大
 clear()          //清空容器
 empty()          //当容器为空，返回true，否则为false
 front()          //返回容器中的首个元素
-at(i)            //返回容器中第i个元素。此外也可通过 operator []对元素进行访问或更改。两者均不能访问尚未存在元素的区域，但at函数会进行越界检查，可以使用try ... catch捕获异常，operator []则会直接报错
-back()           //返回容器中最后一个元素
+operator [k]     //下标访问并修改第k个元素
+pop_back()       //删除容器末尾的一个元素
+push_back(value) //在容器末尾添加一个元素value
+size()           //返回容器中当前元素数量
 ```
 <br/><br/>
  
@@ -118,6 +122,7 @@ back()        //返回队尾元素
 clear()       //清空队列
 empty()       //队列为空返回true 否则返回false 
 front()       //返回队首元素
+operator [k]  //下标访问并修改第k个元素
 pop_back()    //删除队尾元素
 pop_front()   //删除队首元素。
 push_back()   //在队尾插入元素
@@ -198,7 +203,7 @@ erase(iterator) // //在multiset中删除只删除迭代器对应的那一个元
 
 
 ## map
-map是一个以键值对（Key, Value）为元素的容器结构。底层红黑树基于元素的键值（Key）生成，因此元素按Key值排序，不同元素的Key值均不相同。map不允许其中的多个元素具有相同的key。
+map是一个以键值对（Key, Value）为元素的容器结构。底层红黑树基于元素的键（Key）生成，因此元素按Key排序，不同元素的Key均不相同。map不允许其中的多个元素具有相同的key。
 ### 声明
 ```cpp
 #include <amp>
@@ -211,21 +216,21 @@ map <Key类型, Value类型> 变量名;
 begin()       //返回map中第一个元素（即Key值最小的元素）的迭代器
 begin().first //获取Key值最小的元素的Key值
 begin().second//获取Key值最小的元素的Value
-contains(k)   //查找是否存在键值为k的键值对，存在则返回True，否则False
+contains(k)   //查找是否存在Key为k的键值对，存在则返回True，否则False
 empty()       //当map为空返回true，否则为false
-erase(k)      //删除Key值为k的元素
+erase(k)      //删除Key为k的元素
+operator [k]  //可使用下标直接查找Key为k的元素并对其value进行修改
 size()        //返回元素个数
-[k]           //可使用下标直接查找键值为k的元素并对其value进行修改
 ```
 
 ## multimap
-和map类型基本一致，区别在于multimap允许其中有多个元素有相同的key，而map不允许。两者的声明、初始化及成员函数基本相同。
+和map类型基本一致，区别在于multimap允许其中有多个元素有相同的Key，而map不允许。两者的声明、初始化及成员函数基本相同。
 
 
 <br/><br/>
 
 # 无序关联容器（Unordered associative containers）
-C++11加入的容器类型，底层为开链哈希表。在此类容器中，基于元素Key值去进行增删改操作平均能以$O(1)$时间完成。
+C++11加入的容器类型，底层为开链哈希表。在此类容器中，基于元素的Key值去进行增删改操作平均能以$O(1)$时间完成。
 ## unordered_map
 unordered_map简单来说是一个以键值对（Key, Value）为元素的开链哈希表，其中Key和Value可以是复杂数据类型，如string、double或者用户自定义的类型。
 
@@ -239,15 +244,13 @@ unordered_map <Key类型, Value类型> 变量名;
 ### 成员函数
 ```cpp
 clear()         //清空所有键值对   
-contains(k)     //查找是否存在键值为k的键值对，存在则返回True，否则False
-emplace(k, v)   //插入键值对，如果键值k已经存在了，则该语句无效
-find(k)         //查找是否存在键值为k的键值对，存在则k对应迭代器，否则end迭代器
-size()          //返回键值对的数量
-[k]             //可使用下标直接查找键值为k的元素并对其value进行修改。
+contains(k)     //查找是否存在Key为k的元素，存在则返回True，否则False
+emplace(k, v)   //插入元素，如果Key为k的元素已存在，则忽略该语句
+find(k)         //查找是否存在Key为k的元素，存在则返回对应迭代器，否则返回end迭代器
+operator [k]    //使用下标直接查找Key为k的元素并对其value进行修改。
                 //如果不存在Key为k的元素，“[k]” 的访问会默认执行emplace(k, 0)
+size()          //返回键值对的数量
 ```
-
-
 
 ## unordered_set
 底层为开链哈希表的集合类型。哈希表以元素本身的值为Key存储元素。
@@ -300,6 +303,7 @@ count()     //返回bitset中值为1的bit的个数
 flip()      //翻转每个bit
 flip(pos)   //翻转第pos个bit
 none()      //若所有bit都为0则返回True
+operator [k]//直接访问并修改第k个位置的bit
 reset()     //将所有bit位设为0
 set()       //将所有bit位设为1
 set(pos, value)  //将第pos位设置为value
@@ -307,7 +311,7 @@ size()      //返回bitset大小，即所有bit的个数
 to_ullong() //返回unsigned long long形式的bitset变量
 to_ulong()  //返回unsigned long形式的bitset变量
 to_string() //返回字符串形式的bitset变量
-operator [] //可对变量直接进行下标访问并修改
+
 ```
 
 此外，可直接使用“==”或“!=”对不同bitset变量进行比较，也可直接对bitset变量使用位运算操作。

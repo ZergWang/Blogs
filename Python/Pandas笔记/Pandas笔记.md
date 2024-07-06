@@ -25,7 +25,8 @@ import pandas as pd
 <br/><br/>
 
 # 读写Dataframe
-## 从Excel从读取
+## 构造Dataframe
+### 从Excel从读取
 使用 [read_excel](https://pandas.pydata.org/docs/reference/api/pandas.read_excel.html) 函数，将excel的内容读取到一个dataframe变量中。
 
 ```py
@@ -38,7 +39,7 @@ df = pd.read_excel(file_path)   #直接从指定excel文件中读取
 df = pd.read_excel(file_path, index_col = k)   
 ```
 
-## 基于现有dataframe构造
+### 基于现有dataframe构造
 使用 [DataFrame](https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html) 函数直接构造一个dataframe变量。
 ```py
 # 基于旧Dataframe的数据构造一个，相当于复制
@@ -47,6 +48,27 @@ df2 = pd.DataFrame(data=df)
 # 基于一个旧的Dataframe的列结构来构造，不保留其数据
 df2 = pd.DataFrame(columns=df.columns) 
 ```
+### 基于list构造
+```py
+# 假设data为list类型
+df = pd.DataFrame(data) 
+```
+### 基于字典（dict）构造
+将字典转换成list类型后再构造成dataframe：
+```py
+# 假设data为dict类型
+df = pd.DataFrame([data]) 
+```
+此时构造出的dataframe只有两行数据，key为一行，value为另一行。
+
+也可以使用[DataFrame.from_dict](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.from_dict.html)方法构造：
+```py
+# 假设data为dict类型
+df = pd.DataFrame.from_dict(data, orient='index') 
+```
+此时构造出的dataframe有两列数据，key为索引列，value为第0列（如果想继续key为一行，value为另一行，则将参数改为```orient='columns'```）
+
+
 ## 保存为excel
 使用 [to_excel](https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.to_excel.html) 方法将Dataframe变量保存到指定的Excel文件中。
 
@@ -122,6 +144,14 @@ data = df.iloc[i, j]
 
 ```py
 df = df._append(new_row) # 在df末尾添加一行，其中new_row为series类型
+```
+## 更改列名
+```py
+df.columns = ['A','B']
+```
+## 修改索引列列名
+```py
+df = df.reset_index().rename(columns = {'index':'新列名'})
 ```
 
 <br/><br/>
