@@ -186,3 +186,11 @@ public:
 
 
 # 双周赛133第4题：[LeetCode 3193](https://leetcode.com/problems/count-the-number-of-inversions/)
+
+
+
+
+# 双周赛134第4题：[LeetCode 3209](https://leetcode.com/problems/number-of-subarrays-with-and-value-of-k/)
+
+给出一个非负整数数组和非负整数k，求出以下这种子数组的数量：子数组各项按位与运算结果等于k。
+
