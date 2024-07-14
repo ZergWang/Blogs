@@ -22,6 +22,7 @@
 
 利用上述性质，假设当```b[j] |= a[i]``` ( 0 < j < i)后```b[j]```值不变，这说明在执行或运算前，```a[i]```是```b[j]```的子集（即$ a[i] \subseteq b[j]$），那么此时对b的循环就可以break了，因为```a[i]```与```b[j]```执行或运算前，```b[j-1]```等于```a[j-1] | b[j]```，```b[j]```必为```b[j-1]```的子集（即 $b[j] \subseteq b[j-1]$）。因此```a[i]```必定为```b[j-1]```的子集，他们或运算后```b[j-1]```结果必定不变。同理，```a[i]```与b数组前面的元素或运算的结果也不变，因此可以直接break。
 
+实际代码中，我们可以直接在数组a上运算，不必额外开一个b数组。
 ```cpp
 class Solution {
 public:
@@ -45,6 +46,80 @@ public:
 
 以上性质同样适用于与运算。[LeetCode 1521](https://leetcode.com/problems/find-a-value-of-a-mysterious-function-closest-to-target/)把或运算改成与运算。其他地方和周赛这题一样，直接将周赛的代码中的或运算改成与运算就能过这道题。
 
+<br/><br/>
+
+# 双周赛134第4题：[LeetCode 3209](https://leetcode.com/problems/number-of-subarrays-with-and-value-of-k/)
+
+给出一个非负整数数组和非负整数k，求出以下这种子数组的数量：子数组各项按位与运算结果等于k。
+
+这道题与周赛400的第四题很相似，实际上可以直接使用周赛400的思路，遍历数组a，令```b[j]```等于```a[j] & a[j+1] & ... & a[i]```，这样就能枚举出所有的子数组。参与与运算的元素越多，结果就越小（严谨地说，是结果永远不会变大）。如此操作得到的b数组是单调递增的，因此可以直接在b中二分查找等于k的元素的左边界和右边界，右边界减去左边界即可得到b中等于k的元素的数量。
+
+```cpp
+class Solution {
+public:
+    long long countSubarrays(vector<int>& a, int k) {
+        long long ans = 0;        
+        for (int i=0; i<a.size(); ++i) {
+            for (int j=i-1; j>=0; --j) 
+                if ((a[j] & a[i]) == a[j])
+                    break;
+                else 
+                    a[j] &= a[i];
+            auto lef = lower_bound(a.begin(), a.begin()+i+1, k);
+            auto rig = upper_bound(a.begin(), a.begin()+i+1, k);
+            ans += rig - lef;
+        }
+        return ans; 
+    }
+};
+```
+
+除了二分查找，此题也可以继续使用位运算与集合的思想优化。首先在运算过程中必定有以下性质：$b[0] \subseteq b[1] \subseteq ... b[j] ... \subseteq b[i]$。
+
+根据这个性质，我们可以得到如下推论：
+
+1. 当```b[j]```与```a[i]```AND后的结果是k的真子集，则之后```b[0] ... b[j-1]```与```a[i]```AND的结果必定都是k的真子集，之后直到程序结束，都无需更新```b[0] ... b[j]```的值了。因此我们可以使用一个变量```st```作为标记，b中索引值比st小的元素都无需更新。则我们有：$k \subseteq b[st] \subseteq b[st+1] \subseteq ... b[j] ... \subseteq b[i]$。
+
+2. 当```b[j]```与```a[i]```AND后的结果等于k，则```b[st] ... b[j-1]```与```a[i]```AND后的结果都为k，此时答案数直接加上```j-st+1```即可。
+
+3. 当```b[j]```与```a[i]```AND后的结果不变，则说明$b[j] \subseteq a[i]$，则```b[st] ... b[j]```分别与```a[i]```AND后值都不变。而且它们AND的结果必定时k的超集。因此我们可以用一个变量```lastAns```记录上一轮对```i```遍历时新增的答案数，当遇到这种情况时直接令总答案数加上```lastAns```即可。
+
+
+```cpp
+class Solution {
+public:
+    long long countSubarrays(vector<int>& a, int k) {
+        int n = a.size();
+        long long ans = 0;
+        int st = 0;
+        long long lastAns = 0;
+
+        for (int i=0; i<n; ++i) {
+            for (int j=i; j>=st; --j) {
+                if ((a[j] & a[i] & k) < k) {//利用推论1
+                    st = j+1;
+                    lastAns = 0;
+                    break;
+                }
+                
+                if (j!=i && (a[j] & a[i]) == a[j]) {// 利用推论3
+                    ans += lastAns;
+                    break;
+                }
+
+                a[j] &= a[i];
+                if (a[j] == k) {   // 利用推论2
+                    lastAns = j-st + 1;
+                    ans += lastAns;
+                    break;
+                }    
+            }      
+        }
+
+        return ans;
+    }
+};
+```
 
 
 <br/><br/>
@@ -190,7 +265,4 @@ public:
 
 
 
-# 双周赛134第4题：[LeetCode 3209](https://leetcode.com/problems/number-of-subarrays-with-and-value-of-k/)
-
-给出一个非负整数数组和非负整数k，求出以下这种子数组的数量：子数组各项按位与运算结果等于k。
 

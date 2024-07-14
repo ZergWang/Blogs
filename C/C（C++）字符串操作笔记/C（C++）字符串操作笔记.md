@@ -126,6 +126,7 @@ string s;
 s.clear();//全部清除
 s.erase(pos);       //清除第pos位及后面的所有字符
 s.erase(pos,len);   //清除从第pos位开始的连续len个字符（包括第pos位）
+s.pop_back()        //删除最后一个字符
 ```
 <br/><br/>
 

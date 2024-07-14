@@ -82,7 +82,33 @@ double angle=arg(a);     //取得a的幅角，以弧度制表示
 复数之间可以直接加减乘除，复数也可以和实数进行乘除运算， 但不能加减。
 <br/><br/>
 
+# 二分查找
+以下函数调用需要头文件```<algorithm>```。以下函数只可在已经升序排序好的数组中使用。
+## binary_search
+在指定数组范围内查找指定值，如果存在该值返回True。
+```cpp
+//在int a[]的[lef, rig)范围内查找值value
+binary_search(a+lef, a+rig, value)
 
+//在vector<int> b的全部范围内查找值value
+binary_search(b.begin(), b.end(), value)
+```
+## lower_bound
+参数与binary_search一致，查找指定范围内首个大于等于目标值的元素，返回该元素的指针或迭代器。
+```cpp
+//在int a[]的[lef, rig)范围内查找值value，返回元素的指针
+lower_bound(a+lef, a+rig, value)
+//如果找不到，返回的指针会指向数组外，有越界风险
+
+//在vector<int> b的全部范围内查找值value，返回元素的迭代器
+lower_bound(b.begin(), b.end(), value)
+//如果找不到，返回b.end()
+```
+
+## upper_bound
+参数与lower_bound一致，查找指定范围内首个大于目标值的元素，返回该元素的指针或迭代器。
+
+<br/><br/>
 
 # 排序  
 ## qsort
@@ -190,7 +216,7 @@ sort (a, a+n, greater<int>());
 ```
 <br/>
 
-## 自定义比较函数
+## 自定义sort的比较函数
 比较函数传入的参数类型为待排序数组中单个元素的类型，例如对int型数组排序，则将传入int比较函数即可。对结构体数组排序传入单个结构体类型即可。
 ```cpp
 // 对vector <int>类型或者int型数组降序排序
