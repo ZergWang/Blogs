@@ -152,6 +152,36 @@ public:
 ```
 <br/><br/>
 
+# [LeetCode 1605](https://leetcode.com/problems/find-valid-matrix-given-row-and-column-sums/)
+
+给出一个```n * m```的由非负整数构成的矩阵，告知矩阵每行以及每列的和，返回一个满足上述条件的矩阵。
+
+本题的贪心思想其实就是一句话：在合法的情况下能填多大的数就填多大的数！我们从左上角（即```ans[0][0]```）开始，假设```row[i]```表示第i行数字的和，```col[i]```表示第i列数字的和，那么由于矩阵由非负整数构成，因此左上角填的数最大为```min(row[0], col[0])```。
+
+假设```row[0] < col[0]```，我们直接把最大的数填上去（令```ans[0][0] = row[0]```），这样一来ans的首行剩余的位置就只能都填0了。至此，我们把问题简化成了：构造一个```(n-1) * m```的矩阵，矩阵首行的和为```row[1]```，次行的和为```row[2]```…… 首列的和为```col[0]-row[0]，```，次列的和为```col[1]```……
+
+重复以上步骤，即可构造出满足条件的矩阵。
+```cpp
+class Solution {
+public:
+    vector<vector<int>> restoreMatrix(vector<int>& row, vector<int>& col) {
+        int n = row.size(), m = col.size();
+        vector<vector<int>> ans (n, vector<int>(m));
+
+        for (int i = 0; i < n; ++i) 
+            for (int j = 0; j < m; ++j) {
+                ans[i][j] = min(row[i], col[j]);
+                row[i] -= ans[i][j];
+                col[j] -= ans[i][j];
+            }
+            
+        return ans;
+    }
+};
+```
+
+
+<br/><br/>
 
 # [LeetCode 910](https://leetcode.com/problems/smallest-range-ii/)
 

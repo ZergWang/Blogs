@@ -35,6 +35,9 @@ vector <元素类型> 变量名 (N);
 vector <元素类型> 变量名 (N, k);   
 //声明一个vector容器并为该容器预留N个元素的空间，同时将每个元素初始化为k
 
+vector<vector<元素类型>> 变量名 (n, vector<元素类型>(m));
+//对于二维的vector容器，可通过上述方式预留出n * m的空间
+
 vector <元素类型> 变量名 {值1, 值2, 值3}; 
 //使用列表初始化的方式指定容器前三个元素的值，此时容器size为3
 
@@ -53,6 +56,8 @@ front()          //返回容器中的首个元素
 operator [k]     //下标访问并修改第k个元素
 pop_back()       //删除容器末尾的一个元素
 push_back(value) //在容器末尾添加一个元素value
+reserve(k)       //令容器预留k个元素的空间，该操作不会改变容器大小，因此reserve后用下标访问前k个元素仍有报错的可能
+resize(k)        //改变容器size为k，若容器原来元素数量不足k个，则补充元素0直到有k个；原来元素数量超过k个则只保留前k个
 size()           //返回容器中当前元素数量
 ```
 <br/><br/>
@@ -68,6 +73,7 @@ queue <元素类型> 变量名;
 //成员函数
 back()   //返回队尾元素
 clear()  //清空队列
+emplace(a) //在队尾加入元素a，对于复杂元素类型相比push更快更便捷
 empty()  //队列为空返回true 否则返回false
 front()  //返回队首元素
 pop()    //删除队首元素
@@ -102,7 +108,7 @@ priority_queue <int, vector<int>, greater<int>> a;
 ```cpp
 empty()   //队列为空返回true 否则返回false 
 pop()     //删除队首（堆顶）元素，并重新维护堆
-push(x)   //在队列中元素a，并重新维护堆
+push(x)   //在队列中插入元素a，并重新维护堆
 size()    //返回队列元素个数
 top()     //返回队首（堆顶）元素
 ```
@@ -255,7 +261,27 @@ size()          //返回键值对的数量
 ## unordered_set
 底层为开链哈希表的集合类型。哈希表以元素本身的值为Key存储元素。
 
+### 声明及初始化
+```cpp
+#include <unordered_set>
 
+unordered_set <元素类型> 变量名; 
+```
+### 成员函数
+```cpp
+begin()    //返回首个元素的迭代器
+clear()    //清空集合
+count(k)   //判断集合中是否有元素k
+emplace(k) //向集合中插入元素k
+empty()    //判断集合是否为空，为空返回True
+end()      //返回最后一个元素再后一个位置的迭代器（该迭代器不指向任何元素）
+erase(iterator) //删除某迭代器对应的元素
+erase(k)   //在集合中删除值为k的元素（若本来没有，则忽略该命令）
+erase(iterator lef, iterator rig) //删除所有大于等于lef对应元素且小于rig对应元素的元素
+find(k)    //查找是否存在元素k，若存在返回k对应迭代器，否则返回end迭代器
+insert(k)  //向集合中插入元素k（若原集合中已有k，则自动忽略此次插入）
+size()    //返回集合中元素个数
+```
 
 
 # 其他容器

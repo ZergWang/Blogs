@@ -1,8 +1,3 @@
-# 博文内容简介
-
-本博客记载在LeetCode周赛上遇到的一些做不出来且难以分类到某种算法上的题目。
-
-
 # 周赛400第4题：[LeetCode 3171](https://leetcode.com/problems/find-subarray-with-bitwise-or-closest-to-k/)
 
 给出一个int型数组a和正整数k，从a中找出一个子数组，子数组中所有元素或运算的结果与k的差值最小，输出最小的差值。
@@ -264,5 +259,8 @@ public:
 
 
 
+# 周赛405第4题：[LeetCode 3213](https://leetcode.com/problems/construct-string-with-minimum-cost/)
 
+
+# 周赛407第4题：[LeetCode 3229](https://leetcode.com/problems/minimum-operations-to-make-array-equal-to-target/)
 

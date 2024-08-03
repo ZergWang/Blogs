@@ -88,7 +88,7 @@ int fscanf(FILE *stream, const char *format, ...)
 | %u  | 无符号的十进制整数（unsigned int）|
 | %lld  | long long类型整数|
 
-使用fscanf读入信息时，空白字符会被忽略，或者作为连续fscanf时多个类型的分隔符。因此，在使用fscanf读入含空格的字符串时可能会发生信息不全的情况。
+使用fscanf读入信息时，空白字符会被忽略（scanf和C++中的cin也会），或者作为连续fscanf时多个类型的分隔符。因此，在使用fscanf读入含空格的字符串时可能会发生信息不全的情况。
 ## scanf
 等价于fscanf(stdin, format, ...)
 

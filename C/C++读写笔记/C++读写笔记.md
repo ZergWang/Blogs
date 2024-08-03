@@ -5,6 +5,12 @@
 <br/><br/>
 
 # 输入函数
+
+## cin
+（1）cin>>等价于cin.operator>>()，即调用成员函数operator>>()进行读取数据。
+（2）当cin>>从缓冲区中读取数据时，若缓冲区中第一个字符是空格、tab或换行这些分隔符时，cin>>会将其忽略并清除，继续读取下一个字符，若缓冲区为空，则继续等待。但是如果读取成功，字符后面的分隔符是残留在缓冲区的，cin>>不做处理。
+（3）不想略过空白字符，那就使用 noskipws 流控制。比如cin>>noskipws>>input;
+
 ## get与cin.get
 
 
@@ -37,6 +43,12 @@ getline(cin,s);
 ```
 
 <br/><br/>
+
+# stringstream
+[【C++】stringstream类 最全超详细解析](https://blog.csdn.net/weixin_45031801/article/details/136921743)
+
+<br/><br/>
+
 
 # 参考资料
 [菜鸟教程](https://www.runoob.com/)

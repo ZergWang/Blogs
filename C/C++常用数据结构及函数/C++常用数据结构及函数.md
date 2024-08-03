@@ -82,6 +82,19 @@ double angle=arg(a);     //取得a的幅角，以弧度制表示
 复数之间可以直接加减乘除，复数也可以和实数进行乘除运算， 但不能加减。
 <br/><br/>
 
+# 寻找最值
+需要头文件：```<algorithm>```
+```cpp
+//first，last为迭代器，第三个参数为自定义比较函数，某些情况下可省略
+max_element(first, last, cmp)
+//返回 [first, last) 中的最大元素的迭代器
+
+// 参数与max_element一致
+min_element(first, last, cmp)
+//返回 [first, last) 中的最小元素的迭代器
+```
+
+
 # 二分查找
 以下函数调用需要头文件```<algorithm>```。以下函数只可在已经升序排序好的数组中使用。
 ## binary_search
