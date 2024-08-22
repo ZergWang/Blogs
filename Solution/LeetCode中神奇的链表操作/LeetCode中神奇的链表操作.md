@@ -113,6 +113,37 @@ struct ListNode* reverseList(struct ListNode* head){
 
     return prev;
 }
+```
+<br/><br/>
 
+# 哨兵节点(dummy node)
+哨兵节点一般在链表开头，并不存储数据，而是用于简化边界处理。使用哨兵节点后，首个存储数据的节点实际上是链表的第二个节点，对它的处理和对其他实际存储数据的节点都是一样的，从而简化代码逻辑，提高可读性。
 
+在双向链表中，哨兵节点的后继节点为链表第二个节点（也是首个实际存储数据的节点），哨兵节点的前驱结点可以设置为链表末尾节点，这样一来从哨兵节点开始可以沿两个方向遍历，所有实际存储数据的节点（包括第一个和最后一个）都可按同样的代码逻辑处理。
+
+当链表为空时，链表为NULL或者链表仅有一个哨兵节点（此时哨兵节点的前驱和后继节点都指向自己）。下面列出利用哨兵节点进行节点插入和删除的操作：
+```cpp
+typedef struct LinkNode {
+    T data;
+    LinkNode *next, *prev;
+} LinkNode;
+
+//在某链表的开头插入节点，返回新节点的地址 
+LinkNode* InsertNode(T data, LinkNode* dummy) {    
+    LinkNode* nextNode = dummy->next;
+    LinkNode* newNode = (LinkNode*)malloc(sizeof(LinkNode));
+    newNode->data = data;
+    newNode->prev = dummy;
+    newNode->next = nextNode;
+    nextNode->prev = newNode;
+    dummy->next = newNode;
+    return newNode;
+}
+
+//删除指定位置的节点
+void DeleteNode(LinkNode* target) {      
+    target->prev->next = target->next;
+    target->next->prev = target->prev;
+    free(target);
+}
 ```
