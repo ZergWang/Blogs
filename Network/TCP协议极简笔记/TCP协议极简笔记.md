@@ -129,7 +129,9 @@ client收到server的回复报文后，发送ACK segment。该segment序列号�
 其次，随机化的初始序列号可以保证不被之前的历史通信干扰。假设双方不初始化序列号。当双方三次握手后client仅发出了一个segment，之后由于某种原因双方重新三次握手建立连接。但此时，之前发出的segment延迟抵达了server。server并不知道该segment是上一次三次握手后的segment还是本次三次握手后的segment（因为在不初始化序列号的情况下，双方正常通信的第一个segment序号都是恒定的），这会导致数据混乱。
 
 ### 保证通信不被历史握手影响
-假设通信双方仅通过“两次握手”建立连接，且假设client在发送SYN后出了岔子（如宕机）重启后重新发送新的SYN，但server在收到第一个SYN后回复SYN ACK，再然后就进入正式通信环节了，且有可能开始给client发送数据，但这些数据实际上对client来说是非法数据，就会白白浪费带宽。
+假设通信双方仅通过“两次握手”建立连接，所有client发送的无效的SYN segment都会让server建立TCP连接，白白浪费资源。但在三次握手的情况下，即使server回应了无效的SYN segment，client也不会进行第三次握手，从而避免server单方面建立了TCP连接。
+
+无效的SYN segment可能是由于client发送时延迟抵达了（严重延迟，以至于client通过重发的SYN segment与server建立连接了，这个无效的SYN segment才抵达server）。
 
 
 ## 断开连接：四次挥手

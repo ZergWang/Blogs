@@ -203,7 +203,7 @@ create table 表名 (列名 int)
 ```
 
 ## 为表中某一列创建唯一索引
-<font color='FF0000'>一旦为某一列创建唯一索引，则表中任意两行的该列对应的属性值不能相同</font>
+<font color='FF0000'>一旦为某一列创建唯一索引，则表中该列不能出现重复的值</font>
 ```sql
 create unique index 索引名 on 表名 (列名 asc);
 create unique index 索引名 on 表名 (列名 desc);
