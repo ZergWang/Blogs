@@ -387,6 +387,21 @@ bg 作业号
 ```
 <br/><br/>
 
+# 网络管理
+## ifconfig
+查看并设置网卡。
+## hostname
+```bash
+# 查看当前主机名
+hostname  
+
+# 临时更改主机名（重启后失效）
+hostname 新主机名
+```
+通过修改/etc/hostname文件可实现永久修改主机名。
+
+<br/><br/>
+
 # 图形界面下与Terminal交互
 打开Terminal：Ctrl +Alt + T
 

@@ -20,6 +20,9 @@
 ## Database
 数据库相关文章。包括数据库使用的终端命令、SQL语法、数据库内核研究等的笔记。
 
+## Distrubuted
+介绍分布式技术，主要为Hadoop框架下各种技术（比如HDFS、YARN、Spark、MapReduce、HBase等）的解析与使用笔记。
+
 ## FrontEnd
 网页前端开发的知识。包括HTML语言、Flask框架等的学习笔记。
 
