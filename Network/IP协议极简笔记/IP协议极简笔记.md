@@ -20,7 +20,7 @@ IP报文一般称为datagram，和TCP报文类似，同样分为header和data两
 
 ID（identifier）用于标识各个fragment原来属于哪个报文。原datagram的ID和切片后的各个fragment datagram的ID保持一致。
 
-flags占用3bit，用于标识datagram的分片情况。flags第一位为保留位，暂时没用；第二位标识该datagram能否被分片；第三位用于fragment datagram。如果该fragment datagram是属于原datagram的最后一部分，则设为1。
+flags占用3bit，用于标识datagram的分片情况。flags第一位为保留位，暂时没用；第二位标识该datagram能否被分片；第三位用于fragment datagram。如果该fragment datagram是属于原datagram的最后一部分，则设为0。
 
 offset占用13bit，用于fragment datagram。offset以“8字节”为单位，表示该fragment datagram在原datagram的位置。
 
