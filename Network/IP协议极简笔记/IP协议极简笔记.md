@@ -20,7 +20,7 @@ IP报文一般称为datagram，和TCP报文类似，同样分为header和data两
 
 ID（identifier）用于标识各个fragment原来属于哪个报文。原datagram的ID和切片后的各个fragment datagram的ID保持一致。
 
-flags占用3bit，用于标识datagram的分片情况。flags第一位为保留位，暂时没用；第二位标识该datagram能否被分片；第三位用于fragment datagram。如果该fragment datagram是属于原datagram的最后一部分，则设为0。
+flags占用3bit，用于标识datagram的分片情况。flags第一位为保留位，暂时没用；第二位标识该datagram能否被分片；第三位用于标识datagram的是否完整。如果当前datagram未被分片，或者当前datagram被分片，但属于原datagram的最后一部分，则设为0，否则为1。
 
 offset占用13bit，用于fragment datagram。offset以“8字节”为单位，表示该fragment datagram在原datagram的位置。
 
@@ -81,7 +81,7 @@ Subnet Number（子网号，按本人理解也可以叫作网络号）一般为�
 
 Subnet Mask（子网掩码）也为32位，它的网络部分全为1，host部分全为0。例如，C类地址前24位表示网络，则所有C类地址的子网掩码都是11111111.11111111.11111111.00000000（前面24个1，后面8个0）
 
-当一个IP报文来到router，router会将该报文的destination IP地址逐个与Forwarding Table中的子网掩码按位与运算，如果运算结果与该子网掩码对应的子网号一致，则说明该报文属于该子网，直接按表中对应的接口发送即可。
+当一个IP报文来到router，router会将该报文的destination IP地址与Forwarding Table中的子网掩码按位与运算，如果运算结果与该子网掩码对应的子网号一致，则说明该报文属于该子网，直接按表中对应的接口发送即可。
 
 ## NAT
 子网划分让IP地址能更灵活地被分配。但万一IP地址还是不够用，或者我希望为了统一与外界的通信，需要多个设备共用一个IP地址，此时可以使用NAT（Network Address Translation）技术。
