@@ -1,15 +1,18 @@
 # 常见函数及问题
+## 动态内存分配
 
-## calloc、malloc、realloc与free
+主要通过calloc、malloc、realloc实现动态内存分配。
+
 malloc用于分配变量所需的内存空间，并返回一个指向该空间起始地址的指针。若申请内存空间失败，则返回NULL。malloc函数仅一个参数size，为要申请的内存大小，以字节为单位。malloc返回的指针类型为void*，因此实际使用时还需类型转换。
 
 calloc与malloc返回值类型相同，开辟空间后还会将对应空间置0。有两个参数：待分配内存的元素个数以及每个元素的大小。因此，calloc常用于为数组开辟空间并清零。
 
 对于已经分配到空间的内存，realloc可将该空间的大小重新调整。参数有两个：原内存空间对应的指针以及新内存空间的大小，返回一个新指针，指向重新分配的内存。
 
-free无返回值，参数为待释放内存的指针变量。calloc、malloc、realloc函数申请到的内存可通过free释放。
+## 动态内存回收
+free无返回值，参数为待释放内存的指针变量。calloc、malloc、realloc函数申请到的内存可通过free释放。free后指针仍指向原来的地址，因此还需要手动将指针置为NULL，避免指针悬空。
+
 ```cpp
-#include <stdlib.h> 
 char* p;
 int* a;
 p = (char*) malloc(4);  
@@ -18,9 +21,12 @@ a = (int*) calloc(5, sizeof(int));
 //申请了一个含5个元素的int数组并对数组清零。
 p = (char*) realloc(p,10);
 //将申请到的4字节内存扩大至10字节
-free(p);               //使用完后释放掉p所占内存
+free(p);    //使用完后释放掉p所占内存
 free(a);
+p = NULL;
+a = NULL;
 ```
+
 ## memset
 函数原型：
 ```cpp
