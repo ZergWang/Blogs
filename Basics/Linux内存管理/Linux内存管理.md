@@ -47,7 +47,7 @@
 
 ## 页面置换算法
 
-### 最近最久未使用的置换算法（Least Recent Used，LRU）
+### 最近最久未使用置换算法（Least Recent Used，LRU）
 将该进程占用的所有页中，最长时间没读写过的页换出到硬盘上。
 
 ### 先进先出置换算法（First In First Out，FIFO）
