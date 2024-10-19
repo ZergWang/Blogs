@@ -194,5 +194,6 @@ void print(Fruit & p) {
 
 <br/><br/>
 
-# 虚继承
+# 多重继承
+
 
