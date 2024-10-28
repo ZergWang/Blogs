@@ -11,7 +11,7 @@
 
 单例模式又分为懒汉式和饿汉式。
 
-懒汉式线程不安全，单例需要手动调用getSingle函数来创建，相比饿汉式更节省内存空间。
+懒汉式下，单例需要手动调用函数创建或释放，使用起来更灵活，内存占用小。但是在C++11之前，懒汉式线程不安全，一般需要双检查锁来保证单例的创建只被调用一次。
 ```cpp
 class Single {
 private:
@@ -23,9 +23,12 @@ private:
     static Single * istance;
 public:
     static Single * getSingle() {
+        
+        //上锁
         if (istance == nullptr) {
             istance = new Single();
         }
+        //解锁
         return istance;
     }
     static void freeSingle() {
@@ -37,7 +40,7 @@ public:
 
 Single* Single::istance = nullptr; //记得要初始化
 ```
-饿汉式线程安全。在程序最开始处类的静态指针就创建了该单例。相比懒汉式代码有以下不同：
+在饿汉式下，全局静态指针在main函数执行前就创建了单例，线程安全得以保证。但内存空间上略有浪费（程序运行期间，即使不使用单例了，单例也会一直占用空间，直到程序结束）。
 ```cpp
 static Single * getSingle() {
     return istance; //无需在此处创建单例，因此直接返回指针
