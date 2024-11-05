@@ -1,17 +1,28 @@
 # 软件设计模式
-软件设计模式（Design Pattern，或称软件设计典范）是一套被反复使用、多数人知晓的、经过分类编目的、代码设计经验的总结。使用设计模式是为了可重用代码、让代码更容易被他人理解、保证代码可靠性、程序的重用性。设计模式代表了最佳的实践，通常被有经验的面向对象的软件开发人员所采用。设计模式是软件开发人员在软件开发过程中面临的一般问题的解决方案。这些解决方案是众多软件开发人员经过相当长的一段时间的试验和错误总结出来的。（摘自菜鸟教程）
+软件设计模式（Design Pattern，或称软件设计典范）是软件开发人员在软件开发过程中面临的一般问题的解决方案。这些解决方案是众多软件开发人员经过相当长的一段时间的试验和错误总结出来的，能保证代码可靠、易读以及重用。
 
-下面简要介绍几个主流的软件设计模式。
+
+## 设计模式分类
+目前一共有23种软件设计模式，主要分成以下三类。
+
+创建型设计模式有5种，包括单例模式、工厂模式、抽象工厂模式、建造者模式以及原型模式。此类设计模式将对象的创建与使用分离，并总结出多种适配不同场的对象创建方法，同时隐藏对象的创建逻辑。
+
+结构型设计模式有7种，包括适配器模式、桥接模式、组合模式、装饰模式、外观模式、享元模式、代理模式。此类设计模式关注类和对象的组合，即如何将类或对象按某种布局组成更大的结构，并保持结构的灵活和高效。
+
+行为型设计模式有11种，包括访问者模式、模版模式、策略模式、状态模式、观察者模式、备忘录模式、中介者模式、迭代器模式、解释器模式、命令模式、责任链模式。此类设计模式关注类或对象之间的交互关系，包括类或对象之间的通信、合作、职责分配等。
+
 <br/><br/>
 
-# 单例模式
-一个类只能创建唯一的对象。
+# 创建型设计模式
+## 单例模式（Singleton）
+单例模式下，一个类最多只能创建一个对象。
 
 类的构造和析构函数是private，不允许外部调用；拷贝构造、移动拷贝构造、赋值构造、移动赋值构造均被禁用。类中声明一个private的静态指针来保证只能创建出一个对象，同时也提供一个public的成员函数用于获取静态指针。
 
-单例模式又分为懒汉式和饿汉式。
+单例模式又分为懒汉式和饿汉式，其中懒汉式在多线程环境中可能发生线程冲突，导致创建出多个对象，这需要额外的机制去保护线程安全。
 
-懒汉式下，单例需要手动调用函数创建或释放，使用起来更灵活，内存占用小。但是在C++11之前，懒汉式线程不安全，一般需要双检查锁来保证单例的创建只被调用一次。
+### 懒汉式
+懒汉式下，用户需要手动调用函数创建或释放对象，使用起来更灵活，内存占用小。但是在C++11之前，懒汉式线程不安全，一般需要锁机制来保护GetSingle函数：
 ```cpp
 class Single {
 private:
@@ -22,47 +33,68 @@ private:
     Single & operator=(Single &&) = delete; //禁用移动赋值运算符
     static Single * istance;
 public:
-    static Single * getSingle() {
-        
-        //上锁
-        if (istance == nullptr) {
-            istance = new Single();
-        }
-        //解锁
-        return istance;
-    }
-    static void freeSingle() {
+    static Single * GetSingle();
+    static void FreeSingle() {
         if (istance != nullptr) {
             delete istance;
         }
     }
 };
 
+Single * Single::GetSingle() {
+    //上锁
+    if (istance == nullptr) 
+        istance = new Single();
+    //解锁
+}
+
 Single* Single::istance = nullptr; //记得要初始化
+
+int main() {
+    Single* p = Single::GetSingle();
+    ...
+}
 ```
-在饿汉式下，全局静态指针在main函数执行前就创建了单例，线程安全得以保证。但内存空间上略有浪费（程序运行期间，即使不使用单例了，单例也会一直占用空间，直到程序结束）。
+上述方式保证了线程安全，但由于每次通过GetSingle获取对象指针时都要上锁与解锁，比较影响性能。对此，可以使用双检查锁的方式，仅让创建对象时才执行一次上锁与解锁：
 ```cpp
-static Single * getSingle() {
+Single * Single::GetSingle() {
+    if (istance == nullptr) {
+        //上锁
+        if (istance == nullptr)  
+            istance = new Single();
+        //解锁
+    }
+    return istance;
+}
+```
+
+### 饿汉式
+在饿汉式下，全局静态指针在main函数执行前就创建了单例，线程安全得以保证。但在内存空间上略有浪费（程序运行期间，即使不使用该对象了，对象也会一直占用空间，直到程序结束）。
+```cpp
+Single * Single::GetSingle() {
     return istance; //无需在此处创建单例，因此直接返回指针
 }
 
 Single* Single::istance = new Single(); 
 ```
 
-# 工厂模式
-在工厂模式中，产品类的声明专注于描述产品的特性，不负责产品的创建（因此不声明构造函数）。产品对象的创建完全交给专门的工厂类负责，从而实现“对象的创建和对象的表示分离”这一设计原则。
+## 工厂模式（Factory）
+在工厂模式中，产品类的声明专注于描述产品的特性，不负责产品的创建（因此不声明构造函数）。产品对象的创建完全交给专门的工厂类负责，从而将对象的创建和对象的表示分离开。
 
-## 简单工厂模式
-假设我要生产两种品牌的杯子A和B，对此我们定义基类Cup，以及派生类A和B。然后定义工厂类，工厂类中有专门的成员函数负责创建杯子对象：
+假设我要生产两种品牌的杯子A和B，对此我们定义基类Cup，以及派生类CupA和CupB。然后定义工厂类，工厂类中有专门的成员函数负责创建杯子对象：
 ```cpp
-class SimpleFactory {
+class Cup {};
+class CupA : public Cup {};
+class CupB : public Cup {};
+
+class Factory {
 public:
     Cup* createCup(char type) {
         switch (name) {
             case 'A':
-                return new A;
+                return new CupA;
             case 'B':
-                return new B;
+                return new CupB;
             default:
                 cout << "无此类型的杯子" << endl;
         }
@@ -70,12 +102,13 @@ public:
     }
 };
 ```
-## 抽象工厂模式
-假设现在多了一种品牌的杯子需要生产，如果使用简单工厂模式，就需要修改工厂类的switch语句，不符合开闭原则。另外，假设这些品牌拓展产品线，开始生产笔，这样一来工厂类会变得非常冗杂，对此可使用抽象工厂模式。首先声明一个抽象基类作为抽象工厂，然后按照品牌创建派生类：工厂类A、工厂类B和工厂类C。
+## 抽象工厂模式（Abstact Factory）
+工厂模式下，如果有新的品牌CupC，也需要当前的工厂类创建，则需要修改createCup函数，添加新的switch分支，这不符合开闭原则。另外，假设上述品牌拓展产品线，开始生产笔，这样一来工厂类会变得非常冗杂，对此可使用抽象工厂模式。首先声明一个抽象基类作为抽象工厂，然后按照品牌创建派生类：工厂类A（负责品牌A旗下所有类型产品的创建）、工厂类B（负责品牌B旗下所有类型产品的创建）和工厂类C（同理）……
 ```cpp
 class Cup {};
 class CupA : public Cup {};
 class CupB : public Cup {};
+class CupC : public Cup {};
 
 class Pen {};
 class PenA : public Pen {};
@@ -89,25 +122,156 @@ public:
 
 class FactoryA : public AbstractFactory {
 public:
-    Cup* createCup() { return new CupA; }
-    Pen* createPen() { return new PenA; }
+    virtual Cup* createCup() { return new CupA; }
+    virtual Pen* createPen() { return new PenA; }
 };
 
 class FactoryB : public AbstractFactory {
 public:
-    Cup* createCup() { return new CupB; }
-    Pen* createPen() { return new PenB; }
+    virtual Cup* createCup() { return new CupB; }
+    virtual Pen* createPen() { return new PenB; }
+};
+
+class FactoryC : public AbstractFactory {
+public:
+    virtual Cup* createCup() { return new CupC; }
 };
 
 int main() {
     AbstractFactory * factoryA = new FactoryA;
     AbstractFactory * factoryB = new FactoryB;
-    Cup * c1 = factoryA->createCup();
-    Pen * p1 = factoryB->createPen();
+    Cup * newCup = factoryA->createCup(); //创建一个A品牌的杯子
+    Pen * newPen = factoryB->createPen(); //创建一支B品牌的笔
 }
 ```
 
-# 观察者模式
+## 建造者模式（Builder）
+当需要构建的类比较复杂，且由多个部分组成时，可以考虑使用建造者模式来构建类的对象。
+
+举个例子，假设现在需要生产一些椅子，椅子可以简单视为由靠背（back）、坐垫（seat）以及椅子腿（stick）三种组件构成的。我们需要生产不同类型的椅子，可能有木质椅子（三种组件都是木质的）、钢制椅子（三种组件都是钢质的）、轻量化椅子（靠背和椅子腿是碳纤维的）等等。面对不同类型的椅子，如果在产品类（也就是Chair类）中声明不同的构造函数，不仅没有令Chair对象的创建与使用分离开，当有新类型的椅子需要生产时，还要在Chair类中增加新的构造函数，违反了开闭原则。
+
+使用建造者模式可以妥善解决上述问题。我们使用不同的建造者类来生产不同类型的椅子。木质椅子建造者专门负责生产木质椅子，钢质椅子建造者专门负责生产钢质椅子……如果有新类型的椅子要生产，则只需要新声明一个建造者即可，无需修改其他部分的代码。
+
+所有的建造者类都有一个共同的基类——抽象建造者。抽象建造者是一个抽象类，为所有的派生类建造者规定了椅子的生产规范（每张椅子都要生产靠背、坐垫和椅子腿）。
+
+最后，我们通过一个指挥者类的对象来指挥椅子的生产。该对象可以招募不同的建造者对象来生产出不同类型的椅子。
+```cpp
+class Chair {
+private:
+    string back, seat, stick;
+public:
+    void SetBack(const string & s) { back = s;}
+    void SetSeat(const string & s) { seat = s; }
+    void SetStick(const string & s) { stick = s; }
+    void Show() {
+        cout << "该椅子由" << 
+            back << "、" << seat << "、" << stick << "构成。" << endl;
+    }
+};
+
+
+class AbstractBuilder { //抽象建造者，规定椅子的生产流程：生产靠背、坐垫和椅子腿
+protected:
+    Chair* product;
+public:
+    Chair* GetProduct() { return product; }
+    virtual void BuildBack() = 0;
+    virtual void BuildSeat() = 0;
+    virtual void BuildStick() = 0;
+};
+
+
+class WoodChairBuilder: public AbstractBuilder {//木质椅子建造者
+public:
+    WoodChairBuilder() { product = new Chair; };
+    void BuildBack() { product->SetBack("木质靠背"); }
+    void BuildSeat() { product->SetSeat("木质坐垫"); }
+    void BuildStick() { product->SetStick("木质椅子腿"); }
+};
+
+
+class Director { //指挥者
+private:
+    AbstractBuilder* builder;
+public:
+    void SetBuilder(AbstractBuilder* b) { builder = b; }//招募建造者
+    Chair* CreateChair() {
+        builder->BuildBack();
+        builder->BuildSeat();
+        builder->BuildStick();
+        return builder->GetProduct();
+    }
+};
+
+
+int main() {
+    AbstractBuilder* builder1 = new WoodChairBuilder;
+    Director* director = new Director;
+    director->SetBuilder(builder1);  //指挥者招募了一个木质椅子建造者
+    Chair* chair1 = director->CreateChair();//指挥者命令建造者生产一张椅子
+    chair1->Show();
+}
+```
+
+## 原型模式（Prototype）
+原型模式下，类的对象能通过某种方法完全复制出一个与当前对象完全一样的新对象。在C++中，这个复制过程一般通过拷贝构造函数实现。在原型模式下，会首先声明一个抽象类Prototype，该类声明了一个纯虚函数Clone，用于让对象创建一个与自己完全一样的新对象。如果有对象需要使用该功能，则令该对象的类继承自Prototype。
+```cpp
+class ProtoType {
+public:
+    virtual ProtoType* Clone() const =0;
+};
+
+class Recipient : public ProtoType {
+private:     //Recipient类用于描述收件人，描述的信息包括收件人的姓名及其多个地址
+    string name;
+    int size;  //地址数量
+    string* address; 
+public:
+    Recipient(string s, int n, string * p = nullptr) {
+        name = s;
+        size = n;
+        address = nullptr;
+        if (n > 0 && p) {
+            address = new string [n];   // 深拷贝
+            for (int i=0; i<n; ++i) address[i] = p[i]; 
+        }
+    }
+
+    Recipient(const Recipient & a): 
+        Recipient(a.name, a.size, a.address) {}
+
+    ~Recipient() { 
+        delete [] address; 
+    }
+    
+    virtual ProtoType* Clone() const {
+        return new Recipient(*this);
+    }
+};
+
+int main() {
+    string address[2] {"China", "American"};
+    Recipient r("Zerg", 2, address);
+    ProtoType* p = r.Clone();
+}
+```
+原型模式为对象的复制提供了统一的接口（即Clone成员函数），让代码无需依赖待复制对象所属的具体类。的
+<br/><br/>
+
+# 结构型设计模式
+## 适配器模式（Adapter）
+
+### 类适配器
+
+### 对象适配器
+<br/><br/>
+
+
+# 行为型设计模式
+## 观察者模式
+
+
+# 结构型设计模式
 
 # MVC
 全名Model View Controller，是模型（model）－视图（view）－控制器（controller）的缩写。
@@ -180,3 +344,7 @@ class User
 }
 ```
 <br/><br/>
+
+# 参考资料
+
+[C++设计模式：建造者模式（详解+案例代码）](https://blog.csdn.net/jj6666djdbbd/article/details/128576583)
