@@ -158,9 +158,9 @@ deque <元素类型> 变量名;
 ```cpp
 back()             //返回队尾元素
 clear()            //清空队列，size变为0
-emplace(pos, v)//类似insert
-emplace_front(v)//类似push_front
-emplace_back(v) //类似push_back
+emplace(pos, v)    //类似insert
+emplace_front(v)   //类似push_front
+emplace_back(v)    //类似push_back
 empty()            //队列为空返回true
 erase(pos)         //删除迭代器pos处的元素，后面的所有元素均向前移动一位
 front()            //返回队首元素
